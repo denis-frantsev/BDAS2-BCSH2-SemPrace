@@ -1,5 +1,5 @@
 ﻿using BDAS2_SemPrace.Data.Interfaces;
-using BDAS2_SemPrace.Data.Models;
+using BDAS2_SemPrace.Models;
 using System;
 using System.Collections.Generic;
 
@@ -7,23 +7,19 @@ namespace BDAS2_SemPrace.Data.Mocks
 {
     class MockZakaznik : IZakaznik
     {
-        public IEnumerable<Zakaznik> Zakaznici
+        private IEnumerable<Zakaznici> _zakaznici;
+        public IEnumerable<Zakaznici> Zakaznici
         {
             get
             {
-
-                return new List<Zakaznik>() {
-                    new Zakaznik() {
-                        Jmeno = "Denis",
-                        Prijmeni = "Frantsev",
-                        Email="denis.frantsev@gmail.com",
-                        TelCislo = 776123286
-                    }
-                };
-
+                List<Zakaznici> seznam;
+                DataBase.Execute("select*from zakaznici", out seznam);
+                _zakaznici = seznam;
+                return _zakaznici;
             }
+            set { _zakaznici = value; }
         }
-        public Zakaznik DejZakaznika(int id)
+        public Zakaznici DejZakaznika(int id)
         {
             return null;
         }

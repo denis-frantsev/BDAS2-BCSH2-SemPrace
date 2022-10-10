@@ -1,23 +1,27 @@
+using BDAS2_SemPrace.Data;
 using BDAS2_SemPrace.Data.Interfaces;
 using BDAS2_SemPrace.Data.Mocks;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using IHostingEnvironment = Microsoft.Extensions.Hosting.IHostingEnvironment;
 
 namespace BDAS2_SemPrace
 {
     public class Startup
     {
         // This method gets called by the runtime. Use this method to add services to the container.
-        // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
+        private IConfigurationRoot _conString;
+        public Startup(IHostingEnvironment hosting)
+        {
+            _conString = new ConfigurationBuilder().SetBasePath(hosting.ContentRootPath).AddJsonFile("dbSettings.json").Build();
+
+        }
+
         public void ConfigureServices(IServiceCollection services)
         {
+            //services.AddDbContext<DBContent>(options => options.UseSqlServer());
             services.AddTransient<IZakaznik, MockZakaznik>();
             services.AddMvc();
         }
@@ -30,7 +34,8 @@ namespace BDAS2_SemPrace
             app.UseStaticFiles();
             app.UseRouting();
             //app.UseMvcWithDefaultRoute();
-            app.UseEndpoints(endpoints => {
+            app.UseEndpoints(endpoints =>
+            {
                 endpoints.MapControllerRoute(name: "default", pattern: "{controller=Home}/{action=Index}/{id?}");
             });
         }

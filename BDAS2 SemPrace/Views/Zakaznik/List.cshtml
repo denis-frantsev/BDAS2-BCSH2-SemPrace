@@ -1,26 +1,15 @@
-﻿@using BDAS2_SemPrace.Data.Models
-@model IEnumerable<Zakaznik>
-@{
-    Layout = null;
-}
-
-<!DOCTYPE html>
-
-<html>
-<head>
-    <meta name="viewport" content="width=device-width" />
-    <title>List</title>
-</head>
-<body>
-        <h2>Vsichni Zakaznici</h2>
-        @{
-            foreach (var zakaznik in Model)
-            {
-                <h2>@zakaznik.Jmeno @zakaznik.Prijmeni</h2>
-                <p>@zakaznik.ID.ToString()</p>
-                <p>@zakaznik.Email</p>
-                <p>@zakaznik.TelCislo.ToString()</p>
-            }
+﻿
+<h2>Vsichni Zakaznici</h2>
+<div>
+    @{
+        foreach (var zakaznik in Model)
+        {
+        <h2>@zakaznik.Jmeno @zakaznik.Prijmeni</h2>
+        <p>@zakaznik.ID.ToString()</p>
+        <p>@zakaznik.Email</p>
+        <p>@zakaznik.TelCislo.ToString()</p>
         }
-</body>
-</html>
+    }
+</div>
+
+

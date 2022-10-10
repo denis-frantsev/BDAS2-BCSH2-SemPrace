@@ -1,0 +1,5 @@
+{
+  "ConnectionStrings": {
+    "DefaultConnection": "USER ID=ST64102;DATA SOURCE=fei-sql1.upceucebny.cz:1521/IDAS.UPCEUCEBNY.CZ;Password=j8ex765gh"
+  }
+}

@@ -1,4 +1,5 @@
 ﻿using BDAS2_SemPrace.Data.Interfaces;
+using BDAS2_SemPrace.ViewModels;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using System;
@@ -18,9 +19,12 @@ namespace BDAS2_SemPrace.Controllers
         }
 
         public ViewResult List() {
-            ViewBag.Zakaznik = "Some new";
-            var zakaznici = _zakaznici.Zakaznici;
-            return View(zakaznici);
+            //ZakazniciListViewModel obj = new ZakazniciListViewModel();
+            //obj.VsichniZakaznici = _zakaznici.Zakaznici;
+            ViewBag.Title = "Zákazníci";
+            return View(_zakaznici.Zakaznici);
         }
+
+       
     }
 }

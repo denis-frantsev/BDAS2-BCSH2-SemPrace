@@ -3,16 +3,15 @@ using System.Collections.Generic;
 
 namespace BDAS2_SemPrace.Models
 {
-    public partial class Kategorie
+    public partial class Znacky
     {
-        public Kategorie()
+        public Znacky()
         {
             Zbozis = new HashSet<Zbozi>();
         }
 
-        public byte IdKategorie { get; set; }
+        public byte IdZnacka { get; set; }
         public string Nazev { get; set; }
-        public string Popis { get; set; }
 
         public virtual ICollection<Zbozi> Zbozis { get; set; }
     }
