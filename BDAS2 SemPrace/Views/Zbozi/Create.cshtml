@@ -1,0 +1,61 @@
+﻿@model BDAS2_SemPrace.Models.Zbozi
+
+@{
+    ViewData["Title"] = "Create";
+}
+
+<h1>Create</h1>
+
+<h4>Zbozi</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="IdZbozi" class="control-label"></label>
+                <input asp-for="IdZbozi" class="form-control" />
+                <span asp-validation-for="IdZbozi" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="KodZbozi" class="control-label"></label>
+                <input asp-for="KodZbozi" class="form-control" />
+                <span asp-validation-for="KodZbozi" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="NazevZbozi" class="control-label"></label>
+                <input asp-for="NazevZbozi" class="form-control" />
+                <span asp-validation-for="NazevZbozi" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="IdKategorie" class="control-label"></label>
+                <select asp-for="IdKategorie" class ="form-control" asp-items="ViewBag.IdKategorie"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="IdZnacka" class="control-label"></label>
+                <select asp-for="IdZnacka" class ="form-control" asp-items="ViewBag.IdZnacka"></select>
+            </div>
+            <div class="form-group">
+                <label asp-for="Popis" class="control-label"></label>
+                <input asp-for="Popis" class="form-control" />
+                <span asp-validation-for="Popis" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Cena" class="control-label"></label>
+                <input asp-for="Cena" class="form-control" />
+                <span asp-validation-for="Cena" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

@@ -15,8 +15,8 @@ namespace BDAS2_SemPrace.Models
         public decimal IdZbozi { get; set; }
         public short KodZbozi { get; set; }
         public string NazevZbozi { get; set; }
-        public byte IdKategorie { get; set; }
-        public byte IdZnacka { get; set; }
+        public short IdKategorie { get; set; }
+        public short IdZnacka { get; set; }
         public string Popis { get; set; }
         public decimal Cena { get; set; }
 

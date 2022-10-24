@@ -10,7 +10,7 @@ namespace BDAS2_SemPrace.Models
             Zbozis = new HashSet<Zbozi>();
         }
 
-        public byte IdZnacka { get; set; }
+        public short IdZnacka { get; set; }
         public string Nazev { get; set; }
 
         public virtual ICollection<Zbozi> Zbozis { get; set; }

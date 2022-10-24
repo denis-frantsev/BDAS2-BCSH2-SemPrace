@@ -7,7 +7,7 @@ namespace BDAS2_SemPrace.Models
     {
         public Zakaznici()
         {
-            Platbies = new HashSet<Platby>();
+            Platby = new HashSet<Platby>();
         }
 
         public int IdZakaznik { get; set; }
@@ -15,7 +15,6 @@ namespace BDAS2_SemPrace.Models
         public string Prijmeni { get; set; }
         public decimal TelefonniCislo { get; set; }
         public string Email { get; set; }
-
-        public virtual ICollection<Platby> Platbies { get; set; }
+        public virtual ICollection<Platby> Platby { get; set; }
     }
 }

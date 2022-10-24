@@ -10,7 +10,7 @@ namespace BDAS2_SemPrace.Models
             Zbozis = new HashSet<Zbozi>();
         }
 
-        public byte IdKategorie { get; set; }
+        public short IdKategorie { get; set; }
         public string Nazev { get; set; }
         public string Popis { get; set; }
 

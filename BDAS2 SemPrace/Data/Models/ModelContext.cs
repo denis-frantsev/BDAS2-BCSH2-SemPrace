@@ -19,16 +19,16 @@ namespace BDAS2_SemPrace.Models
         public virtual DbSet<Adresy> Adresy { get; set; }
         public virtual DbSet<Kategorie> Kategorie { get; set; }
         public virtual DbSet<NazvyPultu> NazvyPultu { get; set; }
-        public virtual DbSet<Platby> Platbies { get; set; }
-        public virtual DbSet<Pokladny> Pokladnies { get; set; }
-        public virtual DbSet<Polozky> Polozkies { get; set; }
+        public virtual DbSet<Platby> Platby { get; set; }
+        public virtual DbSet<Pokladny> Pokladny { get; set; }
+        public virtual DbSet<Polozky> Polozky { get; set; }
         public virtual DbSet<PracovniMista> PracovniMista { get; set; }
-        public virtual DbSet<Prodeje> Prodejes { get; set; }
-        public virtual DbSet<Pulty> Pulties { get; set; }
-        public virtual DbSet<Sklady> Skladies { get; set; }
+        public virtual DbSet<Prodeje> Prodeje { get; set; }
+        public virtual DbSet<Pulty> Pulty { get; set; }
+        public virtual DbSet<Sklady> Sklady { get; set; }
         public virtual DbSet<SkladyZbozi> SkladyZbozis { get; set; }
         public virtual DbSet<Supermarkety> Supermarketies { get; set; }
-        public virtual DbSet<Zakaznici> Zakaznicis { get; set; }
+        public virtual DbSet<Zakaznici> Zakaznici { get; set; }
         public virtual DbSet<Zamestnanci> Zamestnancis { get; set; }
         public virtual DbSet<Zbozi> Zbozis { get; set; }
         public virtual DbSet<Znacky> Znackies { get; set; }
@@ -37,8 +37,8 @@ namespace BDAS2_SemPrace.Models
         {
             if (!optionsBuilder.IsConfigured)
             {
-#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                optionsBuilder.UseOracle("Data Source=(description=(address_list=(address = (protocol = TCP)(host = fei-sql1.upceucebny.cz)(port = 1521)))(connect_data=(service_name=IDAS.UPCEUCEBNY.CZ))\n);User ID=ST64102;Password=j8ex765gh;Persist Security Info=True");
+                //#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
+                //                optionsBuilder.UseOracle("Data Source=(description=(address_list=(address = (protocol = TCP)(host = fei-sql1.upceucebny.cz)(port = 1521)))(connect_data=(service_name=IDAS.UPCEUCEBNY.CZ))\n);User ID=ST64102;Password=j8ex765gh;Persist Security Info=True");
             }
         }
 
@@ -163,7 +163,7 @@ namespace BDAS2_SemPrace.Models
                     .HasConstraintName("PLATBY_SUPERMARKETY_FK");
 
                 entity.HasOne(d => d.IdZakaznikNavigation)
-                    .WithMany(p => p.Platbies)
+                    .WithMany(p => p.Platby)
                     .HasForeignKey(d => d.IdZakaznik)
                     .OnDelete(DeleteBehavior.Cascade)
                     .HasConstraintName("TYPY_PLATBY_ZAKAZNICI_FK");
