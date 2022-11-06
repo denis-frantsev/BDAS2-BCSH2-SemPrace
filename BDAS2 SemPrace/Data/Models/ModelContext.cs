@@ -26,12 +26,12 @@ namespace BDAS2_SemPrace.Models
         public virtual DbSet<Prodeje> Prodeje { get; set; }
         public virtual DbSet<Pulty> Pulty { get; set; }
         public virtual DbSet<Sklady> Sklady { get; set; }
-        public virtual DbSet<SkladyZbozi> SkladyZbozis { get; set; }
-        public virtual DbSet<Supermarkety> Supermarketies { get; set; }
+        public virtual DbSet<SkladyZbozi> SkladyZbozi { get; set; }
+        public virtual DbSet<Supermarkety> Supermarkety { get; set; }
         public virtual DbSet<Zakaznici> Zakaznici { get; set; }
-        public virtual DbSet<Zamestnanci> Zamestnancis { get; set; }
-        public virtual DbSet<Zbozi> Zbozis { get; set; }
-        public virtual DbSet<Znacky> Znackies { get; set; }
+        public virtual DbSet<Zamestnanci> Zamestnanci { get; set; }
+        public virtual DbSet<Zbozi> Zbozi { get; set; }
+        public virtual DbSet<Znacky> Znacky { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -342,7 +342,7 @@ namespace BDAS2_SemPrace.Models
                     .HasColumnName("NAZEV");
 
                 entity.HasOne(d => d.IdAdresaNavigation)
-                    .WithMany(p => p.Skladies)
+                    .WithMany(p => p.Sklady)
                     .HasForeignKey(d => d.IdAdresa)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("SKLAD_ADRESA_FK");
@@ -406,7 +406,7 @@ namespace BDAS2_SemPrace.Models
                     .HasColumnName("NAZEV");
 
                 entity.HasOne(d => d.IdAdresaNavigation)
-                    .WithMany(p => p.Supermarketies)
+                    .WithMany(p => p.Supermarkety)
                     .HasForeignKey(d => d.IdAdresa)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("SUPERMARKET_ADRESA_FK");

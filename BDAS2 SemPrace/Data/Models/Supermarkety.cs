@@ -15,7 +15,7 @@ namespace BDAS2_SemPrace.Models
 
         public decimal IdSupermarket { get; set; }
         public string Nazev { get; set; }
-        public int IdAdresa { get; set; }
+        public short IdAdresa { get; set; }
 
         public virtual Adresy IdAdresaNavigation { get; set; }
         public virtual ICollection<Platby> Platbies { get; set; }

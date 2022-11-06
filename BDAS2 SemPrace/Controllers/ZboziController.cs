@@ -21,19 +21,19 @@ namespace BDAS2_SemPrace.Controllers
         // GET: Zbozi
         public async Task<IActionResult> Index()
         {
-            var modelContext = _context.Zbozis.Include(z => z.IdKategorieNavigation).Include(z => z.IdZnackaNavigation);
+            var modelContext = _context.Zbozi.Include(z => z.IdKategorieNavigation).Include(z => z.IdZnackaNavigation);
             return View(await modelContext.ToListAsync());
         }
 
         // GET: Zbozi/Details/5
         public async Task<IActionResult> Details(decimal? id)
         {
-            if (id == null || _context.Zbozis == null)
+            if (id == null || _context.Zbozi == null)
             {
                 return NotFound();
             }
 
-            var zbozi = await _context.Zbozis
+            var zbozi = await _context.Zbozi
                 .Include(z => z.IdKategorieNavigation)
                 .Include(z => z.IdZnackaNavigation)
                 .FirstOrDefaultAsync(m => m.IdZbozi == id);
@@ -49,7 +49,7 @@ namespace BDAS2_SemPrace.Controllers
         public IActionResult Create()
         {
             ViewData["IdKategorie"] = new SelectList(_context.Kategorie, "IdKategorie", "Nazev");
-            ViewData["IdZnacka"] = new SelectList(_context.Znackies, "IdZnacka", "Nazev");
+            ViewData["IdZnacka"] = new SelectList(_context.Znacky, "IdZnacka", "Nazev");
             return View();
         }
 
@@ -67,25 +67,25 @@ namespace BDAS2_SemPrace.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["IdKategorie"] = new SelectList(_context.Kategorie, "IdKategorie", "Nazev", zbozi.IdKategorie);
-            ViewData["IdZnacka"] = new SelectList(_context.Znackies, "IdZnacka", "Nazev", zbozi.IdZnacka);
+            ViewData["IdZnacka"] = new SelectList(_context.Znacky, "IdZnacka", "Nazev", zbozi.IdZnacka);
             return View(zbozi);
         }
 
         // GET: Zbozi/Edit/5
         public async Task<IActionResult> Edit(decimal? id)
         {
-            if (id == null || _context.Zbozis == null)
+            if (id == null || _context.Zbozi == null)
             {
                 return NotFound();
             }
 
-            var zbozi = await _context.Zbozis.FindAsync(id);
+            var zbozi = await _context.Zbozi.FindAsync(id);
             if (zbozi == null)
             {
                 return NotFound();
             }
             ViewData["IdKategorie"] = new SelectList(_context.Kategorie, "IdKategorie", "Nazev", zbozi.IdKategorie);
-            ViewData["IdZnacka"] = new SelectList(_context.Znackies, "IdZnacka", "Nazev", zbozi.IdZnacka);
+            ViewData["IdZnacka"] = new SelectList(_context.Znacky, "IdZnacka", "Nazev", zbozi.IdZnacka);
             return View(zbozi);
         }
 
@@ -122,19 +122,19 @@ namespace BDAS2_SemPrace.Controllers
                 return RedirectToAction(nameof(Index));
             }
             ViewData["IdKategorie"] = new SelectList(_context.Kategorie, "IdKategorie", "Nazev", zbozi.IdKategorie);
-            ViewData["IdZnacka"] = new SelectList(_context.Znackies, "IdZnacka", "Nazev", zbozi.IdZnacka);
+            ViewData["IdZnacka"] = new SelectList(_context.Znacky, "IdZnacka", "Nazev", zbozi.IdZnacka);
             return View(zbozi);
         }
 
         // GET: Zbozi/Delete/5
         public async Task<IActionResult> Delete(decimal? id)
         {
-            if (id == null || _context.Zbozis == null)
+            if (id == null || _context.Zbozi == null)
             {
                 return NotFound();
             }
 
-            var zbozi = await _context.Zbozis
+            var zbozi = await _context.Zbozi
                 .Include(z => z.IdKategorieNavigation)
                 .Include(z => z.IdZnackaNavigation)
                 .FirstOrDefaultAsync(m => m.IdZbozi == id);
@@ -151,14 +151,14 @@ namespace BDAS2_SemPrace.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(decimal id)
         {
-            if (_context.Zbozis == null)
+            if (_context.Zbozi == null)
             {
-                return Problem("Entity set 'ModelContext.Zbozis'  is null.");
+                return Problem("Entity set 'ModelContext.Zbozi'  is null.");
             }
-            var zbozi = await _context.Zbozis.FindAsync(id);
+            var zbozi = await _context.Zbozi.FindAsync(id);
             if (zbozi != null)
             {
-                _context.Zbozis.Remove(zbozi);
+                _context.Zbozi.Remove(zbozi);
             }
             
             await _context.SaveChangesAsync();
@@ -167,7 +167,7 @@ namespace BDAS2_SemPrace.Controllers
 
         private bool ZboziExists(decimal id)
         {
-          return _context.Zbozis.Any(e => e.IdZbozi == id);
+          return _context.Zbozi.Any(e => e.IdZbozi == id);
         }
     }
 }

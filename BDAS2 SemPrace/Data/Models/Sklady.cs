@@ -13,7 +13,7 @@ namespace BDAS2_SemPrace.Models
 
         public decimal IdSklad { get; set; }
         public string Nazev { get; set; }
-        public int IdAdresa { get; set; }
+        public short IdAdresa { get; set; }
 
         public virtual Adresy IdAdresaNavigation { get; set; }
         public virtual ICollection<SkladyZbozi> SkladyZbozis { get; set; }
