@@ -26,6 +26,11 @@ namespace BDAS2_SemPrace.Controllers
             return View();
         }
 
+        public IActionResult SignIn()
+        {
+            return View();
+        }
+
         public async Task<IActionResult> Zbozi()
         {
             var modelContext = _context.Zbozi.Include(z => z.IdKategorieNavigation).Include(z => z.IdZnackaNavigation);

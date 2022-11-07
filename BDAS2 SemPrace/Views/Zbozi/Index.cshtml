@@ -8,21 +8,19 @@
 <ul alignment="horizontal">
     @foreach (var item in Model)
     {
-            <li>
-                <div class="col-lg-4">
-                <h2 class="fw-normal">@Html.DisplayFor(modelItem => item.NazevZbozi)</h2>
-                @{
-                    if (item.Popis != "")
-                    {
-                        <p>@Html.DisplayFor(modelItem => item.Popis)</p>
-                    }
+        <li>
+            <div class="col-lg-4">
+            <h2 class="fw-normal">@Html.DisplayFor(modelItem => item.NazevZbozi)</h2>
+            @{
+                if (item.Popis != "")
+                {
+                    <p>@Html.DisplayFor(modelItem => item.Popis)</p>
                 }
-                <p>@Html.DisplayFor(modelItem => item.Cena) Kč</p>
-                <p><a class="btn btn-secondary" href="#">View details »</a></p>
-              </div>
-            </li>
-
+            }
+            <p>@Html.DisplayFor(modelItem => item.Cena) Kč</p>
+            <p><a class="btn btn-secondary" href="#">View details »</a></p>
+            </div>
+        </li>
     }
 </ul>
-
 </table>
