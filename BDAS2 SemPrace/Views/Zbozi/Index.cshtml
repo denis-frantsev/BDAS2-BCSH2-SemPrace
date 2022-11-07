@@ -4,7 +4,10 @@
     ViewData["Title"] = "Index";
 }
 
+@*<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />*@
+
 <h1>Náš sortiment</h1>
+<<<<<<< Updated upstream
 <ul alignment="horizontal">
     @foreach (var item in Model)
     {
@@ -24,3 +27,30 @@
     }
 </ul>
 </table>
+=======
+
+<div class ="card-deck" style=" display: grid;
+    grid-template-columns: 1fr 1fr 1fr;
+    gap: 10px 2em;">
+
+@foreach (var item in Model){
+            <div class="card" >
+			<div class="card-body" style="height: 200px; width: 100%; display: block;">
+                <h5 class="card-title">@Html.DisplayFor(modelItem => item.NazevZbozi)</h5>
+                <p class="card-text">
+                    @{
+                        if (item.Popis != "")
+                        {
+                            <p>@Html.DisplayFor(modelItem => item.Popis)</p>
+                        }
+                    }
+                </p>
+                <h5 class="card-text" style="color:darkgoldenrod"> @Html.DisplayFor(modelItem => item.Cena) Kč</h5>
+                @*<a href="#" class="btn btn-primary">View details</a>*@
+                </div>
+            </div>   
+        }
+</div>
+
+
+>>>>>>> Stashed changes
