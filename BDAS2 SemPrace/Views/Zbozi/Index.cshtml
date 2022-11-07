@@ -7,27 +7,6 @@
 @*<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />*@
 
 <h1>Náš sortiment</h1>
-<<<<<<< Updated upstream
-<ul alignment="horizontal">
-    @foreach (var item in Model)
-    {
-        <li>
-            <div class="col-lg-4">
-            <h2 class="fw-normal">@Html.DisplayFor(modelItem => item.NazevZbozi)</h2>
-            @{
-                if (item.Popis != "")
-                {
-                    <p>@Html.DisplayFor(modelItem => item.Popis)</p>
-                }
-            }
-            <p>@Html.DisplayFor(modelItem => item.Cena) Kč</p>
-            <p><a class="btn btn-secondary" href="#">View details »</a></p>
-            </div>
-        </li>
-    }
-</ul>
-</table>
-=======
 
 <div class ="card-deck" style=" display: grid;
     grid-template-columns: 1fr 1fr 1fr;
@@ -35,7 +14,8 @@
 
 @foreach (var item in Model){
             <div class="card" >
-			<div class="card-body" style="height: 200px; width: 100%; display: block;">
+			<div class="card-body" @*style="height: 200px; width: 100%; display: block;"*@>
+                <img class="card-img-top" data-src="holder.js/100px200/" alt="100%x200" style="height: 50%; width: 100%; display: block;" src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Lidl-Logo.svg/1200px-Lidl-Logo.svg.png" data-holder-rendered="true">
                 <h5 class="card-title">@Html.DisplayFor(modelItem => item.NazevZbozi)</h5>
                 <p class="card-text">
                     @{
@@ -52,5 +32,3 @@
         }
 </div>
 
-
->>>>>>> Stashed changes
