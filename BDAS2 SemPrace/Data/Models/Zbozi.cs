@@ -7,9 +7,9 @@ namespace BDAS2_SemPrace.Models
     {
         public Zbozi()
         {
-            Polozkies = new HashSet<Polozky>();
-            SkladyZbozis = new HashSet<SkladyZbozi>();
-            Pults = new HashSet<Pulty>();
+            Polozky = new HashSet<Polozky>();
+            SkladyZbozi = new HashSet<SkladyZbozi>();
+            Pulty = new HashSet<Pulty>();
         }
 
         public decimal IdZbozi { get; set; }
@@ -19,12 +19,13 @@ namespace BDAS2_SemPrace.Models
         public short IdZnacka { get; set; }
         public string Popis { get; set; }
         public decimal Cena { get; set; }
+        public string Obrazek { get; set; }
 
         public virtual Kategorie IdKategorieNavigation { get; set; }
         public virtual Znacky IdZnackaNavigation { get; set; }
-        public virtual ICollection<Polozky> Polozkies { get; set; }
-        public virtual ICollection<SkladyZbozi> SkladyZbozis { get; set; }
+        public virtual ICollection<Polozky> Polozky { get; set; }
+        public virtual ICollection<SkladyZbozi> SkladyZbozi { get; set; }
 
-        public virtual ICollection<Pulty> Pults { get; set; }
+        public virtual ICollection<Pulty> Pulty { get; set; }
     }
 }

@@ -7,8 +7,8 @@ namespace BDAS2_SemPrace.Models
     {
         public Sklady()
         {
-            SkladyZbozis = new HashSet<SkladyZbozi>();
-            Zamestnancis = new HashSet<Zamestnanci>();
+            SkladyZbozi = new HashSet<SkladyZbozi>();
+            Zamestnanci = new HashSet<Zamestnanci>();
         }
 
         public decimal IdSklad { get; set; }
@@ -16,7 +16,7 @@ namespace BDAS2_SemPrace.Models
         public short IdAdresa { get; set; }
 
         public virtual Adresy IdAdresaNavigation { get; set; }
-        public virtual ICollection<SkladyZbozi> SkladyZbozis { get; set; }
-        public virtual ICollection<Zamestnanci> Zamestnancis { get; set; }
+        public virtual ICollection<SkladyZbozi> SkladyZbozi { get; set; }
+        public virtual ICollection<Zamestnanci> Zamestnanci { get; set; }
     }
 }

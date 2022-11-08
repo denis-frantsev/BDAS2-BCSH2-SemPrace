@@ -7,7 +7,7 @@ namespace BDAS2_SemPrace.Models
     {
         public Platby()
         {
-            Prodejes = new HashSet<Prodeje>();
+            Prodeje = new HashSet<Prodeje>();
         }
 
         public int IdPlatba { get; set; }
@@ -20,6 +20,6 @@ namespace BDAS2_SemPrace.Models
 
         public virtual Supermarkety IdSupermarketNavigation { get; set; }
         public virtual Zakaznici IdZakaznikNavigation { get; set; }
-        public virtual ICollection<Prodeje> Prodejes { get; set; }
+        public virtual ICollection<Prodeje> Prodeje { get; set; }
     }
 }

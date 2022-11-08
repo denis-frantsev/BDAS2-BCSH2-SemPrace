@@ -7,13 +7,13 @@ namespace BDAS2_SemPrace.Models
     {
         public Kategorie()
         {
-            Zbozis = new HashSet<Zbozi>();
+            Zbozi = new HashSet<Zbozi>();
         }
 
         public short IdKategorie { get; set; }
         public string Nazev { get; set; }
         public string Popis { get; set; }
 
-        public virtual ICollection<Zbozi> Zbozis { get; set; }
+        public virtual ICollection<Zbozi> Zbozi { get; set; }
     }
 }
