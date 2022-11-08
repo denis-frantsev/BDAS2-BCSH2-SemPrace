@@ -4,7 +4,7 @@
     ViewData["Title"] = "Index";
 }
 
-@*<link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />*@
+
 
 <h1>Náš sortiment</h1>
 
@@ -15,7 +15,7 @@
 @foreach (var item in Model){
             <div class="card" >
 			<div class="card-body" @*style="height: 200px; width: 100%; display: block;"*@>
-                <img class="card-img-top" data-src="holder.js/100px200/" alt="100%x200" style="height: 50%; width: 100%; display: block;" src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Lidl-Logo.svg/1200px-Lidl-Logo.svg.png" data-holder-rendered="true">
+                <img class="card-img-top" style="height: contain; width: contain; display: block;" src="@Html.DisplayFor(modelItem => item.Obrazek)" data-holder-rendered="true">
                 <h5 class="card-title">@Html.DisplayFor(modelItem => item.NazevZbozi)</h5>
                 <p class="card-text">
                     @{
