@@ -2,7 +2,6 @@
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
-using BDAS2_SemPrace.Data.Models;
 
 namespace BDAS2_SemPrace.Models
 {
@@ -16,7 +15,8 @@ namespace BDAS2_SemPrace.Models
             : base(options)
         {
         }
-
+        private User _user = new User() { Permision = Permision.GHOST };
+        public User User { get { return _user; } set { _user = value; } }
         public virtual DbSet<Adresy> Adresy { get; set; }
         public virtual DbSet<Kategorie> Kategorie { get; set; }
         public virtual DbSet<NazvyPultu> NazvyPultu { get; set; }
@@ -33,6 +33,7 @@ namespace BDAS2_SemPrace.Models
         public virtual DbSet<Zamestnanci> Zamestnanci { get; set; }
         public virtual DbSet<Zbozi> Zbozi { get; set; }
         public virtual DbSet<Znacky> Znacky { get; set; }
+        public virtual DbSet<User> Users { get; set; }
         //public virtual DbSet<User> Uzivatele { get; set; }
 
 
@@ -629,6 +630,36 @@ namespace BDAS2_SemPrace.Models
                     .HasColumnName("NAZEV");
             });
 
+            modelBuilder.Entity<User>(entity =>
+            {
+                entity.HasKey(e => e.Email).HasName("USERS_PK");
+                entity.HasIndex(e => e.ID,"USERS.UK1").IsUnique();
+
+                entity.ToTable("USERS");
+
+                entity.Property(e => e.Email)
+                    .IsRequired()
+                    .HasMaxLength(40)
+                    .IsUnicode(false)
+                    .HasColumnName("EMAIL");
+
+                entity.Property(e => e.Password)
+                   .IsRequired()
+                   .HasMaxLength(30)
+                   .IsUnicode(false)
+                   .HasColumnName("HESLO");
+
+                entity.Property(e => e.Permision)
+                    .IsRequired()
+                    .HasMaxLength(10)
+                    .IsUnicode(false)
+                    .HasColumnName("OPRAVNENI");
+
+                entity.Property(e => e.ID)
+                    .HasPrecision(6)
+                    .HasColumnName("ID_USER");
+            });
+
             modelBuilder.HasSequence("S_ADRESY");
 
             modelBuilder.HasSequence("S_KATEGORIE").IncrementsBy(10);
@@ -647,7 +678,10 @@ namespace BDAS2_SemPrace.Models
 
             modelBuilder.HasSequence("S_ZNACKY").IncrementsBy(10);
 
+            modelBuilder.HasSequence("S_USERS");
+
             OnModelCreatingPartial(modelBuilder);
+          
         }
 
         partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
