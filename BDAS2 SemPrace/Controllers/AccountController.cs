@@ -21,7 +21,7 @@ namespace BDAS2_SemPrace.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> SignIn([Bind("Password,Email")] User user)
+        public async Task<IActionResult> SignIn([Bind("Permission,Password,Email")]User user)
         {
             if (ModelState.IsValid)
             {

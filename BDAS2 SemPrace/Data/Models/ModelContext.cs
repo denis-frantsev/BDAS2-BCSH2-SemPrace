@@ -649,7 +649,7 @@ namespace BDAS2_SemPrace.Models
                    .IsUnicode(false)
                    .HasColumnName("HESLO");
 
-                entity.Property(e => e.Permision)
+                entity.Property(e => e.Permision.ToString())
                     .IsRequired()
                     .HasMaxLength(10)
                     .IsUnicode(false)
