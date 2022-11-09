@@ -7,7 +7,7 @@ namespace BDAS2_SemPrace.Models
     {
         public Prodeje()
         {
-            Polozkies = new HashSet<Polozky>();
+            Polozky = new HashSet<Polozky>();
         }
 
         public int CisloProdeje { get; set; }
@@ -16,6 +16,6 @@ namespace BDAS2_SemPrace.Models
         public int IdPlatba { get; set; }
 
         public virtual Platby IdPlatbaNavigation { get; set; }
-        public virtual ICollection<Polozky> Polozkies { get; set; }
+        public virtual ICollection<Polozky> Polozky { get; set; }
     }
 }

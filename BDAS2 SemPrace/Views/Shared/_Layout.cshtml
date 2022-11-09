@@ -21,7 +21,7 @@
         </button>
        
         <div class="navbar-collapse collapse" id="navbarsExample01" style="">
-        <ul class="navbar-nav me-auto mb-2">
+        <ul class="navbar-nav me-auto mb-2" style="text-align:left;">
             <li class="nav-item">
             <a class="nav-link active" aria-current="page" href="~/Home/Index"><i class="bi bi-house"></i>  Home</a>
             </li>
@@ -29,7 +29,7 @@
             <a class="nav-link active" aria-current="page" href="~/Zbozi/Index"><i class="bi bi-bag"></i>  Sortiment</a>
             </li
             <li class="nav-item">
-            <a class="nav-link active" aria-current="page" href="~/Home/SignIn"><i class="bi bi-person"></i>  Sign-In</a>
+            <a class="nav-link active" aria-current="page" href="~/Account/SignIn"><i class="bi bi-person"></i>  Sign-In</a>
             </li>
         </ul>
         </div>
@@ -37,9 +37,11 @@
   </nav>
   </header>
 
-  <div class="container mt-3">
-        @RenderBody()
+  <div>
+     @RenderBody()
   </div>
+   
+  
 
     <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>

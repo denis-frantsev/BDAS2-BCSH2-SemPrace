@@ -7,7 +7,7 @@ namespace BDAS2_SemPrace.Models
     {
         public Pulty()
         {
-            ZboziIdZbozis = new HashSet<Zbozi>();
+            ZboziIdZbozi = new HashSet<Zbozi>();
         }
 
         public decimal CisloPultu { get; set; }
@@ -17,6 +17,6 @@ namespace BDAS2_SemPrace.Models
         public virtual Supermarkety IdSupermarketNavigation { get; set; }
         public virtual NazvyPultu NazevNavigation { get; set; }
 
-        public virtual ICollection<Zbozi> ZboziIdZbozis { get; set; }
+        public virtual ICollection<Zbozi> ZboziIdZbozi { get; set; }
     }
 }

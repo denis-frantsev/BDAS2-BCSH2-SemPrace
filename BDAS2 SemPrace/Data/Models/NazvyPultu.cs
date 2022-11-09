@@ -7,12 +7,12 @@ namespace BDAS2_SemPrace.Models
     {
         public NazvyPultu()
         {
-            Pulties = new HashSet<Pulty>();
+            Pulty = new HashSet<Pulty>();
         }
 
         public string IdPult { get; set; }
         public string Nazev { get; set; }
 
-        public virtual ICollection<Pulty> Pulties { get; set; }
+        public virtual ICollection<Pulty> Pulty { get; set; }
     }
 }

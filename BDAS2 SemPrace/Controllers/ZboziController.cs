@@ -58,7 +58,7 @@ namespace BDAS2_SemPrace.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("IdZbozi,KodZbozi,NazevZbozi,IdKategorie,IdZnacka,Popis,Cena")] Zbozi zbozi)
+        public async Task<IActionResult> Create([Bind("IdZbozi,KodZbozi,NazevZbozi,IdKategorie,IdZnacka,Popis,Cena,Obrazek")] Zbozi zbozi)
         {
             if (ModelState.IsValid)
             {
@@ -94,7 +94,7 @@ namespace BDAS2_SemPrace.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(decimal id, [Bind("IdZbozi,KodZbozi,NazevZbozi,IdKategorie,IdZnacka,Popis,Cena")] Zbozi zbozi)
+        public async Task<IActionResult> Edit(decimal id, [Bind("IdZbozi,KodZbozi,NazevZbozi,IdKategorie,IdZnacka,Popis,Cena,Obrazek")] Zbozi zbozi)
         {
             if (id != zbozi.IdZbozi)
             {

@@ -15,7 +15,8 @@ namespace BDAS2_SemPrace.Models
             : base(options)
         {
         }
-
+        private User _user = new User() { Permision = Permision.GHOST };
+        public User User { get { return _user; } set { _user = value; } }
         public virtual DbSet<Adresy> Adresy { get; set; }
         public virtual DbSet<Kategorie> Kategorie { get; set; }
         public virtual DbSet<NazvyPultu> NazvyPultu { get; set; }
@@ -32,6 +33,9 @@ namespace BDAS2_SemPrace.Models
         public virtual DbSet<Zamestnanci> Zamestnanci { get; set; }
         public virtual DbSet<Zbozi> Zbozi { get; set; }
         public virtual DbSet<Znacky> Znacky { get; set; }
+        public virtual DbSet<User> Users { get; set; }
+        //public virtual DbSet<User> Uzivatele { get; set; }
+
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -216,13 +220,13 @@ namespace BDAS2_SemPrace.Models
                     .HasColumnName("MNOZSTVI");
 
                 entity.HasOne(d => d.CisloProdejeNavigation)
-                    .WithMany(p => p.Polozkies)
+                    .WithMany(p => p.Polozky)
                     .HasForeignKey(d => d.CisloProdeje)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("POLOZKA_PRODEJ_FK");
 
                 entity.HasOne(d => d.IdZboziNavigation)
-                    .WithMany(p => p.Polozkies)
+                    .WithMany(p => p.Polozky)
                     .HasForeignKey(d => d.IdZbozi)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("POLOZKY_ZBOZI_FK");
@@ -279,7 +283,7 @@ namespace BDAS2_SemPrace.Models
                     .HasColumnName("SUMA");
 
                 entity.HasOne(d => d.IdPlatbaNavigation)
-                    .WithMany(p => p.Prodejes)
+                    .WithMany(p => p.Prodeje)
                     .HasForeignKey(d => d.IdPlatba)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("PRODEJE_TYPY_PLATBY_FK");
@@ -313,7 +317,7 @@ namespace BDAS2_SemPrace.Models
                     .HasConstraintName("PULTY_SUPERMARKETY_FK");
 
                 entity.HasOne(d => d.NazevNavigation)
-                    .WithMany(p => p.Pulties)
+                    .WithMany(p => p.Pulty)
                     .HasForeignKey(d => d.Nazev)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("PULTY_NAZVY_PULTU_FK");
@@ -368,13 +372,13 @@ namespace BDAS2_SemPrace.Models
                     .HasColumnName("POCET");
 
                 entity.HasOne(d => d.SkladIdSkladNavigation)
-                    .WithMany(p => p.SkladyZbozis)
+                    .WithMany(p => p.SkladyZbozi)
                     .HasForeignKey(d => d.SkladIdSklad)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("SKLADY_ZBOZI_SKLADY_FK");
 
                 entity.HasOne(d => d.ZboziIdZboziNavigation)
-                    .WithMany(p => p.SkladyZbozis)
+                    .WithMany(p => p.SkladyZbozi)
                     .HasForeignKey(d => d.ZboziIdZbozi)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("SKLADY_ZBOZI_ZBOZI_FK");
@@ -517,7 +521,7 @@ namespace BDAS2_SemPrace.Models
                     .HasConstraintName("PRACOVNI_MISTO_FK");
 
                 entity.HasOne(d => d.IdSkladNavigation)
-                    .WithMany(p => p.Zamestnancis)
+                    .WithMany(p => p.Zamestnanci)
                     .HasForeignKey(d => d.IdSklad)
                     .HasConstraintName("SKLAD_FK");
 
@@ -570,20 +574,25 @@ namespace BDAS2_SemPrace.Models
                     .IsUnicode(false)
                     .HasColumnName("POPIS");
 
+                entity.Property(e => e.Obrazek)
+                    .HasMaxLength(200)
+                    .IsUnicode(false)
+                    .HasColumnName("OBRAZEK");
+
                 entity.HasOne(d => d.IdKategorieNavigation)
-                    .WithMany(p => p.Zbozis)
+                    .WithMany(p => p.Zbozi)
                     .HasForeignKey(d => d.IdKategorie)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("ZBOZI_KATEGORIE_FK");
 
                 entity.HasOne(d => d.IdZnackaNavigation)
-                    .WithMany(p => p.Zbozis)
+                    .WithMany(p => p.Zbozi)
                     .HasForeignKey(d => d.IdZnacka)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("ZBOZI_ZNACKA_FK");
 
-                entity.HasMany(d => d.Pults)
-                    .WithMany(p => p.ZboziIdZbozis)
+                entity.HasMany(d => d.Pulty)
+                    .WithMany(p => p.ZboziIdZbozi)
                     .UsingEntity<Dictionary<string, object>>(
                         "PultyZbozi",
                         l => l.HasOne<Pulty>().WithMany().HasForeignKey("PultCisloPultu", "PultIdSupermarket").OnDelete(DeleteBehavior.ClientSetNull).HasConstraintName("PULTY_ZBOZI_PULTY_FK"),
@@ -621,6 +630,36 @@ namespace BDAS2_SemPrace.Models
                     .HasColumnName("NAZEV");
             });
 
+            modelBuilder.Entity<User>(entity =>
+            {
+                entity.HasKey(e => e.Email).HasName("USERS_PK");
+                entity.HasIndex(e => e.ID,"USERS.UK1").IsUnique();
+
+                entity.ToTable("USERS");
+
+                entity.Property(e => e.Email)
+                    .IsRequired()
+                    .HasMaxLength(40)
+                    .IsUnicode(false)
+                    .HasColumnName("EMAIL");
+
+                entity.Property(e => e.Password)
+                   .IsRequired()
+                   .HasMaxLength(30)
+                   .IsUnicode(false)
+                   .HasColumnName("HESLO");
+
+                entity.Property(e => e.Permision)
+                    .IsRequired()
+                    .HasMaxLength(10)
+                    .IsUnicode(false)
+                    .HasColumnName("OPRAVNENI");
+
+                entity.Property(e => e.ID)
+                    .HasPrecision(6)
+                    .HasColumnName("ID_USER");
+            });
+
             modelBuilder.HasSequence("S_ADRESY");
 
             modelBuilder.HasSequence("S_KATEGORIE").IncrementsBy(10);
@@ -639,7 +678,10 @@ namespace BDAS2_SemPrace.Models
 
             modelBuilder.HasSequence("S_ZNACKY").IncrementsBy(10);
 
+            modelBuilder.HasSequence("S_USERS");
+
             OnModelCreatingPartial(modelBuilder);
+          
         }
 
         partial void OnModelCreatingPartial(ModelBuilder modelBuilder);

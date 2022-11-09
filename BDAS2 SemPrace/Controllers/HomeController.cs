@@ -21,15 +21,7 @@ namespace BDAS2_SemPrace.Controllers
             _context = context;
         }
 
-        public IActionResult Index()
-        {
-            return View();
-        }
-
-        public IActionResult SignIn()
-        {
-            return View();
-        }
+        public IActionResult Index(User user) { return View(user); }
 
         public async Task<IActionResult> Zbozi()
         {
