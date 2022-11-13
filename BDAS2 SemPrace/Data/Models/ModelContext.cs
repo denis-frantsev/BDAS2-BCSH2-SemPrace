@@ -15,8 +15,8 @@ namespace BDAS2_SemPrace.Models
             : base(options)
         {
         }
-        private User _user = new User() { Permision = Permision.GHOST };
-        public User User { get { return _user; } set { _user = value; } }
+        private static User _user = new() { Permision = Permision.GHOST };
+        public static User User { get { return _user; } set { _user = value; } }
         public virtual DbSet<Adresy> Adresy { get; set; }
         public virtual DbSet<Kategorie> Kategorie { get; set; }
         public virtual DbSet<NazvyPultu> NazvyPultu { get; set; }
@@ -649,13 +649,13 @@ namespace BDAS2_SemPrace.Models
                    .IsUnicode(false)
                    .HasColumnName("HESLO");
 
-                entity.Property(e => e.Permision.ToString())
+                entity.Property(e => e.Permision)
                     .IsRequired()
-                    .HasMaxLength(10)
-                    .IsUnicode(false)
+                    .HasPrecision(2)
                     .HasColumnName("OPRAVNENI");
 
                 entity.Property(e => e.ID)
+                    .ValueGeneratedOnAdd()
                     .HasPrecision(6)
                     .HasColumnName("ID_USER");
             });

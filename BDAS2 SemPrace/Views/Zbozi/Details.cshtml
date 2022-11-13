@@ -30,12 +30,15 @@
             <dd class="col-sm-10">
                 @Html.DisplayFor(model => model.NazevZbozi)
             </dd>
-            <dt class="col-sm-2">
+            @if(Model.Popis != null)
+            {
+                <dt class="col-sm-2">
                 @Html.DisplayNameFor(model => model.Popis)
-            </dt>
-            <dd class="col-sm-10">
+                </dt>
+                <dd class="col-sm-10">
                 @Html.DisplayFor(model => model.Popis)
-            </dd>
+                </dd>   
+            }
             <dt class="col-sm-2">
                 @Html.DisplayNameFor(model => model.Cena)
             </dt>
@@ -57,7 +60,10 @@
         </dl>
     </div>
     <div>
-        <a asp-action="Edit" asp-route-id="@Model?.IdZbozi">Edit</a> |
+        @if(ModelContext.User.Permision == Permision.ADMIN)
+        {
+            <a asp-action="Edit" asp-route-id="@Model?.IdZbozi">Edit</a> <i>|</i>
+        }
         <a asp-action="Index">Back to List</a>
     </div>
 </body>

@@ -23,6 +23,8 @@ namespace BDAS2_SemPrace.Controllers
 
         public IActionResult Index(User user) { return View(user); }
 
+        public IActionResult Data() { return View(); }
+
         public async Task<IActionResult> Zbozi()
         {
             var modelContext = _context.Zbozi.Include(z => z.IdKategorieNavigation).Include(z => z.IdZnackaNavigation);
