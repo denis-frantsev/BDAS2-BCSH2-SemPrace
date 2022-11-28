@@ -31,7 +31,7 @@
             <li class="nav-item">
             <a class="nav-link active" aria-current="page" href="~/Zbozi/Index"><i class="bi bi-bag"></i>  Sortiment</a>
             </li
-            @if (ModelContext.User.Permision == Permision.GHOST)
+            @if (ModelContext.User.Role == Role.GHOST)
             {
                 <li class="nav-item">
                 <a class="nav-link active" aria-current="page" href="~/Account/SignIn"><i class="bi bi-person"></i>  Sign-In</a>
@@ -42,7 +42,7 @@
                 <a class="nav-link active" aria-current="page" href="~/Account/MyAccount"><i class="bi bi-person"></i>  Můj účet</a>
                 </li>            
             }
-            @if(ModelContext.User.Permision == Permision.ADMIN)
+            @if(ModelContext.User.Role == Role.ADMIN)
             {
                 <li class="nav-item">
                 <a class="nav-link active" aria-current="page" href="~/Home/Data"><i class="bi bi-book"></i>  Data</a>

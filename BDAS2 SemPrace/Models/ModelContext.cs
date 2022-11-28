@@ -15,7 +15,7 @@ namespace BDAS2_SemPrace.Models
             : base(options)
         {
         }
-        private static User _user = new() { Permision = Permision.GHOST };
+        private static User _user = new() { Role = Role.GHOST };
         public static User User { get { return _user; } set { _user = value; } }
         public virtual DbSet<Adresy> Adresy { get; set; }
         public virtual DbSet<Kategorie> Kategorie { get; set; }
@@ -649,7 +649,7 @@ namespace BDAS2_SemPrace.Models
                    .IsUnicode(false)
                    .HasColumnName("HESLO");
 
-                entity.Property(e => e.Permision)
+                entity.Property(e => e.Role)
                     .IsRequired()
                     .HasPrecision(2)
                     .HasColumnName("OPRAVNENI");

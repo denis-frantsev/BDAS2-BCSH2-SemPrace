@@ -2,6 +2,8 @@
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Linq;
+using System.Security.Cryptography;
+using System.Text;
 using System.Threading.Tasks;
 
 namespace BDAS2_SemPrace.Controllers
@@ -30,10 +32,11 @@ namespace BDAS2_SemPrace.Controllers
                 {
                     if (UserWithEmailExists(user.Email))
                     {
-                        if (UserPasswordCorrect(user.Email, user.Password))
+                        var encodedPassword = MD5HashedPassword(user.Password);
+                        if (UserPasswordCorrect(user.Email, encodedPassword))
                         {
                             var dbUser = _context.Users.Find(user.Email);
-                            user.Permision = dbUser.Permision;
+                            user.Role = dbUser.Role;
                             user.ID = dbUser.ID;
                             ModelContext.User = user;
                             return RedirectToAction("Index", "Home");
@@ -51,7 +54,7 @@ namespace BDAS2_SemPrace.Controllers
                 }
                 catch (Exception)
                 {
-                    throw;
+                    return NotFound();
                 }
 
             }
@@ -76,7 +79,7 @@ namespace BDAS2_SemPrace.Controllers
                         ModelState.AddModelError("Email", "Uživatel s tímto emailem už existuje.");
                         return View();
                     }
-                    user.Permision = Permision.REGISTERED;
+                    user.Role = Role.REGISTERED;
                     _context.Add(user);
                     ModelContext.User = user;
                     await _context.SaveChangesAsync();
@@ -84,19 +87,28 @@ namespace BDAS2_SemPrace.Controllers
                 }
                 catch (Exception)
                 {
-                    throw;
+                    return NotFound();
                 }
 
             }
             return View();
         }
 
-        public IActionResult MyAccount() { return View(); }
-         
+        public IActionResult MyAccount()
+        {
+            var user = ModelContext.User;
+            if (user.Role == Role.GHOST)
+                return NotFound();
+            else if (user.Role == Role.REGISTERED)
+                return View("MyAccountCustomer", new UserCustomerViewModel(user, _context));
+            else
+                return View("MyAccountEmployee", new UserEmployeeViewModel(user, _context));
+        }
+
         public IActionResult LogOut()
         {
-            ModelContext.User = new() { Permision = Permision.GHOST };
-            return RedirectToAction("Index","Home");
+            ModelContext.User = new() { Role = Role.GHOST };
+            return RedirectToAction("Index", "Home");
         }
 
         private bool UserWithEmailExists(string email)
@@ -107,6 +119,17 @@ namespace BDAS2_SemPrace.Controllers
         private bool UserPasswordCorrect(string email, string password)
         {
             return _context.Users.Where(e => e.Password == password).Any(e => e.Email == email);
+        }
+
+        //metoda prevede zadane uzivatelem heslo do hashovane podoby
+        private string MD5HashedPassword(string password)
+        {
+            byte[] encodedPassword = new UTF8Encoding().GetBytes(password);
+            byte[] hash = ((HashAlgorithm)CryptoConfig.CreateFromName("MD5")).ComputeHash(encodedPassword);
+            string encoded = BitConverter.ToString(hash)
+           .Replace("-", string.Empty)
+           .ToLower();
+            return encoded;
         }
     }
 

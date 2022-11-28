@@ -60,7 +60,7 @@
         </dl>
     </div>
     <div>
-        @if(ModelContext.User.Permision == Permision.ADMIN)
+        @if(ModelContext.User.Role == Role.ADMIN)
         {
             <a asp-action="Edit" asp-route-id="@Model?.IdZbozi">Edit</a> <i>|</i>
         }

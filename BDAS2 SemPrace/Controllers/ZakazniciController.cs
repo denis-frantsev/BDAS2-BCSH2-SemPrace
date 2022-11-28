@@ -19,9 +19,17 @@ namespace BDAS2_SemPrace.Controllers
         }
 
         // GET: Zakaznici
-        public async Task<IActionResult> Index()
+        [HttpGet]
+        public IActionResult Index(string searchString)
         {
-              return View(await _context.Zakaznici.ToListAsync());
+            if (ModelContext.User.Role == Role.GHOST)
+                return NotFound();
+
+            var zakaznici = _context.Zakaznici.Select(s => s).ToList().Where(s => s == s);
+
+            if (!string.IsNullOrEmpty(searchString))
+                zakaznici = zakaznici.Where(s => s.FullName.Contains(searchString));
+            return View(zakaznici);
         }
 
         // GET: Zakaznici/Details/5

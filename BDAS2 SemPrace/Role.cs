@@ -1,6 +1,6 @@
 ﻿namespace BDAS2_SemPrace
 {
-    public enum Permision
+    public enum Role
     {
         ADMIN,
         GHOST,
