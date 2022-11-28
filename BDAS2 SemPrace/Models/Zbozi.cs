@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace BDAS2_SemPrace.Models
 {
@@ -12,8 +13,13 @@ namespace BDAS2_SemPrace.Models
             Pulty = new HashSet<Pulty>();
         }
 
+        [Display(Name = "ID")]
         public decimal IdZbozi { get; set; }
+
+        [Display(Name = "Kod zboží")]
         public short KodZbozi { get; set; }
+
+        [Display(Name = "Název zboží")]
         public string NazevZbozi { get; set; }
         public short IdKategorie { get; set; }
         public short IdZnacka { get; set; }
@@ -21,7 +27,10 @@ namespace BDAS2_SemPrace.Models
         public decimal Cena { get; set; }
         public string Obrazek { get; set; }
 
+        [Display(Name = "Kategorie")]
         public virtual Kategorie IdKategorieNavigation { get; set; }
+
+        [Display(Name = "Značka")]
         public virtual Znacky IdZnackaNavigation { get; set; }
         public virtual ICollection<Polozky> Polozky { get; set; }
         public virtual ICollection<SkladyZbozi> SkladyZbozi { get; set; }

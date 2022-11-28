@@ -1,7 +1,4 @@
 using BDAS2_SemPrace.Controllers;
-using BDAS2_SemPrace.Data;
-using BDAS2_SemPrace.Data.Interfaces;
-using BDAS2_SemPrace.Data.Mocks;
 using BDAS2_SemPrace.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;

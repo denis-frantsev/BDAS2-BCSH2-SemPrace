@@ -11,6 +11,7 @@ namespace BDAS2_SemPrace.Models
             Platby = new HashSet<Platby>();
         }
 
+
         [Display(Name = "ID")]
         public int IdZakaznik { get; set; }
 
@@ -19,6 +20,8 @@ namespace BDAS2_SemPrace.Models
 
         [Display(Name = "Příjmení")]
         public string Prijmeni { get; set; }
+
+        public string FullName => $"{Jmeno} {Prijmeni}";
 
         [Display(Name = "Telefonní číslo")]
         public decimal TelefonniCislo { get; set; }

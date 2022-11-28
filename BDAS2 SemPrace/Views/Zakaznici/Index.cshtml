@@ -18,10 +18,16 @@
         </button>
     </div>*@
 
-    <p>
-        <a class="btn btn-primary" asp-action="Create">Přidat Zákazníka</a>
-    </p>
+    <div class="container-fluid d-inline-flex p-2" style="justify-content:space-between">
+        <p>
+            <a class="btn btn-primary" asp-action="Create">Přidat Zákazníka</a>
+        </p>
 
+        <form asp-controller="Zakaznici" asp-action="Index" method="get" class="d-inline-flex p-2">
+                <input class="form-control mr-sm-2" type="text" name="SearchString" placeholder="Zadej jméno" aria-label="Search" style="margin-right:0.5rem;">
+                <button class="btn btn-outline-success my-2 my-sm-0" value="Filter" type="submit">Hledat</button>
+        </form>
+    </div>
     <table class="table">
         <thead>
             <tr>
