@@ -5,9 +5,9 @@ namespace BDAS2_SemPrace.Models
 {
     public partial class SkladyZbozi
     {
-        public decimal SkladIdSklad { get; set; }
-        public decimal ZboziIdZbozi { get; set; }
-        public decimal Pocet { get; set; }
+        public int SkladIdSklad { get; set; }
+        public int ZboziIdZbozi { get; set; }
+        public int Pocet { get; set; }
 
         public virtual Sklady SkladIdSkladNavigation { get; set; }
         public virtual Zbozi ZboziIdZboziNavigation { get; set; }

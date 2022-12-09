@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace BDAS2_SemPrace.Models
 {
@@ -7,20 +8,23 @@ namespace BDAS2_SemPrace.Models
     {
         public Supermarkety()
         {
-            Platbies = new HashSet<Platby>();
-            Pokladnies = new HashSet<Pokladny>();
-            Pulties = new HashSet<Pulty>();
-            Zamestnancis = new HashSet<Zamestnanci>();
+            Platby = new HashSet<Platby>();
+            Pokladny = new HashSet<Pokladny>();
+            Pulty = new HashSet<Pulty>();
+            Zamestnanci = new HashSet<Zamestnanci>();
         }
 
-        public decimal IdSupermarket { get; set; }
-        public string Nazev { get; set; }
-        public short IdAdresa { get; set; }
+        public int IdSupermarket { get; set; }
 
+        [Display(Name = "Název")]
+        public string Nazev { get; set; }
+        public int IdAdresa { get; set; }
+
+        [Display(Name = "Adresa")]
         public virtual Adresy IdAdresaNavigation { get; set; }
-        public virtual ICollection<Platby> Platbies { get; set; }
-        public virtual ICollection<Pokladny> Pokladnies { get; set; }
-        public virtual ICollection<Pulty> Pulties { get; set; }
-        public virtual ICollection<Zamestnanci> Zamestnancis { get; set; }
+        public virtual ICollection<Platby> Platby { get; set; }
+        public virtual ICollection<Pokladny> Pokladny { get; set; }
+        public virtual ICollection<Pulty> Pulty { get; set; }
+        public virtual ICollection<Zamestnanci> Zamestnanci { get; set; }
     }
 }

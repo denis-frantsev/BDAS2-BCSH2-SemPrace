@@ -26,9 +26,9 @@ namespace BDAS2_SemPrace.Controllers
         }
 
         // GET: Sklady/Details/5
-        public async Task<IActionResult> Details(decimal? id)
+        public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.Sklady == null)
+            if (id == null || _context.Sklady == null || !ModelContext.HasAdminRights())
             {
                 return NotFound();
             }
@@ -47,20 +47,21 @@ namespace BDAS2_SemPrace.Controllers
         // GET: Sklady/Create
         public IActionResult Create()
         {
+            if (!ModelContext.HasAdminRights())
+                return NotFound();
             ViewData["IdAdresa"] = new SelectList(_context.Adresy, "IdAdresa", "Mesto");
             return View();
         }
 
         // POST: Sklady/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("IdSklad,Nazev,IdAdresa")] Sklady sklady)
+        public async Task<IActionResult> Create([Bind("Nazev,IdAdresaNavigation")] Sklady sklady)
         {
             if (ModelState.IsValid)
             {
                 _context.Add(sklady);
+                _context.Add(sklady.IdAdresaNavigation);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
@@ -69,9 +70,9 @@ namespace BDAS2_SemPrace.Controllers
         }
 
         // GET: Sklady/Edit/5
-        public async Task<IActionResult> Edit(decimal? id)
+        public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.Sklady == null)
+            if (id == null || _context.Sklady == null || !ModelContext.HasAdminRights())
             {
                 return NotFound();
             }
@@ -86,11 +87,9 @@ namespace BDAS2_SemPrace.Controllers
         }
 
         // POST: Sklady/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(decimal id, [Bind("IdSklad,Nazev,IdAdresa")] Sklady sklady)
+        public async Task<IActionResult> Edit(int id, [Bind("IdSklad,Nazev,IdAdresa")] Sklady sklady)
         {
             if (id != sklady.IdSklad)
             {
@@ -122,9 +121,9 @@ namespace BDAS2_SemPrace.Controllers
         }
 
         // GET: Sklady/Delete/5
-        public async Task<IActionResult> Delete(decimal? id)
+        public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.Sklady == null)
+            if (id == null || _context.Sklady == null || !ModelContext.HasAdminRights())
             {
                 return NotFound();
             }
@@ -143,7 +142,7 @@ namespace BDAS2_SemPrace.Controllers
         // POST: Sklady/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(decimal id)
+        public async Task<IActionResult> DeleteConfirmed(int id)
         {
             if (_context.Sklady == null)
             {

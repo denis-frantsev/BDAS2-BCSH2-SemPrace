@@ -3,40 +3,40 @@
 @{
     ViewData["Title"] = "Create";
 }
+<div class="container-mt3" style="margin:2rem;">
 
-<h1>Create</h1>
-
-<h4>Prodeje</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Suma" class="control-label"></label>
-                <input asp-for="Suma" class="form-control" />
-                <span asp-validation-for="Suma" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Datum" class="control-label"></label>
-                <input asp-for="Datum" class="form-control" />
-                <span asp-validation-for="Datum" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="IdPlatba" class="control-label"></label>
-                <select asp-for="IdPlatba" class ="form-control" asp-items="ViewBag.IdPlatba"></select>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
+    <h1>Přidat prodej</h1>
+    <hr />
+    <div class="row">
+        <div class="col-md-4">
+            <form asp-action="Create">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <div class="form-group">
+                    <label asp-for="Suma" class="control-label"></label>
+                    <input asp-for="Suma" class="form-control" />
+                    <span asp-validation-for="Suma" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Datum" class="control-label"></label>
+                    <input asp-for="Datum" class="form-control" />
+                    <span asp-validation-for="Datum" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="IdPlatba" class="control-label"></label>
+                    <select asp-for="IdPlatba" class ="form-control" asp-items="ViewBag.IdPlatba"></select>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Create" class="btn btn-primary" />
+                </div>
+            </form>
+        </div>
     </div>
-</div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+    <div>
+        <a asp-action="Index">Zpět do seznamu</a>
+    </div>
 
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}
+    @section Scripts {
+        @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    }
+</div>

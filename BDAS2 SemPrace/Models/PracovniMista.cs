@@ -10,7 +10,7 @@ namespace BDAS2_SemPrace.Models
             Zamestnanci = new HashSet<Zamestnanci>();
         }
 
-        public decimal IdMisto { get; set; }
+        public int IdMisto { get; set; }
         public string Nazev { get; set; }
         public string Popis { get; set; }
         public int MinPlat { get; set; }

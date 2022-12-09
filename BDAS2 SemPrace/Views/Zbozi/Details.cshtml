@@ -1,4 +1,6 @@
-﻿@model BDAS2_SemPrace.Models.Zbozi
+﻿@using BDAS2_SemPrace
+@using BDAS2_SemPrace.Models
+@model BDAS2_SemPrace.Models.Zbozi
 
 @{
     ViewData["Title"] = "Details";
@@ -18,12 +20,12 @@
     <div>
         <hr />
         <dl class="row">
-           @* <dt class="col-sm-2">
+            <dt class="col-sm-2">
                 @Html.DisplayNameFor(model => model.KodZbozi)
             </dt>
             <dd class="col-sm-10">
                 @Html.DisplayFor(model => model.KodZbozi)
-            </dd>*@
+            </dd>
             <dt class="col-sm-2">
                 @Html.DisplayNameFor(model => model.NazevZbozi)
             </dt>

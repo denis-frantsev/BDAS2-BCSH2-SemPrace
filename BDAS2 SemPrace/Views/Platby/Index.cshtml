@@ -3,63 +3,65 @@
 @{
     ViewData["Title"] = "Index";
 }
+<div class="container-mt3" style="margin:2rem;">
 
-<h1>Index</h1>
+    <h1>Seznam plateb</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Datum)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Castka)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Typ)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CisloKarty)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IdSupermarketNavigation)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IdZakaznikNavigation)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Datum)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Castka)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Typ)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.CisloKarty)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IdSupermarketNavigation.Nazev)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IdZakaznikNavigation.Jmeno)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.IdPlatba">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.IdPlatba">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.IdPlatba">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Datum)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Castka)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Typ)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.CisloKarty)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.IdSupermarketNavigation)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.IdZakaznikNavigation)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Datum)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Castka)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Typ)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CisloKarty)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.IdSupermarketNavigation.Nazev)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.IdZakaznikNavigation.Jmeno) 
+                        @Html.DisplayFor(modelItem => item.IdZakaznikNavigation.Prijmeni) <br/>
+                        @Html.DisplayFor(modelItem => item.IdZakaznikNavigation.Email)
+                    </td>
+                    <td>
+                       <a class="btn btn-outline-secondary" asp-action="Edit" asp-route-id="@item.IdPlatba">Upravit</a> |
+                       <a class="btn btn-outline-secondary" asp-action="Details" asp-route-id="@item.IdPlatba">Podrobnosti</a> |
+                       <a class="btn btn-outline-danger" asp-action="Delete" asp-route-id="@item.IdPlatba">Smazat</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

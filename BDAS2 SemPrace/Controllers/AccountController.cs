@@ -1,5 +1,6 @@
 ﻿using BDAS2_SemPrace.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Linq;
 using System.Security.Cryptography;
@@ -108,6 +109,12 @@ namespace BDAS2_SemPrace.Controllers
         public IActionResult LogOut()
         {
             ModelContext.User = new() { Role = Role.GHOST };
+            return RedirectToAction("Index", "Home");
+        }
+
+        public async Task<IActionResult> Emulate(string email) {
+
+            ModelContext.User = await _context.Users.FindAsync(email);
             return RedirectToAction("Index", "Home");
         }
 

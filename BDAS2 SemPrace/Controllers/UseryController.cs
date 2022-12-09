@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using BDAS2_SemPrace.Models;
+using Oracle.ManagedDataAccess.Client;
 
 namespace BDAS2_SemPrace.Controllers
 {
@@ -21,13 +22,23 @@ namespace BDAS2_SemPrace.Controllers
         // GET: Usery
         public async Task<IActionResult> Index()
         {
-              return View(await _context.Users.ToListAsync());
+            var users = await _context.Users.ToListAsync();
+            users.ForEach(async u => {
+                if (_context.Zamestnanci.Any(z=>z.Email == u.Email)) {
+                    u.ZamestnanecNav = await _context.Zamestnanci.FirstOrDefaultAsync(z=> z.Email == u.Email);
+                }
+                else
+                {
+                    u.ZakaznikNav = await _context.Zakaznici.FirstOrDefaultAsync(z => z.Email == u.Email);
+                }
+            });
+            return View(users);
         }
 
         // GET: Usery/Details/5
         public async Task<IActionResult> Details(string id)
         {
-            if (id == null || _context.Users == null)
+            if (id == null || _context.Users == null || !ModelContext.HasAdminRights())
             {
                 return NotFound();
             }
@@ -42,32 +53,10 @@ namespace BDAS2_SemPrace.Controllers
             return View(user);
         }
 
-        // GET: Usery/Create
-        public IActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: Usery/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("Permision,Password,Email,ID")] User user)
-        {
-            if (ModelState.IsValid)
-            {
-                _context.Add(user);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            return View(user);
-        }
-
         // GET: Usery/Edit/5
         public async Task<IActionResult> Edit(string id)
         {
-            if (id == null || _context.Users == null)
+            if (id == null || _context.Users == null || !ModelContext.HasAdminRights())
             {
                 return NotFound();
             }
@@ -81,8 +70,6 @@ namespace BDAS2_SemPrace.Controllers
         }
 
         // POST: Usery/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(string id, [Bind("Permision,Password,Email,ID")] User user)
@@ -118,7 +105,7 @@ namespace BDAS2_SemPrace.Controllers
         // GET: Usery/Delete/5
         public async Task<IActionResult> Delete(string id)
         {
-            if (id == null || _context.Users == null)
+            if (id == null || _context.Users == null || !ModelContext.HasAdminRights())
             {
                 return NotFound();
             }
@@ -145,9 +132,10 @@ namespace BDAS2_SemPrace.Controllers
             var user = await _context.Users.FindAsync(id);
             if (user != null)
             {
-                _context.Users.Remove(user);
+                OracleParameter p_id = new OracleParameter() { ParameterName = "p_id", Direction = System.Data.ParameterDirection.Input, OracleDbType = OracleDbType.Varchar2, Value = id, };
+                await _context.Database.ExecuteSqlRawAsync("BEGIN DELETE_USER(:p_id); END;", p_id);
             }
-            
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }

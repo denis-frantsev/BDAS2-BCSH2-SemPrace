@@ -3,47 +3,52 @@
 @{
     ViewData["Title"] = "Edit";
 }
+<div class="container-mt3" style="margin:2rem;">
 
-<h1>Editace</h1>
+    <h1>Editace</h1>
 
-<h4>Zákazníci</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="IdZakaznik" />
-            <div class="form-group">
-                <label asp-for="Jmeno" class="control-label"></label>
-                <input asp-for="Jmeno" class="form-control" />
-                <span asp-validation-for="Jmeno" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Prijmeni" class="control-label"></label>
-                <input asp-for="Prijmeni" class="form-control" />
-                <span asp-validation-for="Prijmeni" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="TelefonniCislo" class="control-label"></label>
-                <input asp-for="TelefonniCislo" class="form-control" />
-                <span asp-validation-for="TelefonniCislo" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Email" class="control-label"></label>
-                <input asp-for="Email" class="form-control" />
-                <span asp-validation-for="Email" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Uložit" class="btn btn-primary" />
-            </div>
-        </form>
+    <h4>Zákazníci</h4>
+    <hr />
+    <div class="row">
+        <div class="col-md-4">
+            <form asp-action="Edit">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="IdZakaznik" />
+                <div class="form-group">
+                    <label asp-for="Jmeno" class="control-label"></label>
+                    <input asp-for="Jmeno" class="form-control" />
+                    <span asp-validation-for="Jmeno" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Prijmeni" class="control-label"></label>
+                    <input asp-for="Prijmeni" class="form-control" />
+                    <span asp-validation-for="Prijmeni" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="TelefonniCislo" class="control-label"></label>
+                    <input asp-for="TelefonniCislo" class="form-control" />
+                    <span asp-validation-for="TelefonniCislo" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="Email" class="control-label"></label>
+                    <input asp-for="Email" class="form-control" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Uložit" class="btn btn-primary" />
+                </div>
+            </form>
+        </div>
     </div>
-</div>
+    
+    @if (ModelContext.HasAdminRights())
+    {
+        <div>
+            <a asp-action="Index">Zpět do seznamu</a>
+        </div> 
+    }
 
-<div>
-    <a asp-action="Index">Zpět do seznamu</a>
+    @section Scripts {
+        @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    }
 </div>
-
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}

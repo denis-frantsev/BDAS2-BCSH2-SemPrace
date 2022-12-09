@@ -26,9 +26,9 @@ namespace BDAS2_SemPrace.Controllers
         }
 
         // GET: Zbozi/Details/5
-        public async Task<IActionResult> Details(decimal? id)
+        public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.Zbozi == null)
+            if (id == null || _context.Zbozi == null || !ModelContext.HasAdminRights())
             {
                 return NotFound();
             }
@@ -48,14 +48,14 @@ namespace BDAS2_SemPrace.Controllers
         // GET: Zbozi/Create
         public IActionResult Create()
         {
+            if (!ModelContext.HasAdminRights())
+                return NotFound();
             ViewData["IdKategorie"] = new SelectList(_context.Kategorie, "IdKategorie", "Nazev");
             ViewData["IdZnacka"] = new SelectList(_context.Znacky, "IdZnacka", "Nazev");
             return View();
         }
 
         // POST: Zbozi/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("IdZbozi,KodZbozi,NazevZbozi,IdKategorie,IdZnacka,Popis,Cena,Obrazek")] Zbozi zbozi)
@@ -72,9 +72,9 @@ namespace BDAS2_SemPrace.Controllers
         }
 
         // GET: Zbozi/Edit/5
-        public async Task<IActionResult> Edit(decimal? id)
+        public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.Zbozi == null)
+            if (id == null || _context.Zbozi == null || !ModelContext.HasAdminRights())
             {
                 return NotFound();
             }
@@ -90,11 +90,9 @@ namespace BDAS2_SemPrace.Controllers
         }
 
         // POST: Zbozi/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(decimal id, [Bind("IdZbozi,KodZbozi,NazevZbozi,IdKategorie,IdZnacka,Popis,Cena,Obrazek")] Zbozi zbozi)
+        public async Task<IActionResult> Edit(int id, [Bind("IdZbozi,KodZbozi,NazevZbozi,IdKategorie,IdZnacka,Popis,Cena,Obrazek")] Zbozi zbozi)
         {
             if (id != zbozi.IdZbozi)
             {
@@ -127,9 +125,9 @@ namespace BDAS2_SemPrace.Controllers
         }
 
         // GET: Zbozi/Delete/5
-        public async Task<IActionResult> Delete(decimal? id)
+        public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.Zbozi == null)
+            if (id == null || _context.Zbozi == null || !ModelContext.HasAdminRights())
             {
                 return NotFound();
             }
@@ -149,7 +147,7 @@ namespace BDAS2_SemPrace.Controllers
         // POST: Zbozi/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(decimal id)
+        public async Task<IActionResult> DeleteConfirmed(int id)
         {
             if (_context.Zbozi == null)
             {
@@ -165,7 +163,7 @@ namespace BDAS2_SemPrace.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private bool ZboziExists(decimal id)
+        private bool ZboziExists(int id)
         {
           return _context.Zbozi.Any(e => e.IdZbozi == id);
         }

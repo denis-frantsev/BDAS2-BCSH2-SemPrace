@@ -8,16 +8,6 @@
 
     <h1>Seznam zákazníků</h1>
 
-@*    <div class="input-group">
-        <div class="form-outline">
-        <input id="search-focus" type="search" id="form1" class="form-control" />
-        <label class="form-label" for="form1">Search</label>
-        </div>
-        <button type="button" class="btn btn-primary">
-        <i class="fas fa-search"></i>
-        </button>
-    </div>*@
-
     <div class="container-fluid d-inline-flex p-2" style="justify-content:space-between">
         <p>
             <a class="btn btn-primary" asp-action="Create">Přidat Zákazníka</a>
@@ -57,7 +47,7 @@
                         @Html.DisplayFor(modelItem => item.Prijmeni)
                         </td>
                         <td>
-                        @Html.DisplayFor(modelItem => item.TelefonniCislo)
+                        +420<span>@Html.DisplayFor(modelItem => item.TelefonniCislo)</span>
                         </td>
                         <td>
                         @Html.DisplayFor(modelItem => item.Email)

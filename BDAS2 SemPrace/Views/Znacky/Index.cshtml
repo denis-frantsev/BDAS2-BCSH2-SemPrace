@@ -3,33 +3,34 @@
 @{
     ViewData["Title"] = "Index";
 }
+<div class="container-mt3" style="margin:2rem;">
+    <h1>Seznam značek</h1>
 
-<h1>Index</h1>
-
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Nazev)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Nazev)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.IdZnacka">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.IdZnacka">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.IdZnacka">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+    <p>
+        <a class="btn btn-primary" asp-action="Create">Přidat značku</a>
+    </p>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Nazev)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+    @foreach (var item in Model) {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Nazev)
+                </td>
+                <td>
+                   <a class="btn btn-outline-secondary" asp-action="Edit" asp-route-id="@item.IdZnacka">Upravit</a> |
+                   <a class="btn btn-outline-secondary" asp-action="Details" asp-route-id="@item.IdZnacka">Podrobnosti</a> |
+                   <a class="btn btn-outline-danger" asp-action="Delete" asp-route-id="@item.IdZnacka">Smazat</a>
+                </td>
+            </tr>
+    }
+        </tbody>
+    </table>
+<div/>

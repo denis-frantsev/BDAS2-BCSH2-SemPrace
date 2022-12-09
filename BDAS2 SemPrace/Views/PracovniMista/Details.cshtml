@@ -3,34 +3,36 @@
 @{
     ViewData["Title"] = "Details";
 }
+<div class="container-mt3" style="margin:2rem;">
 
-<h1>Details</h1>
+    <h1>Details</h1>
 
-<div>
-    <h4>PracovniMista</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Nazev)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Nazev)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Popis)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Popis)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.MinPlat)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.MinPlat)
-        </dd>
-    </dl>
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.IdMisto">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+    <div>
+        <h4>PracovniMista</h4>
+        <hr />
+        <dl class="row">
+            <dt class = "col-sm-2">
+                @Html.DisplayNameFor(model => model.Nazev)
+            </dt>
+            <dd class = "col-sm-10">
+                @Html.DisplayFor(model => model.Nazev)
+            </dd>
+            <dt class = "col-sm-2">
+                @Html.DisplayNameFor(model => model.Popis)
+            </dt>
+            <dd class = "col-sm-10">
+                @Html.DisplayFor(model => model.Popis)
+            </dd>
+            <dt class = "col-sm-2">
+                @Html.DisplayNameFor(model => model.MinPlat)
+            </dt>
+            <dd class = "col-sm-10">
+                @Html.DisplayFor(model => model.MinPlat)
+            </dd>
+        </dl>
+    </div>
+    <div>
+        <a asp-action="Edit" asp-route-id="@Model?.IdMisto">Edit</a> |
+        <a asp-action="Index">Back to List</a>
+    </div>
 </div>

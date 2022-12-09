@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using BDAS2_SemPrace.Models;
+using Oracle.ManagedDataAccess.Client;
 
 namespace BDAS2_SemPrace.Controllers
 {
@@ -27,11 +28,10 @@ namespace BDAS2_SemPrace.Controllers
         // GET: Adresy/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.Adresy == null)
+            if (id == null || _context.Adresy == null || !ModelContext.HasAdminRights())
             {
                 return NotFound();
             }
-
             var adresy = await _context.Adresy
                 .FirstOrDefaultAsync(m => m.IdAdresa == id);
             if (adresy == null)
@@ -45,12 +45,13 @@ namespace BDAS2_SemPrace.Controllers
         // GET: Adresy/Create
         public IActionResult Create()
         {
+            if (!ModelContext.HasAdminRights())
+                return NotFound();
+
             return View();
         }
 
         // POST: Adresy/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("IdAdresa,Ulice,Mesto,Psc")] Adresy adresy)
@@ -67,7 +68,7 @@ namespace BDAS2_SemPrace.Controllers
         // GET: Adresy/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.Adresy == null)
+            if (id == null || _context.Adresy == null || !ModelContext.HasAdminRights())
             {
                 return NotFound();
             }
@@ -81,8 +82,6 @@ namespace BDAS2_SemPrace.Controllers
         }
 
         // POST: Adresy/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("IdAdresa,Ulice,Mesto,Psc")] Adresy adresy)
@@ -101,7 +100,7 @@ namespace BDAS2_SemPrace.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!AdresyExists(adresy.IdAdresa))
+                    if (!AdresyExists((int)adresy.IdAdresa))
                     {
                         return NotFound();
                     }
@@ -118,7 +117,7 @@ namespace BDAS2_SemPrace.Controllers
         // GET: Adresy/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.Adresy == null)
+            if (id == null || _context.Adresy == null || !ModelContext.HasAdminRights())
             {
                 return NotFound();
             }

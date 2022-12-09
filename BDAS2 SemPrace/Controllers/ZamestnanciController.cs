@@ -19,14 +19,32 @@ namespace BDAS2_SemPrace.Controllers
         }
 
         // GET: Zamestnanci
-        public async Task<IActionResult> Index()
+        [HttpGet]
+        public IActionResult Index(int? manazer, int? misto, int? sklad, int? supermarket, string searchString)
         {
-            var modelContext = _context.Zamestnanci.Include(z => z.IdManazerNavigation).Include(z => z.IdMistoNavigation).Include(z => z.IdSkladNavigation).Include(z => z.IdSupermarketNavigation);
-            return View(await modelContext.ToListAsync());
+            var zamestnanci = _context.Zamestnanci.Include(z => z.IdManazerNavigation).Include(z => z.IdMistoNavigation).Include(z => z.IdSkladNavigation).Include(z => z.IdSupermarketNavigation).Select(s => s).ToList().Where(s => s == s);
+            ViewBag.manazer = new SelectList(_context.Zamestnanci.Where(m => m.IdManazer == null), "IdZamestnanec", "Email");
+            ViewBag.misto = new SelectList(_context.PracovniMista, "IdMisto", "Nazev");
+            ViewBag.supermarket = new SelectList(_context.Supermarkety, "IdSupermarket", "Nazev");
+            ViewBag.sklad = new SelectList(_context.Sklady, "IdSklad", "Nazev");
+
+            if (!string.IsNullOrEmpty(searchString))
+                zamestnanci = zamestnanci.Where(s => s.FullName.ToLower().Contains(searchString.ToLower()));
+            if (supermarket != null)
+                zamestnanci = zamestnanci.Where(x => x.IdSupermarketNavigation != null && x.IdSupermarket == supermarket);
+            if (manazer != null)
+                zamestnanci = zamestnanci.Where(x => x.IdManazerNavigation != null && x.IdManazer == manazer);
+            if (misto != null)
+                zamestnanci = zamestnanci.Where(x => x.IdMisto == misto);
+            if (sklad != null)
+                zamestnanci = zamestnanci.Where(x => x.IdSklad != null && x.IdSklad == sklad);
+            
+            //var modelContext = _context.Zamestnanci.Include(z => z.IdManazerNavigation).Include(z => z.IdMistoNavigation).Include(z => z.IdSkladNavigation).Include(z => z.IdSupermarketNavigation);
+            return View(zamestnanci);
         }
 
         // GET: Zamestnanci/Details/5
-        public async Task<IActionResult> Details(decimal? id)
+        public async Task<IActionResult> Details(int? id)
         {
             if (id == null || _context.Zamestnanci == null)
             {
@@ -50,6 +68,8 @@ namespace BDAS2_SemPrace.Controllers
         // GET: Zamestnanci/Create
         public IActionResult Create()
         {
+            if (!ModelContext.HasAdminRights())
+                return NotFound();
             ViewData["IdManazer"] = new SelectList(_context.Zamestnanci, "IdZamestnanec", "Email");
             ViewData["IdMisto"] = new SelectList(_context.PracovniMista, "IdMisto", "Nazev");
             ViewData["IdSklad"] = new SelectList(_context.Sklady, "IdSklad", "Nazev");
@@ -58,12 +78,17 @@ namespace BDAS2_SemPrace.Controllers
         }
 
         // POST: Zamestnanci/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("IdZamestnanec,Jmeno,Prijmeni,TelefonniCislo,Email,Mzda,IdSupermarket,IdManazer,IdMisto,IdSklad")] Zamestnanci zamestnanci)
         {
+            if (zamestnanci.IdSklad == 0)
+                zamestnanci.IdSklad = null;
+            if (zamestnanci.IdSupermarket == 0)
+                zamestnanci.IdSupermarket = null;
+            if (zamestnanci.IdManazer == 0)
+                zamestnanci.IdManazer = null;
+
             if (ModelState.IsValid)
             {
                 _context.Add(zamestnanci);
@@ -78,9 +103,9 @@ namespace BDAS2_SemPrace.Controllers
         }
 
         // GET: Zamestnanci/Edit/5
-        public async Task<IActionResult> Edit(decimal? id)
+        public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.Zamestnanci == null)
+            if (id == null || _context.Zamestnanci == null || !ModelContext.HasAdminRights())
             {
                 return NotFound();
             }
@@ -98,16 +123,21 @@ namespace BDAS2_SemPrace.Controllers
         }
 
         // POST: Zamestnanci/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(decimal id, [Bind("IdZamestnanec,Jmeno,Prijmeni,TelefonniCislo,Email,Mzda,IdSupermarket,IdManazer,IdMisto,IdSklad")] Zamestnanci zamestnanci)
+        public async Task<IActionResult> Edit(int id, [Bind("IdZamestnanec,Jmeno,Prijmeni,TelefonniCislo,Email,Mzda,IdSupermarket,IdManazer,IdMisto,IdSklad")] Zamestnanci zamestnanci)
         {
             if (id != zamestnanci.IdZamestnanec)
             {
                 return NotFound();
             }
+
+            if (zamestnanci.IdSklad == 0)
+                zamestnanci.IdSklad = null;
+            if (zamestnanci.IdSupermarket == 0)
+                zamestnanci.IdSupermarket = null;
+            if(zamestnanci.IdManazer == 0)
+                zamestnanci.IdManazer = null;
 
             if (ModelState.IsValid)
             {
@@ -137,9 +167,9 @@ namespace BDAS2_SemPrace.Controllers
         }
 
         // GET: Zamestnanci/Delete/5
-        public async Task<IActionResult> Delete(decimal? id)
+        public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.Zamestnanci == null)
+            if (id == null || _context.Zamestnanci == null || !ModelContext.HasAdminRights())
             {
                 return NotFound();
             }
@@ -161,7 +191,7 @@ namespace BDAS2_SemPrace.Controllers
         // POST: Zamestnanci/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(decimal id)
+        public async Task<IActionResult> DeleteConfirmed(int id)
         {
             if (_context.Zamestnanci == null)
             {
@@ -172,14 +202,14 @@ namespace BDAS2_SemPrace.Controllers
             {
                 _context.Zamestnanci.Remove(zamestnanci);
             }
-            
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool ZamestnanciExists(decimal id)
+        private bool ZamestnanciExists(int id)
         {
-          return _context.Zamestnanci.Any(e => e.IdZamestnanec == id);
+            return _context.Zamestnanci.Any(e => e.IdZamestnanec == id);
         }
     }
 }

@@ -3,39 +3,42 @@
 @{
     ViewData["Title"] = "Index";
 }
+<div class="container-mt3" style="margin:2rem;">
 
-<h1>Index</h1>
+    <h1>Seznam skladů</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Nazev)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IdAdresaNavigation)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Nazev)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IdAdresaNavigation.Mesto)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.IdSklad">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.IdSklad">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.IdSklad">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+    <p>
+        <a class="btn btn-primary" asp-action="Create">Přidat sklad</a>
+    </p>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Nazev)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.IdAdresaNavigation)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+    @foreach (var item in Model) {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Nazev)
+                </td>
+                <td>
+                    @{var adresa = item.IdAdresaNavigation.ToString();}
+                    @Html.DisplayFor(modelItem => adresa)
+                </td>
+                <td>
+                    <a class="btn btn-outline-secondary" asp-action="Edit" asp-route-id="@item.IdSklad">Upravit</a> |
+                    <a class="btn btn-outline-secondary" asp-action="Details" asp-route-id="@item.IdSklad">Podrobnosti</a> |
+                    <a class="btn btn-outline-danger" asp-action="Delete" asp-route-id="@item.IdSklad">Smazat</a> 
+                </td>
+            </tr>
+    }
+        </tbody>
+    </table>
+</div>

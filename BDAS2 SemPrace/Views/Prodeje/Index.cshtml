@@ -4,44 +4,45 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<div class="container-mt3" style="margin:2rem;">
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Suma)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Datum)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IdPlatbaNavigation)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Suma)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Datum)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IdPlatbaNavigation.Typ)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.CisloProdeje">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.CisloProdeje">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.CisloProdeje">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+    <h1>Seznam prodejů</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Suma)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Datum)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.IdPlatbaNavigation)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Suma)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Datum)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.IdPlatbaNavigation.Typ)
+                    </td>
+                    <td>
+                        <a class="btn btn-outline-secondary" asp-action="Edit" asp-route-id="@item.CisloProdeje">Upravit</a> |
+                        <a class="btn btn-outline-secondary" asp-action="Details" asp-route-id="@item.CisloProdeje">Podrobnosti</a> |
+                        <a class="btn btn-outline-danger" asp-action="Delete" asp-route-id="@item.CisloProdeje">Smazat</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>
