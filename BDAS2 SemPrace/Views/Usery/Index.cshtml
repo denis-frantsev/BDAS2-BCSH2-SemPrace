@@ -63,7 +63,7 @@
                         <label class="control-label">@role</label>
                     </td>
                     <td>
-                        <a class="btn btn-outline-primary" asp-controller="Account" asp-action="Emulate" asp-route-email="@item.Email">Emulovat</a> |
+                        <a class="btn btn-outline-primary" asp-controller="Account" asp-action="Emulate" asp-route-email="@item.Email">Emulovat</a>                        
                         <a class="btn btn-outline-secondary" asp-action="Edit" asp-route-id="@item.Email">Upravit</a> |
                         <a class="btn btn-outline-warning" asp-action="Details" asp-route-id="@item.Email">Podrobnosti</a> |
                         <a class="btn btn-outline-danger" asp-action="Delete" asp-route-id="@item.Email">Smazat</a> 
@@ -72,4 +72,5 @@
             }
         </tbody>
     </table>
+
 </div>

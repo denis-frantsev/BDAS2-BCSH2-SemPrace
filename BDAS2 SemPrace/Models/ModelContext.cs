@@ -1,5 +1,6 @@
 ﻿using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
+using BDAS2_SemPrace.Models;
 namespace BDAS2_SemPrace.Models
 {
     public partial class ModelContext : DbContext
@@ -31,6 +32,7 @@ namespace BDAS2_SemPrace.Models
         public virtual DbSet<Zbozi> Zbozi { get; set; }
         public virtual DbSet<Znacky> Znacky { get; set; }
         public virtual DbSet<User> Users { get; set; }
+        public virtual DbSet<Obrazky> Obrazky { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -629,36 +631,61 @@ namespace BDAS2_SemPrace.Models
 
             modelBuilder.Entity<User>(entity =>
             {
-                entity.HasKey(e => e.Email).HasName("USERS_PK");
-                entity.HasIndex(e => e.ID, "USERS.UK1").IsUnique();
+                entity.HasKey(e => e.Email)
+                    .HasName("USERS_PK");
 
                 entity.ToTable("USERS");
 
+                entity.HasIndex(e => e.Email, "USERS_UK1")
+                    .IsUnique();
+
                 entity.Property(e => e.Email)
-                    .IsRequired()
                     .HasMaxLength(40)
                     .IsUnicode(false)
                     .HasColumnName("EMAIL");
 
                 entity.Property(e => e.Password)
-                   .IsRequired()
-                   .HasMaxLength(30)
-                   .IsUnicode(false)
-                   .HasColumnName("HESLO");
+                    .IsRequired()
+                    .HasMaxLength(256)
+                    .IsUnicode(false)
+                    .HasColumnName("HESLO");
+
+                entity.Property(e => e.IdObrazek)
+                    .HasPrecision(6)
+                    .HasColumnName("ID_OBRAZEK");
 
                 entity.Property(e => e.Role)
-                    .IsRequired()
                     .HasPrecision(2)
                     .HasColumnName("OPRAVNENI");
 
-                entity.Property(e => e.ID)
-                    .ValueGeneratedOnAdd()
-                    .HasPrecision(6)
-                    .HasColumnName("ID_USER");
+                entity.HasOne(d => d.IdObrazekNavigation)
+                    .WithMany(p => p.Users)
+                    .HasForeignKey(d => d.IdObrazek)
+                    .OnDelete(DeleteBehavior.SetNull)
+                    .HasConstraintName("USERS_FK");
+            });
 
-                entity.Property(p => p.Obrazek)
-                    .HasColumnName("OBRAZEK")
-                    .HasColumnType("BLOB");
+            modelBuilder.Entity<Obrazky>(entity =>
+            {
+                entity.HasKey(e => e.IdObrazek)
+                    .HasName("OBRAZKY_PK");
+
+                entity.ToTable("OBRAZKY");
+
+                entity.Property(e => e.IdObrazek)
+                    .HasPrecision(6)
+                    .ValueGeneratedNever()
+                    .HasColumnName("ID_OBRAZEK");
+
+                entity.Property(e => e.Data)
+                    .IsRequired()
+                    .HasColumnType("BLOB")
+                    .HasColumnName("DATA");
+
+                entity.Property(e => e.Popis)
+                    .HasMaxLength(30)
+                    .IsUnicode(false)
+                    .HasColumnName("POPIS");
             });
 
             modelBuilder.HasSequence("S_ADRESY");
@@ -681,6 +708,8 @@ namespace BDAS2_SemPrace.Models
 
             modelBuilder.HasSequence("S_USERS");
 
+            modelBuilder.HasSequence("S_OBRAZKY");
+
             OnModelCreatingPartial(modelBuilder);
 
         }
@@ -690,5 +719,6 @@ namespace BDAS2_SemPrace.Models
         public static bool HasAdminRights() => User.Role == Role.ADMIN;
 
         public bool IsUser(int? id) => User.Email == Zakaznici.Find(id).Email; 
+
     }
 }

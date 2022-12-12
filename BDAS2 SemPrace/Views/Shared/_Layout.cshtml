@@ -16,7 +16,10 @@
     <div class="container-fluid">
         <div class="container-fluid navbar-top">
             <a href="~/Home/Index"><img class="navbar-brand"style="height: contain; width: contain; display: block; width:40px; padding:0;" src="https://upload.wikimedia.org/wikipedia/commons/thumb/9/91/Lidl-Logo.svg/1200px-Lidl-Logo.svg.png" data-holder-rendered="true"></a>
-
+            @if (ModelContext.User.IsEmulated)
+            {
+                  <a asp-controller="Account" asp-action="StopEmulating" class="nav-link active" aria-current="page"><i class="bi bi-x-circle"></i>Ukončit emulaci</a>
+            }
             <button class="navbar-toggler collapsed bg-transparent" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsExample01" aria-controls="navbarsExample01" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon bg-transparent"></span>
             </button>

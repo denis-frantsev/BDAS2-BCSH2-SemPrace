@@ -1,6 +1,6 @@
 ﻿@model BDAS2_SemPrace.Models.UserEmployeeViewModel
 @{
-    ViewData["Title"] = "Account";
+    ViewData["Title"] = "Profil";
 }
 
 
@@ -12,9 +12,18 @@
         <div class="col-lg-4">
           <div class="card mb-4">
             <div class="card-body text-center">
-              <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava3.webp" alt="avatar" class="rounded-circle img-fluid" style="width: 150px;">
-              <h5 class="my-3">@Model.FullName</h5>
-                    <p class="text-muted mb-1">@Model.Pozice</p>
+                <a href="~/Account/AddProfilePic">
+                    @if (Model.ProfilePic != null)
+                    {
+                        <img src="/Account/RetrieveImage/@Model.ProfilePic.IdObrazek" alt="avatar" class="rounded-circle img-fluid" style="width: 150px; height: 150px; object-fit: cover;">
+                    }
+                    else
+                    {
+                            <img src="https://cdn2.iconfinder.com/data/icons/instagram-ui/48/jee-74-512.png" alt="avatar" class="rounded-circle img-fluid" style="width: 150px; height: 150px; object-fit: cover;">
+                    }
+                </a>
+                <h5 class="my-3">@Model.FullName</h5>
+                <p class="text-muted mb-1">@Model.Pozice</p>
               <div class="d-flex justify-content-center mb-2" style="margin-top:1rem;">
                   <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#exampleModal">
                     Odhlásit se

@@ -1,0 +1,23 @@
+﻿@{
+    ViewData["Title"] = "Přidat profilový obrázek";
+}
+
+
+<body class="text-center">
+    <div class="form-floating col-md-4" style="margin: 0 auto; margin-top:13rem; margin-bottom:12rem">
+        <form asp-action="AddProfilePic" asp-controller="Account" method="post" enctype="multipart/form-data">
+            <div class="custom-file">
+                <label class="control-label">Přidat/změnit obrázek</label>
+                <input type="file" class="form-control custom-file-input" id="validatedCustomFile" name="image">
+            </div>
+            <div class="form-group">
+                <input asp-page-handler="Upload" type="submit" value="Přidat" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+
+</body>
+
+    @section Scripts {
+        @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    }

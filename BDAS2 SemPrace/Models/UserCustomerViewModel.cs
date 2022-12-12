@@ -8,11 +8,13 @@ namespace BDAS2_SemPrace.Models
     {
         private User _user;
         private Zakaznici _zakaznik;
+        private Obrazky _obrazek;
         public UserCustomerViewModel(User user, ModelContext context)
         {
             _user = user;
             _zakaznik = context.Zakaznici.Single(s => s.Email == _user.Email);
             Platby = context.Platby.Where(p => p.IdZakaznik == _zakaznik.IdZakaznik);
+            _obrazek = context.Obrazky.Find(user.IdObrazek);
         }
 
         public int ID => _zakaznik.IdZakaznik;
@@ -58,6 +60,16 @@ namespace BDAS2_SemPrace.Models
         public IEnumerable<Platby> Platby
         {
             get;
+        }
+
+        public Obrazky ProfilePic
+        {
+            get
+            {
+                if (_obrazek != null)
+                    return _obrazek;
+                else return null;
+            }
         }
     }
 }

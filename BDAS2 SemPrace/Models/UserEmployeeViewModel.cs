@@ -10,12 +10,14 @@ namespace BDAS2_SemPrace.Models
         private Zamestnanci _zamestnanec;
         private string _pozice;
         private ModelContext _context;
+        private Obrazky _obrazek;
         public UserEmployeeViewModel(User user, ModelContext context)
         {
             _context = context;
             _user = user;
             _zamestnanec = context.Zamestnanci.Single(s => s.Email == user.Email);
-            _pozice = context.PracovniMista.Single(s => s.IdMisto == _zamestnanec.IdMisto).Nazev;
+            _pozice = context.PracovniMista.Find(_zamestnanec.IdMisto).Nazev;
+            _obrazek = context.Obrazky.Find(user.IdObrazek);
         }
 
         public int ID => _zamestnanec.IdZamestnanec;
@@ -61,6 +63,16 @@ namespace BDAS2_SemPrace.Models
         public string Pozice
         {
             get => _pozice;
+        }
+
+        public Obrazky ProfilePic
+        {
+            get
+            {
+                if (_obrazek != null)
+                    return _obrazek;
+                else return null;
+            }
         }
     }
 }

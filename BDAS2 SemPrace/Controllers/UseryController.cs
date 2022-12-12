@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using BDAS2_SemPrace.Models;
 using Oracle.ManagedDataAccess.Client;
+using Microsoft.AspNetCore.Http;
+using System.IO;
 
 namespace BDAS2_SemPrace.Controllers
 {
@@ -72,7 +74,7 @@ namespace BDAS2_SemPrace.Controllers
         // POST: Usery/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(string id, [Bind("Permision,Password,Email,ID")] User user)
+        public async Task<IActionResult> Edit(string id, [Bind("Role,Password,Email,ProfilePic")] User user, IFormFile file)
         {
             if (id != user.Email)
             {
@@ -83,7 +85,17 @@ namespace BDAS2_SemPrace.Controllers
             {
                 try
                 {
+                    IFormFile image = user.ProfilePic;
+                    if (image != null)
+                    {
+                        using var stream = new MemoryStream();
+                        await image.CopyToAsync(stream);
+                        user.IdObrazekNavigation.Data = stream.ToArray();
+                        user.IdObrazekNavigation.Popis = "Profilový obrázek";
+                        await _context.Obrazky.AddAsync(user.IdObrazekNavigation);
+                    }
                     _context.Update(user);
+
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)

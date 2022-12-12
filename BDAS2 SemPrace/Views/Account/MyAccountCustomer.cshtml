@@ -1,6 +1,6 @@
 ﻿@model BDAS2_SemPrace.Models.UserCustomerViewModel
 @{
-    ViewData["Title"] = "Account";
+    ViewData["Title"] = "Profil";
 }
 
 
@@ -12,7 +12,18 @@
         <div class="col-lg-4">
           <div class="card mb-4">
             <div class="card-body text-center">
-              <img src="https://mdbcdn.b-cdn.net/img/Photos/new-templates/bootstrap-chat/ava4.webp" alt="avatar" class="rounded-circle img-fluid" style="width: 150px;">
+              <div >
+                <a href="~/Account/AddProfilePic">
+                    @if (Model.ProfilePic != null)
+                    {
+                        <img src="/Account/RetrieveImage/@Model.ProfilePic.IdObrazek" alt="avatar" class="rounded-circle img-fluid" style="width: 150px; height: 150px; object-fit: cover;">
+                    }
+                    else
+                    {
+                            <img src="https://cdn2.iconfinder.com/data/icons/instagram-ui/48/jee-74-512.png" alt="avatar" class="rounded-circle img-fluid" style="width: 150px; height: 150px; object-fit: cover;">
+                    }
+                </a>
+              </div>
               <h5 class="my-3">@Model.FullName</h5>
               <div class="d-flex justify-content-center mb-2" style="margin-top:1rem;">
                 <a asp-controller="Zakaznici" asp-action="Edit" asp-route-id="@Model.ID" class="btn btn-primary" style="margin-right:0.5rem;">Upravit údaje</a>
