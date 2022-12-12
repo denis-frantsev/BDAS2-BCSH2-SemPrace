@@ -1,0 +1,65 @@
+﻿@model IEnumerable<BDAS2_SemPrace.Models.Zbozi>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.KodZbozi)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.NazevZbozi)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Popis)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Cena)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Obrazek)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IdKategorieNavigation)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.IdZnackaNavigation)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.KodZbozi)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.NazevZbozi)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Popis)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Cena)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Obrazek)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IdKategorieNavigation.Nazev)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.IdZnackaNavigation.Nazev)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.IdZbozi">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.IdZbozi">Details</a> |
+                <a asp-action="Delete" asp-route-id="@item.IdZbozi">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

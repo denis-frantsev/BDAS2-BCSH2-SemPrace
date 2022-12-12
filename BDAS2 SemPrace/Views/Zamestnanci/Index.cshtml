@@ -3,81 +3,101 @@
 @{
     ViewData["Title"] = "Index";
 }
+<div class="container-mt3" style="margin:2rem;">
 
-<h1>Index</h1>
+    <h1>Seznam zaměstnanců</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Jmeno)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Prijmeni)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.TelefonniCislo)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Email)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Mzda)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IdManazerNavigation)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IdMistoNavigation)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IdSkladNavigation)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.IdSupermarketNavigation)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Jmeno)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Prijmeni)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.TelefonniCislo)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Email)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Mzda)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IdManazerNavigation.Email)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IdMistoNavigation.Nazev)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IdSkladNavigation.Nazev)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.IdSupermarketNavigation.Nazev)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.IdZamestnanec">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.IdZamestnanec">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.IdZamestnanec">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+    <div class="container-fluid d-inline-flex p-2" style="justify-content:space-between">
+        <p>
+            <a class="btn btn-primary" asp-action="Create" style="margin-top:1rem;">Přidat zaměstnance</a>
+        </p>
+        
+        <form asp-controller="Zamestnanci" asp-action="Index" method="get" class="d-inline-flex p-2">
+                @Html.DropDownList("manazer",@ViewBag.manazer,"Manažer", new { @class = "form-control form-select mr-sm-2", @style="margin-right:0.5rem;" })
+                @Html.DropDownList("misto",@ViewBag.misto,"Pozice", new { @class = "form-control form-select mr-sm-2", @style="margin-right:0.5rem;" })
+                @Html.DropDownList("sklad",@ViewBag.sklad,"Sklad", new { @class = "form-control form-select mr-sm-2", @style="margin-right:0.5rem;" })
+                @Html.DropDownList("supermarket",@ViewBag.supermarket,"Pobočka", new { @class = "form-control form-select mr-sm-2", @style="margin-right:0.5rem;" })
+                <input class="form-control mr-sm-2" type="text" name="SearchString" placeholder="Zadej jméno" aria-label="Search" style="margin-right:0.5rem;">
+                <button class="btn btn-outline-success my-2 my-sm-0" value="Filter" type="submit" style="margin:0.5rem;">Filtruj</button>
+        </form>
+    </div>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Jmeno)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Prijmeni)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.TelefonniCislo)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Email)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Mzda)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.IdManazerNavigation)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.IdMistoNavigation)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.IdSkladNavigation)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.IdSupermarketNavigation)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Jmeno)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Prijmeni)
+                    </td>
+                    <td>
+                        +420
+                        @Html.DisplayFor(modelItem => item.TelefonniCislo)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Email)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Mzda)
+                    </td>
+                    <td>
+                        @{
+                            var fullName = "Nemá";
+                            if (item.IdManazerNavigation != null)
+                                fullName = $"{item.IdManazerNavigation.Jmeno} {item.IdManazerNavigation.Prijmeni}";
+                        }
+                        @Html.DisplayFor(modelItem => fullName)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.IdMistoNavigation.Nazev)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.IdSkladNavigation.Nazev)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.IdSupermarketNavigation.Nazev)
+                    </td>
+                    <td>
+                        <a class="btn btn-outline-secondary btn-sm" asp-action="Edit" asp-route-id="@item.IdZamestnanec">Upravit</a> |
+                        <a class="btn btn-outline-secondary btn-sm" asp-action="Details" asp-route-id="@item.IdZamestnanec">Podrobnosti</a> |
+                        <a class="btn btn-outline-danger btn-sm" asp-action="Delete" asp-route-id="@item.IdZamestnanec">Smazat</a> 
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

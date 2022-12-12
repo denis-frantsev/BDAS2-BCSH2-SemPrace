@@ -14,7 +14,7 @@ namespace BDAS2_SemPrace.Models
         }
 
         [Display(Name = "ID")]
-        public decimal IdZbozi { get; set; }
+        public int IdZbozi { get; set; }
 
         [Display(Name = "Kod zboží")]
         public short KodZbozi { get; set; }
@@ -24,7 +24,10 @@ namespace BDAS2_SemPrace.Models
         public short IdKategorie { get; set; }
         public short IdZnacka { get; set; }
         public string Popis { get; set; }
-        public decimal Cena { get; set; }
+        public int Cena { get; set; }
+
+        [Display(Name = "Obrázek")]
+        //[RegularExpression(@"^(http|https|ftp|)\://|[a-zA-Z0-9\-\.]+\.[a-zA-Z](:[a-zA-Z0-9]*)?/?([a-zA-Z0-9\-\._\?\,\'/\\\+&amp;%\$#\=~])*[^\.\,\)\(\s]", ErrorMessage ="Špatný format URL")]
         public string Obrazek { get; set; }
 
         [Display(Name = "Kategorie")]
@@ -34,7 +37,6 @@ namespace BDAS2_SemPrace.Models
         public virtual Znacky IdZnackaNavigation { get; set; }
         public virtual ICollection<Polozky> Polozky { get; set; }
         public virtual ICollection<SkladyZbozi> SkladyZbozi { get; set; }
-
         public virtual ICollection<Pulty> Pulty { get; set; }
     }
 }

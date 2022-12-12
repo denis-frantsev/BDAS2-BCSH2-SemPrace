@@ -9,7 +9,6 @@ using System;
 var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddDbContext<ModelContext>(options =>
     options.UseOracle(builder.Configuration.GetConnectionString("SemPrace") ?? throw new InvalidOperationException("Connection string 'SemPrace' not found.")));
-
 // Add services to the container.
 builder.Services.AddControllersWithViews();
 

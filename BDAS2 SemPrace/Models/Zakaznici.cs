@@ -15,7 +15,7 @@ namespace BDAS2_SemPrace.Models
         [Display(Name = "ID")]
         public int IdZakaznik { get; set; }
 
-        [Display(Name = "Zákazník")]
+        [Display(Name = "Jméno")]
         public string Jmeno { get; set; }
 
         [Display(Name = "Příjmení")]
@@ -24,7 +24,7 @@ namespace BDAS2_SemPrace.Models
         public string FullName => $"{Jmeno} {Prijmeni}";
 
         [Display(Name = "Telefonní číslo")]
-        public decimal TelefonniCislo { get; set; }
+        public int TelefonniCislo { get; set; }
 
         [Display(Name = "E-mail")]
         public string Email { get; set; }

@@ -1,41 +1,54 @@
-﻿@model IEnumerable<BDAS2_SemPrace.Models.Pulty>
+﻿@using Microsoft.AspNetCore.Routing
+@model IEnumerable<BDAS2_SemPrace.Models.Pulty>
 
 @{
     ViewData["Title"] = "Index";
 }
+<div class="container-mt3" style="margin:2rem;">
 
-<h1>Index</h1>
+    <h1>Index</h1>
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.IdSupermarketNavigation)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.NazevNavigation)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.IdSupermarketNavigation.Nazev)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.NazevNavigation.IdPult)
-            </td>
-            <td>
-                @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+    <p>
+        <a class="btn btn-primary" asp-action="Create">Přidat pult</a>
+    </p>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.CisloPultu)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.IdSupermarketNavigation)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.NazevNavigation)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                    <tr>
+                        <td>
+                        @{
+                            var cisloPultu = (int)item.CisloPultu;
+                        }
+                        @Html.DisplayFor(modelItem => cisloPultu)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.IdSupermarketNavigation.Nazev)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.NazevNavigation.Nazev)
+                    </td>
+                    <td>
+                        <a class="btn btn-outline-secondary" asp-action="Edit" asp-route-cisloPultu="@item.CisloPultu" asp-route-supermarketId="@item.IdSupermarket">Upravit</a> |
+                        <a class="btn btn-outline-secondary" asp-action="Details" asp-route-cisloPultu="@item.CisloPultu" asp-route-supermarketId="@item.IdSupermarket">Podrobnosti</a> |
+                        <a class="btn btn-outline-danger" asp-action="Delete" asp-route-cisloPultu="@item.CisloPultu" asp-route-supermarketId="@item.IdSupermarket">Smazat</a> 
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

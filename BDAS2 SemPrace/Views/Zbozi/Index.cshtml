@@ -1,4 +1,5 @@
-﻿@model IEnumerable<BDAS2_SemPrace.Models.Zbozi>
+﻿@using BDAS2_SemPrace.Models
+@model IEnumerable<BDAS2_SemPrace.Models.Zbozi>
 
 @{
     ViewData["Title"] = "Index";
@@ -16,6 +17,13 @@
     <div class="container mt-2"> 
     <h1>Náš sortiment</h1>
 
+    @if (ModelContext.User.Role == BDAS2_SemPrace.Role.ADMIN)
+    {
+        <p>
+            <a class="btn btn-primary" asp-action="Create">Přidat zboží</a>
+        </p>
+    }
+
     <div class="card-deck" style=" display: grid;
     grid-template-columns: 1fr 1fr 1fr;
     gap: 10px 2em;">
@@ -30,7 +38,7 @@
                         @{
                             if (item.Popis != "")
                             {
-                            <p>@Html.DisplayFor(modelItem => item.Popis)</p>
+                                <p>@Html.DisplayFor(modelItem => item.Popis)</p>
                             }
                         }
                     </p>

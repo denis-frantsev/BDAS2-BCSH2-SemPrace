@@ -31,7 +31,7 @@ namespace BDAS2_SemPrace.Controllers
         // GET: Polozky/Details/5
         public async Task<IActionResult> Details(string id)
         {
-            if (id == null || _context.Polozky == null)
+            if (id == null || _context.Polozky == null || !ModelContext.HasAdminRights())
             {
                 return NotFound();
             }
@@ -51,14 +51,14 @@ namespace BDAS2_SemPrace.Controllers
         // GET: Polozky/Create
         public IActionResult Create()
         {
+            if (!ModelContext.HasAdminRights())
+                return NotFound();
             ViewData["CisloProdeje"] = new SelectList(_context.Prodeje, "CisloProdeje", "CisloProdeje");
             ViewData["IdZbozi"] = new SelectList(_context.Zbozi, "IdZbozi", "NazevZbozi");
             return View();
         }
 
         // POST: Polozky/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("IdZbozi,NazevZbozi,Mnozstvi,CisloProdeje")] Polozky polozky)
@@ -77,7 +77,7 @@ namespace BDAS2_SemPrace.Controllers
         // GET: Polozky/Edit/5
         public async Task<IActionResult> Edit(string id)
         {
-            if (id == null || _context.Polozky == null)
+            if (id == null || _context.Polozky == null || !ModelContext.HasAdminRights())
             {
                 return NotFound();
             }
@@ -93,8 +93,6 @@ namespace BDAS2_SemPrace.Controllers
         }
 
         // POST: Polozky/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(string id, [Bind("IdZbozi,NazevZbozi,Mnozstvi,CisloProdeje")] Polozky polozky)
@@ -132,7 +130,7 @@ namespace BDAS2_SemPrace.Controllers
         // GET: Polozky/Delete/5
         public async Task<IActionResult> Delete(string id)
         {
-            if (id == null || _context.Polozky == null)
+            if (id == null || _context.Polozky == null || !ModelContext.HasAdminRights())
             {
                 return NotFound();
             }

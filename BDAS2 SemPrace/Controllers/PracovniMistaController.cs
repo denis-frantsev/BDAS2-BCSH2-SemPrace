@@ -28,9 +28,9 @@ namespace BDAS2_SemPrace.Controllers
         }
 
         // GET: PracovniMista/Details/5
-        public async Task<IActionResult> Details(decimal? id)
+        public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.PracovniMista == null)
+            if (id == null || _context.PracovniMista == null || !ModelContext.HasAdminRights())
             {
                 return NotFound();
             }
@@ -48,12 +48,12 @@ namespace BDAS2_SemPrace.Controllers
         // GET: PracovniMista/Create
         public IActionResult Create()
         {
+            if (!ModelContext.HasAdminRights())
+                return NotFound();
             return View();
         }
 
         // POST: PracovniMista/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("IdMisto,Nazev,Popis,MinPlat")] PracovniMista pracovniMista)
@@ -68,9 +68,9 @@ namespace BDAS2_SemPrace.Controllers
         }
 
         // GET: PracovniMista/Edit/5
-        public async Task<IActionResult> Edit(decimal? id)
+        public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.PracovniMista == null)
+            if (id == null || _context.PracovniMista == null || !ModelContext.HasAdminRights())
             {
                 return NotFound();
             }
@@ -84,11 +84,9 @@ namespace BDAS2_SemPrace.Controllers
         }
 
         // POST: PracovniMista/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(decimal id, [Bind("IdMisto,Nazev,Popis,MinPlat")] PracovniMista pracovniMista)
+        public async Task<IActionResult> Edit(int id, [Bind("IdMisto,Nazev,Popis,MinPlat")] PracovniMista pracovniMista)
         {
             if (id != pracovniMista.IdMisto)
             {
@@ -119,9 +117,9 @@ namespace BDAS2_SemPrace.Controllers
         }
 
         // GET: PracovniMista/Delete/5
-        public async Task<IActionResult> Delete(decimal? id)
+        public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.PracovniMista == null)
+            if (id == null || _context.PracovniMista == null || !ModelContext.HasAdminRights())
             {
                 return NotFound();
             }
@@ -139,7 +137,7 @@ namespace BDAS2_SemPrace.Controllers
         // POST: PracovniMista/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(decimal id)
+        public async Task<IActionResult> DeleteConfirmed(int id)
         {
             if (_context.PracovniMista == null)
             {
@@ -155,7 +153,7 @@ namespace BDAS2_SemPrace.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private bool PracovniMistaExists(decimal id)
+        private bool PracovniMistaExists(int id)
         {
           return _context.PracovniMista.Any(e => e.IdMisto == id);
         }

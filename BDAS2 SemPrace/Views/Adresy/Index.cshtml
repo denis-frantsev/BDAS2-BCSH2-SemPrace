@@ -3,45 +3,46 @@
 @{
     ViewData["Title"] = "Index";
 }
+<div class="container-mt3" style="margin:2rem;">
 
-<h1>Index</h1>
-
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.Ulice)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Mesto)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Psc)
-            </th>
-            <th></th>
-        </tr>
-    </thead>
-    <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Ulice)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Mesto)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Psc)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.IdAdresa">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.IdAdresa">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.IdAdresa">Delete</a>
-            </td>
-        </tr>
-}
-    </tbody>
-</table>
+    <p>
+        <a class="btn btn-primary" asp-action="Create">Přidat adresu</a>
+    </p>
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Ulice)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Mesto)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Psc)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Ulice)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Mesto)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Psc)
+                    </td>
+                    <td>
+                        <a class="btn btn-outline-secondary" asp-action="Edit" asp-route-id="@item.IdAdresa">Upravit</a> |
+                       <a class="btn btn-outline-secondary" asp-action="Details" asp-route-id="@item.IdAdresa">Podrobnosti</a> |
+                       <a class="btn btn-outline-danger" asp-action="Delete" asp-route-id="@item.IdAdresa">Smazat</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+</div>

@@ -3,34 +3,59 @@
 @{
     ViewData["Title"] = "Details";
 }
+<div class="container-mt3" style="margin:2rem;">
+    <div>
+        <h4>Prodej</h4>
+        <hr />
+        <dl class="row">
+            <dt class = "col-sm-2">
+                @Html.DisplayNameFor(model => model.Suma)
+            </dt>
+            <dd class = "col-sm-10">
+                @Html.DisplayFor(model => model.Suma)
+            </dd>
+            <dt class = "col-sm-2">
+                @Html.DisplayNameFor(model => model.Datum)
+            </dt>
+            <dd class = "col-sm-10">
+                @Html.DisplayFor(model => model.Datum)
+            </dd>
+            <dt class = "col-sm-2">
+                @Html.DisplayNameFor(model => model.IdPlatbaNavigation)
+            </dt>
+            <dd class = "col-sm-10">
+                @Html.DisplayFor(model => model.IdPlatbaNavigation.Typ)
+            </dd>
+        </dl>
 
-<h1>Details</h1>
-
-<div>
-    <h4>Prodeje</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Suma)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Suma)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Datum)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Datum)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.IdPlatbaNavigation)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.IdPlatbaNavigation.Typ)
-        </dd>
-    </dl>
-</div>
-<div>
-    <a asp-action="Edit" asp-route-id="@Model?.CisloProdeje">Edit</a> |
-    <a asp-action="Index">Back to List</a>
+        <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => Model.Polozky.ToList()[0].NazevZbozi)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model =>  Model.Polozky.ToList()[0].Mnozstvi)
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model.Polozky)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.NazevZbozi)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Mnozstvi)
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    </div>
+    <div>
+        <a asp-action="Edit" asp-route-id="@Model?.CisloProdeje">Upravit</a> |
+        <a asp-action="Index">Zpět do seznamu</a>
+    </div>
 </div>

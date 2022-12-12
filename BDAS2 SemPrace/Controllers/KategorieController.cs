@@ -30,7 +30,7 @@ namespace BDAS2_SemPrace.Controllers
         // GET: Kategorie/Details/5
         public async Task<IActionResult> Details(short? id)
         {
-            if (id == null || _context.Kategorie == null)
+            if (id == null || _context.Kategorie == null || !ModelContext.HasAdminRights())
             {
                 return NotFound();
             }
@@ -48,12 +48,12 @@ namespace BDAS2_SemPrace.Controllers
         // GET: Kategorie/Create
         public IActionResult Create()
         {
+            if (!ModelContext.HasAdminRights())
+                return NotFound();
             return View();
         }
 
         // POST: Kategorie/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("IdKategorie,Nazev,Popis")] Kategorie kategorie)
@@ -70,7 +70,7 @@ namespace BDAS2_SemPrace.Controllers
         // GET: Kategorie/Edit/5
         public async Task<IActionResult> Edit(short? id)
         {
-            if (id == null || _context.Kategorie == null)
+            if (id == null || _context.Kategorie == null || !ModelContext.HasAdminRights())
             {
                 return NotFound();
             }
@@ -84,8 +84,6 @@ namespace BDAS2_SemPrace.Controllers
         }
 
         // POST: Kategorie/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(short id, [Bind("IdKategorie,Nazev,Popis")] Kategorie kategorie)
@@ -121,7 +119,7 @@ namespace BDAS2_SemPrace.Controllers
         // GET: Kategorie/Delete/5
         public async Task<IActionResult> Delete(short? id)
         {
-            if (id == null || _context.Kategorie == null)
+            if (id == null || _context.Kategorie == null || !ModelContext.HasAdminRights())
             {
                 return NotFound();
             }
@@ -145,6 +143,7 @@ namespace BDAS2_SemPrace.Controllers
             {
                 return Problem("Entity set 'ModelContext.Kategorie'  is null.");
             }
+
             var kategorie = await _context.Kategorie.FindAsync(id);
             if (kategorie != null)
             {

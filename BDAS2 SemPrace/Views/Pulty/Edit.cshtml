@@ -3,33 +3,40 @@
 @{
     ViewData["Title"] = "Edit";
 }
+<div class="container-mt3" style="margin:2rem;">
 
-<h1>Edit</h1>
+    <h1>Upravit</h1>
 
-<h4>Pulty</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Edit">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <input type="hidden" asp-for="CisloPultu" />
-            <input type="hidden" asp-for="IdSupermarket" />
-            <div class="form-group">
-                <label asp-for="Nazev" class="control-label"></label>
-                <select asp-for="Nazev" class="form-control" asp-items="ViewBag.Nazev"></select>
-                <span asp-validation-for="Nazev" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
-            </div>
-        </form>
+    <h4>Pult</h4>
+    <hr />
+    <div class="row">
+        <div class="col-md-4">
+            <form asp-action="Edit">
+                <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+                <input type="hidden" asp-for="CisloPultu" />
+                <input type="hidden" asp-for="IdSupermarket" />
+                <div class="form-group">
+                    <label asp-for="Nazev" class="control-label"></label>
+                    <select asp-for="Nazev" class="form-control" asp-items="ViewBag.Nazev"></select>
+                    <span asp-validation-for="Nazev" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="IdSupermarket" class="control-label"></label>
+                    <select asp-for="IdSupermarket" class="form-control" asp-items="ViewBag.IdSupermarket"></select>
+                    <span asp-validation-for="IdSupermarket" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <input type="submit" value="Save" class="btn btn-primary" />
+                </div>
+            </form>
+        </div>
     </div>
-</div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+    <div>
+        <a asp-action="Index">Back to List</a>
+    </div>
 
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}
+    @section Scripts {
+        @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    }
+</div>

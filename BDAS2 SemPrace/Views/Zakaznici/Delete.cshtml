@@ -3,43 +3,45 @@
 @{
     ViewData["Title"] = "Delete";
 }
+<div class="container-mt3" style="margin:2rem;">
 
-<h1>Mazání</h1>
+    <h1>Mazání</h1>
 
-<h3>Opravdu chcete smazat tento záznam?</h3>
-<div>
-    <h4>Zákazníci</h4>
-    <hr />
-    <dl class="row">
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Jmeno)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Jmeno)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Prijmeni)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Prijmeni)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.TelefonniCislo)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.TelefonniCislo)
-        </dd>
-        <dt class = "col-sm-2">
-            @Html.DisplayNameFor(model => model.Email)
-        </dt>
-        <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Email)
-        </dd>
-    </dl>
+    <h3>Opravdu chcete smazat tento záznam?</h3>
+    <div>
+        <h4>Zákazníci</h4>
+        <hr />
+        <dl class="row">
+            <dt class = "col-sm-2">
+                @Html.DisplayNameFor(model => model.Jmeno)
+            </dt>
+            <dd class = "col-sm-10">
+                @Html.DisplayFor(model => model.Jmeno)
+            </dd>
+            <dt class = "col-sm-2">
+                @Html.DisplayNameFor(model => model.Prijmeni)
+            </dt>
+            <dd class = "col-sm-10">
+                @Html.DisplayFor(model => model.Prijmeni)
+            </dd>
+            <dt class = "col-sm-2">
+                @Html.DisplayNameFor(model => model.TelefonniCislo)
+            </dt>
+            <dd class = "col-sm-10">
+                @Html.DisplayFor(model => model.TelefonniCislo)
+            </dd>
+            <dt class = "col-sm-2">
+                @Html.DisplayNameFor(model => model.Email)
+            </dt>
+            <dd class = "col-sm-10">
+                @Html.DisplayFor(model => model.Email)
+            </dd>
+        </dl>
     
-    <form asp-action="Delete">
-        <input type="hidden" asp-for="IdZakaznik" />
-        <input type="submit" value="Smazat" class="btn btn-danger" /> |
-        <a asp-action="Index">Zpět do seznamu</a>
-    </form>
+        <form asp-action="Delete">
+            <input type="hidden" asp-for="IdZakaznik" />
+            <input type="submit" value="Smazat" class="btn btn-danger" /> |
+            <a asp-action="Index">Zpět do seznamu</a>
+        </form>
+    </div>
 </div>

@@ -29,9 +29,9 @@ namespace BDAS2_SemPrace.Controllers
         }
 
         // GET: Pulty/Details/5
-        public async Task<IActionResult> Details(decimal? id)
+        public async Task<IActionResult> Details(int? cisloPultu, int? supermarketId)
         {
-            if (id == null || _context.Pulty == null)
+            if (cisloPultu == null || supermarketId == null || _context.Pulty == null || !ModelContext.HasAdminRights())
             {
                 return NotFound();
             }
@@ -39,7 +39,7 @@ namespace BDAS2_SemPrace.Controllers
             var pulty = await _context.Pulty
                 .Include(p => p.IdSupermarketNavigation)
                 .Include(p => p.NazevNavigation)
-                .FirstOrDefaultAsync(m => m.CisloPultu == id);
+                .FirstOrDefaultAsync(m => m.CisloPultu == cisloPultu && m.IdSupermarket == supermarketId);
             if (pulty == null)
             {
                 return NotFound();
@@ -51,14 +51,14 @@ namespace BDAS2_SemPrace.Controllers
         // GET: Pulty/Create
         public IActionResult Create()
         {
+            if (!ModelContext.HasAdminRights())
+                return NotFound();
             ViewData["IdSupermarket"] = new SelectList(_context.Supermarkety, "IdSupermarket", "Nazev");
             ViewData["Nazev"] = new SelectList(_context.NazvyPultu, "IdPult", "IdPult");
             return View();
         }
 
         // POST: Pulty/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("CisloPultu,IdSupermarket,Nazev")] Pulty pulty)
@@ -75,14 +75,14 @@ namespace BDAS2_SemPrace.Controllers
         }
 
         // GET: Pulty/Edit/5
-        public async Task<IActionResult> Edit(decimal? id)
+        public async Task<IActionResult> Edit(int? cisloPultu, int? supermarketId)
         {
-            if (id == null || _context.Pulty == null)
+            if (cisloPultu == null || supermarketId == null || _context.Pulty == null || !ModelContext.HasAdminRights())
             {
                 return NotFound();
             }
 
-            var pulty = await _context.Pulty.FindAsync(id);
+            var pulty = await _context.Pulty.FindAsync(cisloPultu, supermarketId);
             if (pulty == null)
             {
                 return NotFound();
@@ -93,13 +93,11 @@ namespace BDAS2_SemPrace.Controllers
         }
 
         // POST: Pulty/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(decimal id, [Bind("CisloPultu,IdSupermarket,Nazev")] Pulty pulty)
+        public async Task<IActionResult> Edit(int cisloPultu, int supermarketId, [Bind("CisloPultu,IdSupermarket,Nazev")] Pulty pulty)
         {
-            if (id != pulty.CisloPultu)
+            if (cisloPultu != pulty.CisloPultu && supermarketId != pulty.IdSupermarket)
             {
                 return NotFound();
             }
@@ -113,7 +111,7 @@ namespace BDAS2_SemPrace.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!PultyExists(pulty.CisloPultu))
+                    if (!PultyExists(pulty.CisloPultu, pulty.IdSupermarket))
                     {
                         return NotFound();
                     }
@@ -130,9 +128,11 @@ namespace BDAS2_SemPrace.Controllers
         }
 
         // GET: Pulty/Delete/5
-        public async Task<IActionResult> Delete(decimal? id)
+        //[HttpGet("{cisloPultu?}/{supermarketId?}"), ActionName("Delete")]
+
+        public async Task<IActionResult> Delete(int? cisloPultu, int? supermarketId)
         {
-            if (id == null || _context.Pulty == null)
+            if (cisloPultu == null || _context.Pulty == null || !ModelContext.HasAdminRights())
             {
                 return NotFound();
             }
@@ -140,7 +140,7 @@ namespace BDAS2_SemPrace.Controllers
             var pulty = await _context.Pulty
                 .Include(p => p.IdSupermarketNavigation)
                 .Include(p => p.NazevNavigation)
-                .FirstOrDefaultAsync(m => m.CisloPultu == id);
+                .FirstOrDefaultAsync(m => m.CisloPultu == cisloPultu && m.IdSupermarket == supermarketId);
             if (pulty == null)
             {
                 return NotFound();
@@ -152,25 +152,25 @@ namespace BDAS2_SemPrace.Controllers
         // POST: Pulty/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(decimal id)
+        public async Task<IActionResult> DeleteConfirmed(int cisloPultu, int supermarketId)
         {
             if (_context.Pulty == null)
             {
                 return Problem("Entity set 'ModelContext.Pulty'  is null.");
             }
-            var pulty = await _context.Pulty.FindAsync(id);
+            var pulty = await _context.Pulty.FindAsync(cisloPultu, supermarketId);
             if (pulty != null)
             {
                 _context.Pulty.Remove(pulty);
             }
-            
+
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 
-        private bool PultyExists(decimal id)
+        private bool PultyExists(int idPult, int idSupermarket)
         {
-          return _context.Pulty.Any(e => e.CisloPultu == id);
+            return _context.Pulty.Any(e => e.CisloPultu == idPult && e.IdSupermarket == idSupermarket);
         }
     }
 }

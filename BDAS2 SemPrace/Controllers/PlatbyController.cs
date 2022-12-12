@@ -31,7 +31,7 @@ namespace BDAS2_SemPrace.Controllers
         // GET: Platby/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.Platby == null)
+            if (id == null || _context.Platby == null || !ModelContext.HasAdminRights())
             {
                 return NotFound();
             }
@@ -51,14 +51,14 @@ namespace BDAS2_SemPrace.Controllers
         // GET: Platby/Create
         public IActionResult Create()
         {
+            if (!ModelContext.HasAdminRights())
+                return NotFound();
             ViewData["IdSupermarket"] = new SelectList(_context.Supermarkety, "IdSupermarket", "Nazev");
             ViewData["IdZakaznik"] = new SelectList(_context.Zakaznici, "IdZakaznik", "Jmeno");
             return View();
         }
 
         // POST: Platby/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("IdPlatba,Datum,Castka,Typ,CisloKarty,IdZakaznik,IdSupermarket")] Platby platby)
@@ -77,7 +77,7 @@ namespace BDAS2_SemPrace.Controllers
         // GET: Platby/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.Platby == null)
+            if (id == null || _context.Platby == null || !ModelContext.HasAdminRights())
             {
                 return NotFound();
             }
@@ -93,8 +93,6 @@ namespace BDAS2_SemPrace.Controllers
         }
 
         // POST: Platby/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("IdPlatba,Datum,Castka,Typ,CisloKarty,IdZakaznik,IdSupermarket")] Platby platby)
@@ -132,7 +130,7 @@ namespace BDAS2_SemPrace.Controllers
         // GET: Platby/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.Platby == null)
+            if (id == null || _context.Platby == null || !ModelContext.HasAdminRights())
             {
                 return NotFound();
             }
@@ -168,7 +166,7 @@ namespace BDAS2_SemPrace.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private bool PlatbyExists(int id)
+        private bool PlatbyExists(long id)
         {
           return _context.Platby.Any(e => e.IdPlatba == id);
         }

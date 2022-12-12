@@ -3,40 +3,49 @@
 @{
     ViewData["Title"] = "Create";
 }
+<div class="container-mt3" style="margin:2rem;">
 
-<h1>Create</h1>
+    <h1>Přidat pobočku</h1>
 
-<h4>Supermarkety</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="IdSupermarket" class="control-label"></label>
-                <input asp-for="IdSupermarket" class="form-control" />
-                <span asp-validation-for="IdSupermarket" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="Nazev" class="control-label"></label>
-                <input asp-for="Nazev" class="form-control" />
-                <span asp-validation-for="Nazev" class="text-danger"></span>
-            </div>
-            <div class="form-group">
-                <label asp-for="IdAdresa" class="control-label"></label>
-                <select asp-for="IdAdresa" class ="form-control" asp-items="ViewBag.IdAdresa"></select>
-            </div>
-            <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
-            </div>
-        </form>
+    <hr />
+    <div class="row">
+        <div class="col-md-4">
+            <form asp-action="Create">
+              <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+              <div class="form-group">
+                    <label asp-for="Nazev" class="control-label"></label>
+                    <input asp-for="Nazev" class="form-control" />
+                    <span asp-validation-for="Nazev" class="text-danger"></span>
+              </div>
+              <div class="form-group">
+                    <label asp-for="IdAdresaNavigation.Ulice" class="control-label"></label>
+                    <input asp-for="IdAdresaNavigation.Ulice" class="form-control" />
+                    <span asp-validation-for="IdAdresaNavigation.Ulice" class="text-danger"></span>
+              </div>
+              <div class="form-row">
+                <div class="form-group">
+                    <label asp-for="IdAdresaNavigation.Mesto" class="control-label"></label>
+                    <input asp-for="IdAdresaNavigation.Mesto" class="form-control" />
+                    <span asp-validation-for="IdAdresaNavigation.Mesto" class="text-danger"></span>
+                </div>
+                <div class="form-group">
+                    <label asp-for="IdAdresaNavigation.Psc" class="control-label"></label>
+                    <input asp-for="IdAdresaNavigation.Psc" class="form-control" />
+                    <span asp-validation-for="IdAdresaNavigation.Psc" class="text-danger"></span>
+                </div>
+              </div>
+              <div class="form-group">
+                    <input type="submit" value="Přidat" class="btn btn-primary" />
+              </div>          
+            </form>
+        </div>
     </div>
-</div>
 
-<div>
-    <a asp-action="Index">Back to List</a>
-</div>
+    <div>
+        <a asp-action="Index">Back to List</a>
+    </div>
 
-@section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
-}
+    @section Scripts {
+        @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    }
+</div>

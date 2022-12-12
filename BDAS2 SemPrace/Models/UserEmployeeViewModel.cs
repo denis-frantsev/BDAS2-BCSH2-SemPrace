@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System.Collections;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace BDAS2_SemPrace.Models
 {
@@ -6,12 +8,19 @@ namespace BDAS2_SemPrace.Models
     {
         private User _user;
         private Zamestnanci _zamestnanec;
-
+        private string _pozice;
+        private ModelContext _context;
+        private Obrazky _obrazek;
         public UserEmployeeViewModel(User user, ModelContext context)
         {
+            _context = context;
             _user = user;
             _zamestnanec = context.Zamestnanci.Single(s => s.Email == user.Email);
+            _pozice = context.PracovniMista.Find(_zamestnanec.IdMisto).Nazev;
+            _obrazek = context.Obrazky.Find(user.IdObrazek);
         }
+
+        public int ID => _zamestnanec.IdZamestnanec;
 
         public Role Role { get => _user.Role; set => _user.Role = value; }
 
@@ -51,5 +60,19 @@ namespace BDAS2_SemPrace.Models
             set => _user.Password = value;
         }
 
+        public string Pozice
+        {
+            get => _pozice;
+        }
+
+        public Obrazky ProfilePic
+        {
+            get
+            {
+                if (_obrazek != null)
+                    return _obrazek;
+                else return null;
+            }
+        }
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace BDAS2_SemPrace.Models
 {
@@ -11,10 +12,13 @@ namespace BDAS2_SemPrace.Models
             Zamestnanci = new HashSet<Zamestnanci>();
         }
 
-        public decimal IdSklad { get; set; }
-        public string Nazev { get; set; }
-        public short IdAdresa { get; set; }
+        public int IdSklad { get; set; }
 
+        [Display(Name = "Název")]
+        public string Nazev { get; set; }
+        public int IdAdresa { get; set; }
+
+        [Display(Name = "Adresa")]
         public virtual Adresy IdAdresaNavigation { get; set; }
         public virtual ICollection<SkladyZbozi> SkladyZbozi { get; set; }
         public virtual ICollection<Zamestnanci> Zamestnanci { get; set; }

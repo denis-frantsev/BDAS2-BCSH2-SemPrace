@@ -1,13 +1,18 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace BDAS2_SemPrace.Models
 {
     public partial class Pokladny
     {
-        public decimal IdSupermarket { get; set; }
+        [Display(Name = "Pobočka")]
+        public int IdSupermarket { get; set; }
+
+        [Display(Name = "Číslo pokladny")]
         public byte CisloPokladny { get; set; }
 
+        [Display(Name = "Pobočka")]
         public virtual Supermarkety IdSupermarketNavigation { get; set; }
     }
 }

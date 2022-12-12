@@ -1,8 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Metadata;
-
+using BDAS2_SemPrace.Models;
 namespace BDAS2_SemPrace.Models
 {
     public partial class ModelContext : DbContext
@@ -34,13 +32,13 @@ namespace BDAS2_SemPrace.Models
         public virtual DbSet<Zbozi> Zbozi { get; set; }
         public virtual DbSet<Znacky> Znacky { get; set; }
         public virtual DbSet<User> Users { get; set; }
-        //public virtual DbSet<User> Uzivatele { get; set; }
-
+        public virtual DbSet<Obrazky> Obrazky { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
             if (!optionsBuilder.IsConfigured)
             {
+                optionsBuilder.UseOracle();
                 //#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
                 //                optionsBuilder.UseOracle("Data Source=(description=(address_list=(address = (protocol = TCP)(host = fei-sql1.upceucebny.cz)(port = 1521)))(connect_data=(service_name=IDAS.UPCEUCEBNY.CZ))\n);User ID=ST64102;Password=j8ex765gh;Persist Security Info=True");
             }
@@ -51,6 +49,7 @@ namespace BDAS2_SemPrace.Models
             modelBuilder.HasDefaultSchema("ST64102")
                 .UseCollation("USING_NLS_COMP");
 
+
             modelBuilder.Entity<Adresy>(entity =>
             {
                 entity.HasKey(e => e.IdAdresa)
@@ -59,7 +58,7 @@ namespace BDAS2_SemPrace.Models
                 entity.ToTable("ADRESY");
 
                 entity.Property(e => e.IdAdresa)
-                    .HasPrecision(6)
+                    .HasPrecision(8)
                     .HasColumnName("ID_ADRESA");
 
                 entity.Property(e => e.Mesto)
@@ -130,11 +129,11 @@ namespace BDAS2_SemPrace.Models
                 entity.ToTable("PLATBY");
 
                 entity.Property(e => e.IdPlatba)
-                    .HasPrecision(8)
+                    .HasColumnType("NUMBER(8)")
                     .HasColumnName("ID_PLATBA");
 
                 entity.Property(e => e.Castka)
-                    .HasColumnType("NUMBER(38)")
+                    .HasColumnType("NUMBER(8)")
                     .HasColumnName("CASTKA");
 
                 entity.Property(e => e.CisloKarty)
@@ -147,7 +146,7 @@ namespace BDAS2_SemPrace.Models
                     .HasColumnName("DATUM");
 
                 entity.Property(e => e.IdSupermarket)
-                    .HasColumnType("NUMBER(38)")
+                    .HasColumnType("NUMBER(8)")
                     .HasColumnName("ID_SUPERMARKET");
 
                 entity.Property(e => e.IdZakaznik)
@@ -161,7 +160,7 @@ namespace BDAS2_SemPrace.Models
                     .HasColumnName("TYP");
 
                 entity.HasOne(d => d.IdSupermarketNavigation)
-                    .WithMany(p => p.Platbies)
+                    .WithMany(p => p.Platby)
                     .HasForeignKey(d => d.IdSupermarket)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("PLATBY_SUPERMARKETY_FK");
@@ -181,7 +180,7 @@ namespace BDAS2_SemPrace.Models
                 entity.ToTable("POKLADNY");
 
                 entity.Property(e => e.IdSupermarket)
-                    .HasColumnType("NUMBER(38)")
+                    .HasColumnType("NUMBER(8)")
                     .HasColumnName("ID_SUPERMARKET");
 
                 entity.Property(e => e.CisloPokladny)
@@ -189,7 +188,7 @@ namespace BDAS2_SemPrace.Models
                     .HasColumnName("CISLO_POKLADNY");
 
                 entity.HasOne(d => d.IdSupermarketNavigation)
-                    .WithMany(p => p.Pokladnies)
+                    .WithMany(p => p.Pokladny)
                     .HasForeignKey(d => d.IdSupermarket)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("POKLADNY_SUPERMARKETY_FK");
@@ -208,7 +207,7 @@ namespace BDAS2_SemPrace.Models
                     .HasColumnName("NAZEV_ZBOZI");
 
                 entity.Property(e => e.IdZbozi)
-                    .HasColumnType("NUMBER(38)")
+                    .HasColumnType("NUMBER(8)")
                     .HasColumnName("ID_ZBOZI");
 
                 entity.Property(e => e.CisloProdeje)
@@ -216,7 +215,7 @@ namespace BDAS2_SemPrace.Models
                     .HasColumnName("CISLO_PRODEJE");
 
                 entity.Property(e => e.Mnozstvi)
-                    .HasColumnType("NUMBER")
+                    .HasColumnType("NUMBER(8)")
                     .HasColumnName("MNOZSTVI");
 
                 entity.HasOne(d => d.CisloProdejeNavigation)
@@ -240,7 +239,7 @@ namespace BDAS2_SemPrace.Models
                 entity.ToTable("PRACOVNI_MISTA");
 
                 entity.Property(e => e.IdMisto)
-                    .HasColumnType("NUMBER(38)")
+                    .HasColumnType("NUMBER(8)")
                     .HasColumnName("ID_MISTO");
 
                 entity.Property(e => e.MinPlat)
@@ -279,7 +278,7 @@ namespace BDAS2_SemPrace.Models
                     .HasColumnName("ID_PLATBA");
 
                 entity.Property(e => e.Suma)
-                    .HasColumnType("NUMBER(38)")
+                    .HasColumnType("NUMBER(8)")
                     .HasColumnName("SUMA");
 
                 entity.HasOne(d => d.IdPlatbaNavigation)
@@ -297,11 +296,11 @@ namespace BDAS2_SemPrace.Models
                 entity.ToTable("PULTY");
 
                 entity.Property(e => e.CisloPultu)
-                    .HasColumnType("NUMBER(38)")
+                    .HasColumnType("NUMBER(8)")
                     .HasColumnName("CISLO_PULTU");
 
                 entity.Property(e => e.IdSupermarket)
-                    .HasColumnType("NUMBER(38)")
+                    .HasColumnType("NUMBER(8)")
                     .HasColumnName("ID_SUPERMARKET");
 
                 entity.Property(e => e.Nazev)
@@ -311,7 +310,7 @@ namespace BDAS2_SemPrace.Models
                     .HasColumnName("NAZEV");
 
                 entity.HasOne(d => d.IdSupermarketNavigation)
-                    .WithMany(p => p.Pulties)
+                    .WithMany(p => p.Pulty)
                     .HasForeignKey(d => d.IdSupermarket)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("PULTY_SUPERMARKETY_FK");
@@ -331,12 +330,12 @@ namespace BDAS2_SemPrace.Models
                 entity.ToTable("SKLADY");
 
                 entity.Property(e => e.IdSklad)
-                    .HasColumnType("NUMBER(38)")
+                    .HasColumnType("NUMBER(8)")
                     //.ValueGeneratedOnAdd()
                     .HasColumnName("ID_SKLAD");
 
                 entity.Property(e => e.IdAdresa)
-                    .HasPrecision(6)
+                    .HasPrecision(8)
                     .HasColumnName("ID_ADRESA");
 
                 entity.Property(e => e.Nazev)
@@ -360,15 +359,15 @@ namespace BDAS2_SemPrace.Models
                 entity.ToTable("SKLADY_ZBOZI");
 
                 entity.Property(e => e.SkladIdSklad)
-                    .HasColumnType("NUMBER(38)")
+                    .HasColumnType("NUMBER(8)")
                     .HasColumnName("SKLAD_ID_SKLAD");
 
                 entity.Property(e => e.ZboziIdZbozi)
-                    .HasColumnType("NUMBER(38)")
+                    .HasColumnType("NUMBER(8)")
                     .HasColumnName("ZBOZI_ID_ZBOZI");
 
                 entity.Property(e => e.Pocet)
-                    .HasColumnType("NUMBER(38)")
+                    .HasColumnType("NUMBER(8)")
                     .HasColumnName("POCET");
 
                 entity.HasOne(d => d.SkladIdSkladNavigation)
@@ -395,12 +394,12 @@ namespace BDAS2_SemPrace.Models
                     .IsUnique();
 
                 entity.Property(e => e.IdSupermarket)
-                    .HasColumnType("NUMBER(38)")
+                    .HasColumnType("NUMBER(8)")
                     //.ValueGeneratedOnAdd()
                     .HasColumnName("ID_SUPERMARKET");
 
                 entity.Property(e => e.IdAdresa)
-                    .HasPrecision(6)
+                    .HasPrecision(8)
                     .HasColumnName("ID_ADRESA");
 
                 entity.Property(e => e.Nazev)
@@ -448,7 +447,7 @@ namespace BDAS2_SemPrace.Models
                     .HasColumnName("PRIJMENI");
 
                 entity.Property(e => e.TelefonniCislo)
-                    .HasColumnType("NUMBER")
+                    .HasColumnType("NUMBER(8)")
                     .HasColumnName("TELEFONNI_CISLO");
             });
 
@@ -463,7 +462,7 @@ namespace BDAS2_SemPrace.Models
                     .IsUnique();
 
                 entity.Property(e => e.IdZamestnanec)
-                    .HasColumnType("NUMBER")
+                    .HasColumnType("NUMBER(8)")
                     //.ValueGeneratedOnAdd()
                     .HasColumnName("ID_ZAMESTNANEC");
 
@@ -474,19 +473,19 @@ namespace BDAS2_SemPrace.Models
                     .HasColumnName("EMAIL");
 
                 entity.Property(e => e.IdManazer)
-                    .HasColumnType("NUMBER")
+                    .HasColumnType("NUMBER(8)")
                     .HasColumnName("ID_MANAZER");
 
                 entity.Property(e => e.IdMisto)
-                    .HasColumnType("NUMBER(38)")
+                    .HasColumnType("NUMBER(8)")
                     .HasColumnName("ID_MISTO");
 
                 entity.Property(e => e.IdSklad)
-                    .HasColumnType("NUMBER")
+                    .HasColumnType("NUMBER(8)")
                     .HasColumnName("ID_SKLAD");
 
                 entity.Property(e => e.IdSupermarket)
-                    .HasColumnType("NUMBER(38)")
+                    .HasColumnType("NUMBER(8)")
                     .HasColumnName("ID_SUPERMARKET");
 
                 entity.Property(e => e.Jmeno)
@@ -496,7 +495,7 @@ namespace BDAS2_SemPrace.Models
                     .HasColumnName("JMENO");
 
                 entity.Property(e => e.Mzda)
-                    .HasColumnType("NUMBER")
+                    .HasColumnType("NUMBER(8)")
                     .HasColumnName("MZDA");
 
                 entity.Property(e => e.Prijmeni)
@@ -506,7 +505,7 @@ namespace BDAS2_SemPrace.Models
                     .HasColumnName("PRIJMENI");
 
                 entity.Property(e => e.TelefonniCislo)
-                    .HasColumnType("NUMBER")
+                    .HasColumnType("NUMBER(8)")
                     .HasColumnName("TELEFONNI_CISLO");
 
                 entity.HasOne(d => d.IdManazerNavigation)
@@ -526,7 +525,7 @@ namespace BDAS2_SemPrace.Models
                     .HasConstraintName("SKLAD_FK");
 
                 entity.HasOne(d => d.IdSupermarketNavigation)
-                    .WithMany(p => p.Zamestnancis)
+                    .WithMany(p => p.Zamestnanci)
                     .HasForeignKey(d => d.IdSupermarket)
                     .HasConstraintName("SUPERMARKET_FK");
             });
@@ -542,12 +541,12 @@ namespace BDAS2_SemPrace.Models
                     .IsUnique();
 
                 entity.Property(e => e.IdZbozi)
-                    .HasColumnType("NUMBER(38)")
+                    .HasColumnType("NUMBER(8)")
                     //.ValueGeneratedOnAdd()
                     .HasColumnName("ID_ZBOZI");
 
                 entity.Property(e => e.Cena)
-                    .HasColumnType("NUMBER")
+                    .HasColumnType("NUMBER(8)")
                     .HasColumnName("CENA");
 
                 entity.Property(e => e.IdKategorie)
@@ -603,11 +602,11 @@ namespace BDAS2_SemPrace.Models
 
                             j.ToTable("PULTY_ZBOZI");
 
-                            j.IndexerProperty<decimal>("ZboziIdZbozi").HasColumnType("NUMBER(38)").HasColumnName("ZBOZI_ID_ZBOZI");
+                            j.IndexerProperty<int>("ZboziIdZbozi").HasColumnType("NUMBER(8)").HasColumnName("ZBOZI_ID_ZBOZI");
 
-                            j.IndexerProperty<decimal>("PultCisloPultu").HasColumnType("NUMBER(38)").HasColumnName("PULT_CISLO_PULTU");
+                            j.IndexerProperty<int>("PultCisloPultu").HasColumnType("NUMBER(8)").HasColumnName("PULT_CISLO_PULTU");
 
-                            j.IndexerProperty<decimal>("PultIdSupermarket").HasColumnType("NUMBER(38)").HasColumnName("PULT_ID_SUPERMARKET");
+                            j.IndexerProperty<int>("PultIdSupermarket").HasColumnType("NUMBER(8)").HasColumnName("PULT_ID_SUPERMARKET");
                         });
             });
 
@@ -632,32 +631,61 @@ namespace BDAS2_SemPrace.Models
 
             modelBuilder.Entity<User>(entity =>
             {
-                entity.HasKey(e => e.Email).HasName("USERS_PK");
-                entity.HasIndex(e => e.ID,"USERS.UK1").IsUnique();
+                entity.HasKey(e => e.Email)
+                    .HasName("USERS_PK");
 
                 entity.ToTable("USERS");
 
+                entity.HasIndex(e => e.Email, "USERS_UK1")
+                    .IsUnique();
+
                 entity.Property(e => e.Email)
-                    .IsRequired()
                     .HasMaxLength(40)
                     .IsUnicode(false)
                     .HasColumnName("EMAIL");
 
                 entity.Property(e => e.Password)
-                   .IsRequired()
-                   .HasMaxLength(30)
-                   .IsUnicode(false)
-                   .HasColumnName("HESLO");
+                    .IsRequired()
+                    .HasMaxLength(256)
+                    .IsUnicode(false)
+                    .HasColumnName("HESLO");
+
+                entity.Property(e => e.IdObrazek)
+                    .HasPrecision(6)
+                    .HasColumnName("ID_OBRAZEK");
 
                 entity.Property(e => e.Role)
-                    .IsRequired()
                     .HasPrecision(2)
                     .HasColumnName("OPRAVNENI");
 
-                entity.Property(e => e.ID)
-                    .ValueGeneratedOnAdd()
+                entity.HasOne(d => d.IdObrazekNavigation)
+                    .WithMany(p => p.Users)
+                    .HasForeignKey(d => d.IdObrazek)
+                    .OnDelete(DeleteBehavior.SetNull)
+                    .HasConstraintName("USERS_FK");
+            });
+
+            modelBuilder.Entity<Obrazky>(entity =>
+            {
+                entity.HasKey(e => e.IdObrazek)
+                    .HasName("OBRAZKY_PK");
+
+                entity.ToTable("OBRAZKY");
+
+                entity.Property(e => e.IdObrazek)
                     .HasPrecision(6)
-                    .HasColumnName("ID_USER");
+                    .ValueGeneratedNever()
+                    .HasColumnName("ID_OBRAZEK");
+
+                entity.Property(e => e.Data)
+                    .IsRequired()
+                    .HasColumnType("BLOB")
+                    .HasColumnName("DATA");
+
+                entity.Property(e => e.Popis)
+                    .HasMaxLength(30)
+                    .IsUnicode(false)
+                    .HasColumnName("POPIS");
             });
 
             modelBuilder.HasSequence("S_ADRESY");
@@ -680,10 +708,17 @@ namespace BDAS2_SemPrace.Models
 
             modelBuilder.HasSequence("S_USERS");
 
+            modelBuilder.HasSequence("S_OBRAZKY");
+
             OnModelCreatingPartial(modelBuilder);
-          
+
         }
 
         partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
+
+        public static bool HasAdminRights() => User.Role == Role.ADMIN;
+
+        public bool IsUser(int? id) => User.Email == Zakaznici.Find(id).Email; 
+
     }
 }

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 
 namespace BDAS2_SemPrace.Models
 {
@@ -11,6 +12,8 @@ namespace BDAS2_SemPrace.Models
         }
 
         public short IdKategorie { get; set; }
+
+        [Display(Name = "Název kategorie")]
         public string Nazev { get; set; }
         public string Popis { get; set; }
 

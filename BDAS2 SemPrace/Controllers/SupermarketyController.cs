@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using BDAS2_SemPrace.Models;
+using Oracle.ManagedDataAccess.Client;
 
 namespace BDAS2_SemPrace.Controllers
 {
@@ -22,16 +23,15 @@ namespace BDAS2_SemPrace.Controllers
         public async Task<IActionResult> Index()
         {
             if (ModelContext.User.Role == Role.GHOST || ModelContext.User.Role == Role.REGISTERED)
-                return NotFound();
-
-            var modelContext = _context.Supermarkety.Include(s => s.IdAdresaNavigation);
-            return View(await modelContext.ToListAsync());
+            return NotFound();
+            var test = await _context.Supermarkety.FromSqlRaw("select * from supermarkety_view").Include(s=>s.IdAdresaNavigation).ToListAsync();
+            return View(test);
         }
 
         // GET: Supermarkety/Details/5
         public async Task<IActionResult> Details(decimal? id)
         {
-            if (id == null || _context.Supermarkety == null)
+            if (id == null || _context.Supermarkety == null || !ModelContext.HasAdminRights())
             {
                 return NotFound();
             }
@@ -50,20 +50,21 @@ namespace BDAS2_SemPrace.Controllers
         // GET: Supermarkety/Create
         public IActionResult Create()
         {
+            if (!ModelContext.HasAdminRights())
+                return NotFound();
             ViewData["IdAdresa"] = new SelectList(_context.Adresy, "IdAdresa", "Mesto");
             return View();
         }
 
         // POST: Supermarkety/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("IdSupermarket,Nazev,IdAdresa")] Supermarkety supermarkety)
+        public async Task<IActionResult> Create([Bind("Nazev,IdAdresaNavigation")] Supermarkety supermarkety)
         {
             if (ModelState.IsValid)
             {
                 _context.Add(supermarkety);
+                _context.Adresy.Add(supermarkety.IdAdresaNavigation);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
@@ -72,9 +73,9 @@ namespace BDAS2_SemPrace.Controllers
         }
 
         // GET: Supermarkety/Edit/5
-        public async Task<IActionResult> Edit(decimal? id)
+        public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.Supermarkety == null)
+            if (id == null || _context.Supermarkety == null || !ModelContext.HasAdminRights())
             {
                 return NotFound();
             }
@@ -89,11 +90,9 @@ namespace BDAS2_SemPrace.Controllers
         }
 
         // POST: Supermarkety/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(decimal id, [Bind("IdSupermarket,Nazev,IdAdresa")] Supermarkety supermarkety)
+        public async Task<IActionResult> Edit(int id, [Bind("IdSupermarket,Nazev,IdAdresa")] Supermarkety supermarkety)
         {
             if (id != supermarkety.IdSupermarket)
             {
@@ -125,9 +124,9 @@ namespace BDAS2_SemPrace.Controllers
         }
 
         // GET: Supermarkety/Delete/5
-        public async Task<IActionResult> Delete(decimal? id)
+        public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.Supermarkety == null)
+            if (id == null || _context.Supermarkety == null || !ModelContext.HasAdminRights())
             {
                 return NotFound();
             }
@@ -146,7 +145,7 @@ namespace BDAS2_SemPrace.Controllers
         // POST: Supermarkety/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(decimal id)
+        public async Task<IActionResult> DeleteConfirmed(int id)
         {
             if (_context.Supermarkety == null)
             {
@@ -162,7 +161,7 @@ namespace BDAS2_SemPrace.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private bool SupermarketyExists(decimal id)
+        private bool SupermarketyExists(int id)
         {
           return _context.Supermarkety.Any(e => e.IdSupermarket == id);
         }

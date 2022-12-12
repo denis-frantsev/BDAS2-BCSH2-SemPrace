@@ -96,5 +96,9 @@ body {
     border-top-color: #e60a14;
 }
 
+.form-control {
+    margin: 0.5rem;
+}
+
 
 

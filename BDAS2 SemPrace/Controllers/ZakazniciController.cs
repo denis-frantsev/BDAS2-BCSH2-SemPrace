@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using BDAS2_SemPrace.Models;
+using Oracle.ManagedDataAccess.Client;
 
 namespace BDAS2_SemPrace.Controllers
 {
@@ -28,14 +29,14 @@ namespace BDAS2_SemPrace.Controllers
             var zakaznici = _context.Zakaznici.Select(s => s).ToList().Where(s => s == s);
 
             if (!string.IsNullOrEmpty(searchString))
-                zakaznici = zakaznici.Where(s => s.FullName.Contains(searchString));
+                zakaznici = zakaznici.Where(s => s.FullName.ToLower().Contains(searchString.ToLower()));
             return View(zakaznici);
         }
 
         // GET: Zakaznici/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.Zakaznici == null)
+            if (id == null || _context.Zakaznici == null || !ModelContext.HasAdminRights())
             {
                 return NotFound();
             }
@@ -50,23 +51,28 @@ namespace BDAS2_SemPrace.Controllers
             return View(zakaznici);
         }
 
-        // GET: Zakaznici/Create
+        // GET: Zakaznici/Create 7 
         public IActionResult Create()
         {
+            if (!ModelContext.HasAdminRights())
+                return NotFound();
             return View();
         }
 
         // POST: Zakaznici/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("IdZakaznik,Jmeno,Prijmeni,TelefonniCislo,Email")] Zakaznici zakaznici)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(zakaznici);
-                await _context.SaveChangesAsync();
+                OracleParameter jmeno = new() { ParameterName = "p_jmeno", Direction = System.Data.ParameterDirection.Input, OracleDbType = OracleDbType.Varchar2, Value = zakaznici.Jmeno };
+                OracleParameter prijmeni = new() { ParameterName = "p_prijmeni", Direction = System.Data.ParameterDirection.Input, OracleDbType = OracleDbType.Varchar2, Value = zakaznici.Prijmeni };
+                OracleParameter telefonniCislo = new() { ParameterName = "p_telefonni_cislo", Direction = System.Data.ParameterDirection.Input, OracleDbType = OracleDbType.Int32, Value = zakaznici.TelefonniCislo };
+                OracleParameter email = new() { ParameterName = "p_email", Direction = System.Data.ParameterDirection.Input, OracleDbType = OracleDbType.Varchar2, Value = zakaznici.Email };
+
+                await _context.Database.ExecuteSqlRawAsync("BEGIN zakaznici_pkg.zakaznik_insert(:p_jmeno, :p_prijmeni, :p_telefonni_cislo, :p_email); END;", jmeno, prijmeni, telefonniCislo, email);
+
                 return RedirectToAction(nameof(Index));
             }
             return View(zakaznici);
@@ -75,7 +81,7 @@ namespace BDAS2_SemPrace.Controllers
         // GET: Zakaznici/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
-            if (id == null || _context.Zakaznici == null)
+            if (id == null || _context.Zakaznici == null || (!ModelContext.HasAdminRights() && !_context.IsUser(id)))
             {
                 return NotFound();
             }
@@ -89,8 +95,6 @@ namespace BDAS2_SemPrace.Controllers
         }
 
         // POST: Zakaznici/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(int id, [Bind("IdZakaznik,Jmeno,Prijmeni,TelefonniCislo,Email")] Zakaznici zakaznici)
@@ -104,8 +108,13 @@ namespace BDAS2_SemPrace.Controllers
             {
                 try
                 {
-                    _context.Update(zakaznici);
-                    await _context.SaveChangesAsync();
+                    OracleParameter p_id = new() { ParameterName = "p_id", Direction = System.Data.ParameterDirection.Input, OracleDbType = OracleDbType.Int32, Value = id, };
+                    OracleParameter jmeno = new() { ParameterName = "p_jmeno", Direction = System.Data.ParameterDirection.Input, OracleDbType = OracleDbType.Varchar2, Value = zakaznici.Jmeno };
+                    OracleParameter prijmeni = new() { ParameterName = "p_prijmeni", Direction = System.Data.ParameterDirection.Input, OracleDbType = OracleDbType.Varchar2, Value = zakaznici.Prijmeni };
+                    OracleParameter telefonniCislo = new() { ParameterName = "p_telefonni_cislo", Direction = System.Data.ParameterDirection.Input, OracleDbType = OracleDbType.Int32, Value = zakaznici.TelefonniCislo };
+                    OracleParameter email = new() { ParameterName = "p_email", Direction = System.Data.ParameterDirection.Input, OracleDbType = OracleDbType.Varchar2, Value = zakaznici.Email };
+
+                    await _context.Database.ExecuteSqlRawAsync("BEGIN zakaznici_pkg.zakaznik_update(:p_id, :p_jmeno, :p_prijmeni, :p_telefonni_cislo, :p_email); END;", p_id, jmeno, prijmeni, telefonniCislo, email);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -118,7 +127,10 @@ namespace BDAS2_SemPrace.Controllers
                         throw;
                     }
                 }
-                return RedirectToAction(nameof(Index));
+                if (ModelContext.HasAdminRights())
+                    return RedirectToAction(nameof(Index));
+                else
+                    return RedirectToAction("MyAccount", "Account");
             }
             return View(zakaznici);
         }
@@ -126,7 +138,7 @@ namespace BDAS2_SemPrace.Controllers
         // GET: Zakaznici/Delete/5
         public async Task<IActionResult> Delete(int? id)
         {
-            if (id == null || _context.Zakaznici == null)
+            if (id == null || _context.Zakaznici == null || !ModelContext.HasAdminRights())
             {
                 return NotFound();
             }
@@ -150,19 +162,15 @@ namespace BDAS2_SemPrace.Controllers
             {
                 return Problem("Entity set 'ModelContext.Zakaznici'  is null.");
             }
-            var zakaznici = await _context.Zakaznici.FindAsync(id);
-            if (zakaznici != null)
-            {
-                _context.Zakaznici.Remove(zakaznici);
-            }
-            
-            await _context.SaveChangesAsync();
+
+            OracleParameter p_id = new() { ParameterName = "p_id", Direction = System.Data.ParameterDirection.Input, OracleDbType = OracleDbType.Int32, Value = id, };
+            await _context.Database.ExecuteSqlRawAsync("BEGIN zakaznici_pkg.zakaznik_delete(:p_id); END;", p_id);
             return RedirectToAction(nameof(Index));
         }
 
         private bool ZakazniciExists(int id)
         {
-          return _context.Zakaznici.Any(e => e.IdZakaznik == id);
+            return _context.Zakaznici.Any(e => e.IdZakaznik == id);
         }
     }
 }
