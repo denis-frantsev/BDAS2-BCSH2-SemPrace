@@ -21,6 +21,9 @@ namespace BDAS2_SemPrace.Controllers
         // GET: Polozky
         public async Task<IActionResult> Index()
         {
+            if (ModelContext.User.Role == Role.GHOST || ModelContext.User.Role == Role.REGISTERED)
+                return NotFound();
+
             var modelContext = _context.Polozky.Include(p => p.CisloProdejeNavigation).Include(p => p.IdZboziNavigation);
             return View(await modelContext.ToListAsync());
         }

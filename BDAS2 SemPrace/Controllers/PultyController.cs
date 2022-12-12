@@ -21,6 +21,9 @@ namespace BDAS2_SemPrace.Controllers
         // GET: Pulty
         public async Task<IActionResult> Index()
         {
+            if (ModelContext.User.Role == Role.GHOST || ModelContext.User.Role == Role.REGISTERED)
+                return NotFound();
+
             var modelContext = _context.Pulty.Include(p => p.IdSupermarketNavigation).Include(p => p.NazevNavigation);
             return View(await modelContext.ToListAsync());
         }

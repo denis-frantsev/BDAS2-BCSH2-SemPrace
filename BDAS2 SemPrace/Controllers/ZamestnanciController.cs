@@ -21,6 +21,9 @@ namespace BDAS2_SemPrace.Controllers
         // GET: Zamestnanci
         public async Task<IActionResult> Index()
         {
+            if (ModelContext.User.Role == Role.GHOST || ModelContext.User.Role == Role.REGISTERED)
+                return NotFound();
+
             var modelContext = _context.Zamestnanci.Include(z => z.IdManazerNavigation).Include(z => z.IdMistoNavigation).Include(z => z.IdSkladNavigation).Include(z => z.IdSupermarketNavigation);
             return View(await modelContext.ToListAsync());
         }

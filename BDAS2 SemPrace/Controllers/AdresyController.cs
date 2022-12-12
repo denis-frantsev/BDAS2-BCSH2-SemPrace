@@ -21,7 +21,10 @@ namespace BDAS2_SemPrace.Controllers
         // GET: Adresy
         public async Task<IActionResult> Index()
         {
-              return View(await _context.Adresy.ToListAsync());
+            if (ModelContext.User.Role == Role.GHOST || ModelContext.User.Role == Role.REGISTERED)
+                return NotFound();
+
+            return View(await _context.Adresy.ToListAsync());
         }
 
         // GET: Adresy/Details/5

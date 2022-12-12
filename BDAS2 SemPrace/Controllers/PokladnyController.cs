@@ -21,6 +21,9 @@ namespace BDAS2_SemPrace.Controllers
         // GET: Pokladnies
         public async Task<IActionResult> Index()
         {
+            if (ModelContext.User.Role == Role.GHOST || ModelContext.User.Role == Role.REGISTERED)
+                return NotFound();
+
             var modelContext = _context.Pokladny.Include(p => p.IdSupermarketNavigation);
             return View(await modelContext.ToListAsync());
         }
