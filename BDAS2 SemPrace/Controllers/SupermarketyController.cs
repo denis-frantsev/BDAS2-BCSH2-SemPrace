@@ -22,6 +22,8 @@ namespace BDAS2_SemPrace.Controllers
         // GET: Supermarkety
         public async Task<IActionResult> Index()
         {
+            if (ModelContext.User.Role == Role.GHOST || ModelContext.User.Role == Role.REGISTERED)
+            return NotFound();
             var test = await _context.Supermarkety.FromSqlRaw("select * from supermarkety_view").Include(s=>s.IdAdresaNavigation).ToListAsync();
             return View(test);
         }

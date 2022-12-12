@@ -23,7 +23,7 @@ namespace BDAS2_SemPrace.Controllers
         [HttpGet]
         public IActionResult Index(string searchString)
         {
-            if (ModelContext.User.Role == Role.GHOST)
+            if (ModelContext.User.Role == Role.GHOST || ModelContext.User.Role == Role.REGISTERED)
                 return NotFound();
 
             var zakaznici = _context.Zakaznici.Select(s => s).ToList().Where(s => s == s);

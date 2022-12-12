@@ -21,7 +21,10 @@ namespace BDAS2_SemPrace.Controllers
         // GET: Kategorie
         public async Task<IActionResult> Index()
         {
-              return View(await _context.Kategorie.ToListAsync());
+            if (ModelContext.User.Role == Role.GHOST || ModelContext.User.Role == Role.REGISTERED)
+                return NotFound();
+
+            return View(await _context.Kategorie.ToListAsync());
         }
 
         // GET: Kategorie/Details/5

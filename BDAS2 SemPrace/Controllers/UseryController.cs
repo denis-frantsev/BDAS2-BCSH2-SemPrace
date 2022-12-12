@@ -24,6 +24,8 @@ namespace BDAS2_SemPrace.Controllers
         // GET: Usery
         public async Task<IActionResult> Index()
         {
+            if (ModelContext.User.Role == Role.GHOST || ModelContext.User.Role == Role.REGISTERED)
+                return NotFound();
             var users = await _context.Users.ToListAsync();
             users.ForEach(async u => {
                 if (_context.Zamestnanci.Any(z=>z.Email == u.Email)) {

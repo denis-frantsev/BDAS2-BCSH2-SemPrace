@@ -22,6 +22,8 @@ namespace BDAS2_SemPrace.Controllers
         [HttpGet]
         public IActionResult Index(int? manazer, int? misto, int? sklad, int? supermarket, string searchString)
         {
+            if (ModelContext.User.Role == Role.GHOST || ModelContext.User.Role == Role.REGISTERED)
+                return NotFound();
             var zamestnanci = _context.Zamestnanci.Include(z => z.IdManazerNavigation).Include(z => z.IdMistoNavigation).Include(z => z.IdSkladNavigation).Include(z => z.IdSupermarketNavigation).Select(s => s).ToList().Where(s => s == s);
             ViewBag.manazer = new SelectList(_context.Zamestnanci.Where(m => m.IdManazer == null), "IdZamestnanec", "Email");
             ViewBag.misto = new SelectList(_context.PracovniMista, "IdMisto", "Nazev");

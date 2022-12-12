@@ -16,57 +16,75 @@
     <title>Zbozi</title>
 </head>
 <body>
-    <h1>Details</h1>
-    <div>
-        <hr />
-        <dl class="row">
-            <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => model.KodZbozi)
-            </dt>
-            <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.KodZbozi)
-            </dd>
-            <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => model.NazevZbozi)
-            </dt>
-            <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.NazevZbozi)
-            </dd>
-            @if(Model.Popis != null)
-            {
+    <div class="container-fluid">
+        <div class="container">
+		    <h1>Details</h1>
+            @*<div class="container" max-width="400px" >
+			    <img style="height: fit-content; width: 50%; display: block;" src="@Html.DisplayFor(model => model.Obrazek)" />
+		    </div>
+            <div class="container-sm">
+			    <h2>@Html.DisplayFor(model => model.NazevZbozi)</h2>
+            </div>*@
+            
+            @*<hr />
                 <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => model.Popis)
+                    @Html.DisplayNameFor(model => model.NazevZbozi)
                 </dt>
                 <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.Popis)
-                </dd>   
-            }
-            <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => model.Cena)
-            </dt>
-            <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.Cena)
-            </dd>
-            <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => model.IdKategorieNavigation)
-            </dt>
-            <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.IdKategorieNavigation.Nazev)
-            </dd>
-            <dt class="col-sm-2">
-                @Html.DisplayNameFor(model => model.IdZnackaNavigation)
-            </dt>
-            <dd class="col-sm-10">
-                @Html.DisplayFor(model => model.IdZnackaNavigation.Nazev)
-            </dd>
-        </dl>
-    </div>
-    <div>
-        @if(ModelContext.User.Role == Role.ADMIN)
-        {
-            <a asp-action="Edit" asp-route-id="@Model?.IdZbozi">Edit</a> <i>|</i>
-        }
-        <a asp-action="Index">Back to List</a>
+                    @Html.DisplayFor(model => model.NazevZbozi)
+                </dd>
+                @if(Model.Popis != null)
+                {
+                    <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.Popis)
+                    </dt>
+                    <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.Popis)
+                    </dd>   
+                }
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.Cena)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.Cena)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.IdKategorieNavigation)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.IdKategorieNavigation.Nazev)
+                </dd>
+                <dt class="col-sm-2">
+                    @Html.DisplayNameFor(model => model.IdZnackaNavigation)
+                </dt>
+                <dd class="col-sm-10">
+                    @Html.DisplayFor(model => model.IdZnackaNavigation.Nazev)
+                </dd>
+            </dl>*@
+
+            <div class="row"> 
+                <div class="col-md-7 order-md-2">
+                    <h2 class="nazev-headng">
+                        @Html.DisplayFor(model => model.NazevZbozi)
+                        <span class="price-box" style="font-weight: bold; text-align: center">@Html.DisplayFor(model => model.Cena) Kč</span>
+                    </h2>
+                    <p class="lead">
+                        @Html.DisplayFor(model => model.Popis)
+                    </p>
+                </div>
+                <div class="col-md-5 order-md-1">
+                    <img style="width: 100%; height: 100%" src="@Html.DisplayFor(model => model.Obrazek)" />
+                </div>
+            </div>
+        
+            <div>
+                @if(ModelContext.User.Role == Role.ADMIN)
+                {
+                    <a class="btn btn-light btn-sm" style="color: gray" asp-action="Edit" asp-route-id="@Model?.IdZbozi">Edit</a> <i>|</i>
+                }
+                <a class="btn btn-light btn-sm" style="color: gray" asp-action="Index">Back to List</a>
+            </div>
+		</div>
     </div>
 </body>
 </html>
