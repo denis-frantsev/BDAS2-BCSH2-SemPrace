@@ -21,6 +21,9 @@ namespace BDAS2_SemPrace.Controllers
         // GET: Platby
         public async Task<IActionResult> Index()
         {
+            if (ModelContext.User.Role == Role.GHOST || ModelContext.User.Role == Role.REGISTERED)
+                return NotFound();
+
             var modelContext = _context.Platby.Include(p => p.IdSupermarketNavigation).Include(p => p.IdZakaznikNavigation);
             return View(await modelContext.ToListAsync());
         }

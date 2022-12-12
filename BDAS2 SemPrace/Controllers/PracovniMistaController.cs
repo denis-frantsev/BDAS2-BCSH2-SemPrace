@@ -21,7 +21,10 @@ namespace BDAS2_SemPrace.Controllers
         // GET: PracovniMista
         public async Task<IActionResult> Index()
         {
-              return View(await _context.PracovniMista.ToListAsync());
+            if (ModelContext.User.Role == Role.GHOST || ModelContext.User.Role == Role.REGISTERED)
+                return NotFound();
+
+            return View(await _context.PracovniMista.ToListAsync());
         }
 
         // GET: PracovniMista/Details/5
