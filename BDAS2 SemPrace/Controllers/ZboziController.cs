@@ -28,7 +28,7 @@ namespace BDAS2_SemPrace.Controllers
         // GET: Zbozi/Details/5
         public async Task<IActionResult> Details(int? id)
         {
-            if (id == null || _context.Zbozi == null || !ModelContext.HasAdminRights())
+            if (id == null || _context.Zbozi == null)
             {
                 return NotFound();
             }
