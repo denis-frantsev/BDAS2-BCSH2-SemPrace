@@ -61,8 +61,11 @@ namespace BDAS2_SemPrace.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(adresy);
-                await _context.SaveChangesAsync();
+                OracleParameter ulice = new() { ParameterName = "p_ulice", Direction = System.Data.ParameterDirection.Input, OracleDbType = OracleDbType.Varchar2, Value = adresy.Ulice };
+                OracleParameter mesto = new() { ParameterName = "p_mesto", Direction = System.Data.ParameterDirection.Input, OracleDbType = OracleDbType.Varchar2, Value = adresy.Mesto };
+                OracleParameter psc = new() { ParameterName = "p_psc", Direction = System.Data.ParameterDirection.Input, OracleDbType = OracleDbType.Int32, Value = adresy.Psc };
+
+                await _context.Database.ExecuteSqlRawAsync("BEGIN adresy_pkg.adresa_insert(:p_ulice, :p_mesto, :p_psc); END;", ulice, mesto, psc);
                 return RedirectToAction(nameof(Index));
             }
             return View(adresy);
@@ -98,8 +101,12 @@ namespace BDAS2_SemPrace.Controllers
             {
                 try
                 {
-                    _context.Update(adresy);
-                    await _context.SaveChangesAsync();
+                    OracleParameter p_id = new() { ParameterName = "p_id", Direction = System.Data.ParameterDirection.Input, OracleDbType = OracleDbType.Int32, Value = adresy.IdAdresa };
+                    OracleParameter ulice = new() { ParameterName = "p_ulice", Direction = System.Data.ParameterDirection.Input, OracleDbType = OracleDbType.Varchar2, Value = adresy.Ulice };
+                    OracleParameter mesto = new() { ParameterName = "p_mesto", Direction = System.Data.ParameterDirection.Input, OracleDbType = OracleDbType.Varchar2, Value = adresy.Mesto };
+                    OracleParameter psc = new() { ParameterName = "p_psc", Direction = System.Data.ParameterDirection.Input, OracleDbType = OracleDbType.Int32, Value = adresy.Psc };
+
+                    await _context.Database.ExecuteSqlRawAsync("BEGIN adresy_pkg.adresa_update(:p_id, :p_ulice, :p_mesto, :p_psc); END;", p_id, ulice, mesto, psc);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -144,13 +151,9 @@ namespace BDAS2_SemPrace.Controllers
             {
                 return Problem("Entity set 'ModelContext.Adresy'  is null.");
             }
-            var adresy = await _context.Adresy.FindAsync(id);
-            if (adresy != null)
-            {
-                _context.Adresy.Remove(adresy);
-            }
-            
-            await _context.SaveChangesAsync();
+            OracleParameter p_id = new() { ParameterName = "p_id", Direction = System.Data.ParameterDirection.Input, OracleDbType = OracleDbType.Int32, Value = id, };
+            await _context.Database.ExecuteSqlRawAsync("BEGIN adresy_pkg.adresa_delete(:p_id); END;", p_id);
+
             return RedirectToAction(nameof(Index));
         }
 
