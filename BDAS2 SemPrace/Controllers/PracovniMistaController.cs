@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using BDAS2_SemPrace.Models;
+using Oracle.ManagedDataAccess.Client;
 
 namespace BDAS2_SemPrace.Controllers
 {
@@ -60,8 +61,13 @@ namespace BDAS2_SemPrace.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(pracovniMista);
-                await _context.SaveChangesAsync();
+                OracleParameter id_misto = new() { ParameterName = "p_id_misto", Direction = System.Data.ParameterDirection.Input, OracleDbType = OracleDbType.Varchar2, Value = pracovniMista.IdMisto };
+                OracleParameter nazev = new() { ParameterName = "p_nazev", Direction = System.Data.ParameterDirection.Input, OracleDbType = OracleDbType.Varchar2, Value = pracovniMista.Nazev };
+                OracleParameter popis = new() { ParameterName = "p_popis", Direction = System.Data.ParameterDirection.Input, OracleDbType = OracleDbType.Varchar2, Value = pracovniMista.Popis };
+                OracleParameter min_plat = new() { ParameterName = "p_min_plat", Direction = System.Data.ParameterDirection.Input, OracleDbType = OracleDbType.Int32, Value = pracovniMista.MinPlat };
+
+                await _context.Database.ExecuteSqlRawAsync("BEGIN pracovni_mista_pkg.pracovni_mista_insert(:p_nazev, :p_popis, :p_min_plat); END;", nazev, popis, min_plat);
+
                 return RedirectToAction(nameof(Index));
             }
             return View(pracovniMista);
@@ -97,8 +103,13 @@ namespace BDAS2_SemPrace.Controllers
             {
                 try
                 {
-                    _context.Update(pracovniMista);
-                    await _context.SaveChangesAsync();
+                    OracleParameter p_id = new() { ParameterName = "p_id", Direction = System.Data.ParameterDirection.Input, OracleDbType = OracleDbType.Int32, Value = id, };
+                    OracleParameter nazev = new() { ParameterName = "p_nazev", Direction = System.Data.ParameterDirection.Input, OracleDbType = OracleDbType.Varchar2, Value = pracovniMista.Nazev };
+                    OracleParameter popis = new() { ParameterName = "p_popis", Direction = System.Data.ParameterDirection.Input, OracleDbType = OracleDbType.Varchar2, Value = pracovniMista.Popis };
+                    OracleParameter min_plat = new() { ParameterName = "p_min_plat", Direction = System.Data.ParameterDirection.Input, OracleDbType = OracleDbType.Int32, Value = pracovniMista.MinPlat };
+
+                    await _context.Database.ExecuteSqlRawAsync("BEGIN pracovni_mista_pkg.pracovni_mista_update(:p_id, :p_nazev, :p_popis, :p_min_plat); END;", p_id, nazev, popis, min_plat);
+
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -143,13 +154,9 @@ namespace BDAS2_SemPrace.Controllers
             {
                 return Problem("Entity set 'ModelContext.PracovniMista'  is null.");
             }
-            var pracovniMista = await _context.PracovniMista.FindAsync(id);
-            if (pracovniMista != null)
-            {
-                _context.PracovniMista.Remove(pracovniMista);
-            }
-            
-            await _context.SaveChangesAsync();
+            OracleParameter p_id = new() { ParameterName = "p_id", Direction = System.Data.ParameterDirection.Input, OracleDbType = OracleDbType.Int32, Value = id, };
+            await _context.Database.ExecuteSqlRawAsync("BEGIN pracovni_mista_pkg.pracovni_mista_delete(:p_id); END;", p_id);
+
             return RedirectToAction(nameof(Index));
         }
 

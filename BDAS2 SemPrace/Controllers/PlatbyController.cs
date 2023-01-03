@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using BDAS2_SemPrace.Models;
+using Oracle.ManagedDataAccess.Client;
 
 namespace BDAS2_SemPrace.Controllers
 {
@@ -53,8 +54,8 @@ namespace BDAS2_SemPrace.Controllers
         {
             if (!ModelContext.HasAdminRights())
                 return NotFound();
-            ViewData["IdSupermarket"] = new SelectList(_context.Supermarkety, "IdSupermarket", "Nazev");
-            ViewData["IdZakaznik"] = new SelectList(_context.Zakaznici, "IdZakaznik", "Jmeno");
+            //ViewData["IdSupermarket"] = new SelectList(_context.Supermarkety, "IdSupermarket", "Nazev");
+            //ViewData["IdZakaznik"] = new SelectList(_context.Zakaznici, "IdZakaznik", "Jmeno");
             return View();
         }
 
@@ -65,8 +66,16 @@ namespace BDAS2_SemPrace.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(platby);
-                await _context.SaveChangesAsync();
+                OracleParameter datum = new() { ParameterName = "p_datum", Direction = System.Data.ParameterDirection.Input, OracleDbType = OracleDbType.Date, Value = platby.Datum };
+                OracleParameter castka = new() { ParameterName = "p_castka", Direction = System.Data.ParameterDirection.Input, OracleDbType = OracleDbType.Int32, Value = platby.Castka };
+                OracleParameter typ = new() { ParameterName = "p_typ", Direction = System.Data.ParameterDirection.Input, OracleDbType = OracleDbType.Varchar2, Value = platby.Typ };
+                OracleParameter cislo_karty = new() { ParameterName = "p_cislo_karty", Direction = System.Data.ParameterDirection.Input, OracleDbType = OracleDbType.Int32, Value = platby.CisloKarty };
+                OracleParameter id_zakaznik = new() { ParameterName = "p_id_zakaznik", Direction = System.Data.ParameterDirection.Input, OracleDbType = OracleDbType.Int32, Value = platby.IdZakaznik };
+                OracleParameter id_supermarket = new() { ParameterName = "p_id_supermarket", Direction = System.Data.ParameterDirection.Input, OracleDbType = OracleDbType.Int32, Value = platby.IdSupermarket };
+
+                await _context.Database.ExecuteSqlRawAsync("BEGIN platby_pkg.platby_insert(:p_datum, :p_castka, :p_typ, :p_cislo_karty, :p_id_zakaznik, :p_id_supermarket); END;",
+                    datum, castka, typ, cislo_karty, id_zakaznik, id_supermarket);
+
                 return RedirectToAction(nameof(Index));
             }
             ViewData["IdSupermarket"] = new SelectList(_context.Supermarkety, "IdSupermarket", "Nazev", platby.IdSupermarket);
@@ -106,8 +115,15 @@ namespace BDAS2_SemPrace.Controllers
             {
                 try
                 {
-                    _context.Update(platby);
-                    await _context.SaveChangesAsync();
+                    OracleParameter p_id = new() { ParameterName = "p_id", Direction = System.Data.ParameterDirection.Input, OracleDbType = OracleDbType.Int32, Value = id };
+                    OracleParameter datum = new() { ParameterName = "p_datum", Direction = System.Data.ParameterDirection.Input, OracleDbType = OracleDbType.Date, Value = platby.Datum };
+                    OracleParameter castka = new() { ParameterName = "p_castka", Direction = System.Data.ParameterDirection.Input, OracleDbType = OracleDbType.Int32, Value = platby.Castka };
+                    OracleParameter typ = new() { ParameterName = "p_typ", Direction = System.Data.ParameterDirection.Input, OracleDbType = OracleDbType.Varchar2, Value = platby.Typ };
+                    OracleParameter cislo_karty = new() { ParameterName = "p_cislo_karty", Direction = System.Data.ParameterDirection.Input, OracleDbType = OracleDbType.Int32, Value = platby.CisloKarty };
+                    OracleParameter id_zakaznik = new() { ParameterName = "p_id_zakaznik", Direction = System.Data.ParameterDirection.Input, OracleDbType = OracleDbType.Int32, Value = platby.IdZakaznik };
+                    OracleParameter id_supermarket = new() { ParameterName = "p_id_supermarket", Direction = System.Data.ParameterDirection.Input, OracleDbType = OracleDbType.Int32, Value = platby.IdSupermarket };
+
+                    await _context.Database.ExecuteSqlRawAsync("BEGIN platby_pkg.platby_update(:p_id, :p_datum, :p_castka, :p_typ, :p_cislo_karty, :p_id_zakaznik, :p_id_supermarket); END;", p_id, datum, castka, typ, cislo_karty, id_zakaznik, id_supermarket);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -122,8 +138,6 @@ namespace BDAS2_SemPrace.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["IdSupermarket"] = new SelectList(_context.Supermarkety, "IdSupermarket", "Nazev", platby.IdSupermarket);
-            ViewData["IdZakaznik"] = new SelectList(_context.Zakaznici, "IdZakaznik", "Jmeno", platby.IdZakaznik);
             return View(platby);
         }
 
@@ -156,13 +170,9 @@ namespace BDAS2_SemPrace.Controllers
             {
                 return Problem("Entity set 'ModelContext.Platby'  is null.");
             }
-            var platby = await _context.Platby.FindAsync(id);
-            if (platby != null)
-            {
-                _context.Platby.Remove(platby);
-            }
-            
-            await _context.SaveChangesAsync();
+            OracleParameter p_id = new() { ParameterName = "p_id", Direction = System.Data.ParameterDirection.Input, OracleDbType = OracleDbType.Int32, Value = id };
+            await _context.Database.ExecuteSqlRawAsync("BEGIN platby_pkg.platby_delete(:p_id); END;", p_id);
+
             return RedirectToAction(nameof(Index));
         }
 

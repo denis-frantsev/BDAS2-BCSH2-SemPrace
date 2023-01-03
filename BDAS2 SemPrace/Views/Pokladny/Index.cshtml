@@ -14,6 +14,37 @@
         <thead>
             <tr>
                 <th>
+                    @Html.DisplayNameFor(model => model.IdSupermarketNavigation)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.CisloPokladny)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.IdSupermarketNavigation.Nazev)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.CisloPokladny)
+                    </td>
+                    <td>
+                        <a class="btn btn-outline-secondary" asp-action="Edit" asp-route-id="@item.IdSupermarket" asp-route-id="@item.CisloPokladny">Upravit</a> |
+                        <a class="btn btn-outline-secondary" asp-action="Details" asp-route-id="@item.IdSupermarket">Podrobnosti</a> |
+                        <a class="btn btn-outline-danger" asp-action="Delete" asp-route-id="@item.IdSupermarket">Smazat</a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    @*<table class="table">
+        <thead>
+            <tr>
+                <th>
                 @Html.DisplayNameFor(model => model.IdSupermarketNavigation)
                 </th>
                 <th></th>
@@ -34,5 +65,5 @@
                 </tr>
         }
         </tbody>
-    </table>
+    </table>*@
 </div>
