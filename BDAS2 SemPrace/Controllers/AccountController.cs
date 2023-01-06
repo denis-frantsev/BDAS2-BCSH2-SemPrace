@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using Oracle.ManagedDataAccess.Client;
 using System;
 using System.IO;
 using System.Linq;
@@ -82,9 +83,14 @@ namespace BDAS2_SemPrace.Controllers
                         return View();
                     }
                     user.Role = Role.REGISTERED;
-                    _context.Add(user);
+                    OracleParameter email = new() { ParameterName = "p_email", Direction = System.Data.ParameterDirection.Input, OracleDbType = OracleDbType.Varchar2, Value = user.Email };
+                    OracleParameter password = new() { ParameterName = "p_heslo", Direction = System.Data.ParameterDirection.Input, OracleDbType = OracleDbType.Varchar2, Value = user.Password };
+                    OracleParameter role = new() { ParameterName = "p_opravneni", Direction = System.Data.ParameterDirection.Input, OracleDbType = OracleDbType.Int32, Value = user.Role };
+                    OracleParameter obrazek = new() { ParameterName = "p_id_obrazek", Direction = System.Data.ParameterDirection.Input, OracleDbType = OracleDbType.Int32, Value = user.IdObrazek };
+
+                    await _context.Database.ExecuteSqlRawAsync("BEGIN users_pkg.user_insert(:p_email, :p_heslo, :p_opravneni, :p_id_obrazek); END;", email, password, role, obrazek);
+
                     ModelContext.User = user;
-                    await _context.SaveChangesAsync();
                     return RedirectToAction("Index", "Home");
                 }
                 catch (Exception)
@@ -148,20 +154,23 @@ namespace BDAS2_SemPrace.Controllers
                 await image.CopyToAsync(stream);
                 Obrazky obrazek = new();
                 obrazek.Data = stream.ToArray();
-                obrazek.Popis = "Profilový obrázek";
+                obrazek.Popis = "Profilový obrázek, user: " + user.Email;
+                obrazek.Nazev = image.FileName;
+                obrazek.Pripona = image.ContentType;
                 if (user.IdObrazek == 0 || user.IdObrazek == null)
                 {
-                    user.IdObrazekNavigation = obrazek;
-                    await _context.Obrazky.AddAsync(user.IdObrazekNavigation);
+                    await _context.Obrazky.AddAsync(obrazek);
+                    await _context.SaveChangesAsync();
+                    user.IdObrazekNavigation = _context.Obrazky.FirstOrDefault(s => s.Popis == obrazek.Popis);
                 }
-                else 
+                else
                 {
-                    user.IdObrazekNavigation = new() {IdObrazek = (int)user.IdObrazek, Data = obrazek.Data, Popis = obrazek.Popis };
+                    user.IdObrazekNavigation = new() { IdObrazek = (int)user.IdObrazek, Data = obrazek.Data, Popis = obrazek.Popis, Nazev = obrazek.Nazev, Pripona = obrazek.Pripona };
                     _context.Obrazky.Update(user.IdObrazekNavigation);
                 }
                 _context.Users.Update(user);
-                await _context.SaveChangesAsync();
                 ModelContext.User = user;
+                await _context.SaveChangesAsync();
             }
 
             if (user.Role == Role.REGISTERED)
@@ -175,7 +184,7 @@ namespace BDAS2_SemPrace.Controllers
         {
             var obrazek = await _context.Obrazky.FindAsync(id);
             byte[] data = obrazek.Data;
-            return File(data, "image/jpg");
+            return File(data, obrazek.Pripona);
         }
 
         private bool UserWithEmailExists(string email)

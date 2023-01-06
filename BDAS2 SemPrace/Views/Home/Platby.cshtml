@@ -1,0 +1,78 @@
+﻿@model IEnumerable<BDAS2_SemPrace.Models.Platby>
+
+@{
+    ViewData["Title"] = "Index";
+}
+<div class="container-mt3" style="margin:2rem;">
+
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Platby" method="post">
+            <div class="form-group">
+                <label for="start" class="control-label">Od</label>
+                <input value="start" name="start" class="form-control" type="date" required/>
+            </div>
+            <div class="form-group">
+                <label for="end" class="control-label">Do</label>
+                <input value="end" name="end" class="form-control" type="date" required/>
+            </div>
+            <div class="form-group">
+                <label for="id" class="control-label">Vyberte pobočku</label>
+                <select value="id" name="id" class="form-control" asp-items="ViewBag.IdSupermarket"></select>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Zobrazit" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                        @Html.DisplayNameFor(model => model.Datum)
+                </th>
+                <th>
+                        @Html.DisplayNameFor(model => model.Castka)
+                </th>
+                <th>
+                        @Html.DisplayNameFor(model => model.Typ)
+                </th>
+                <th>
+                        @Html.DisplayNameFor(model => model.CisloKarty)
+                </th>
+                <th>
+                        @Html.DisplayNameFor(model => model.IdZakaznikNavigation)
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+                @if (Model != null)
+                {
+                    foreach (var item in Model)
+                    {
+                        <tr>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Datum)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Castka)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.Typ)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.CisloKarty)
+                            </td>
+                            <td>
+                                @Html.DisplayFor(modelItem => item.IdZakaznikNavigation.Jmeno) 
+                                @Html.DisplayFor(modelItem => item.IdZakaznikNavigation.Prijmeni) <br/>
+                                @Html.DisplayFor(modelItem => item.IdZakaznikNavigation.Email)
+                            </td>
+                        </tr>
+                    }
+                }
+
+        </tbody>
+    </table>
+</div>

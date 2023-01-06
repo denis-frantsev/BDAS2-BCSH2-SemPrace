@@ -40,8 +40,6 @@ namespace BDAS2_SemPrace.Models
             if (!optionsBuilder.IsConfigured)
             {
                 optionsBuilder.UseOracle();
-                //#warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                //                optionsBuilder.UseOracle("Data Source=(description=(address_list=(address = (protocol = TCP)(host = fei-sql1.upceucebny.cz)(port = 1521)))(connect_data=(service_name=IDAS.UPCEUCEBNY.CZ))\n);User ID=ST64102;Password=j8ex765gh;Persist Security Info=True");
             }
         }
 
@@ -684,9 +682,17 @@ namespace BDAS2_SemPrace.Models
                     .HasColumnName("DATA");
 
                 entity.Property(e => e.Popis)
-                    .HasMaxLength(30)
+                    .HasMaxLength(60)
                     .IsUnicode(false)
                     .HasColumnName("POPIS");
+                entity.Property(e => e.Nazev)
+                    .HasMaxLength(60)
+                    .IsUnicode(false)
+                    .HasColumnName("NAZEV");
+                entity.Property(e => e.Pripona)
+                    .HasMaxLength(60)
+                    .IsUnicode(false)
+                    .HasColumnName("PRIPONA");
             });
 
             modelBuilder.Entity<LogTable>(entity =>

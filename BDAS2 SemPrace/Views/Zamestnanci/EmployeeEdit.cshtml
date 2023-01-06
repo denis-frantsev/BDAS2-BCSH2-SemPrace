@@ -13,6 +13,12 @@
         <form asp-action="EmployeeEdit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="IdZamestnanec" />
+            <input type="hidden" asp-for="Mzda" />
+            <input type="hidden" asp-for="IdSupermarket" />
+            <input type="hidden" asp-for="IdManazer" />
+            <input type="hidden" asp-for="IdMisto" />
+            <input type="hidden" asp-for="IdSklad" />
+
             <div class="form-group">
                 <label asp-for="Jmeno" class="control-label"></label>
                 <input asp-for="Jmeno" class="form-control" />
@@ -33,6 +39,7 @@
                 <input asp-for="Email" class="form-control" />
                 <span asp-validation-for="Email" class="text-danger"></span>
             </div>
+
             <div class="form-group">
                 <input type="submit" value="Save" class="btn btn-primary" />
             </div>
