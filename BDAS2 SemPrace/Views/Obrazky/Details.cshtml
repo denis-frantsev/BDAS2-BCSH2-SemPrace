@@ -1,0 +1,54 @@
+﻿@model BDAS2_SemPrace.Models.Obrazky
+
+@{
+    ViewData["Title"] = "Details";
+}
+
+<div class="container-mt3" style="margin:2rem;">
+
+    <h1>Details</h1>
+
+    <div>
+        <h4>Obrazky</h4>
+        <hr />
+        <dl class="row">
+            <dt class = "col-sm-2">
+                @Html.DisplayNameFor(model => model.Data)
+            </dt>
+            <dd class = "col-sm-10">
+                <a href="~/Account/AddProfilePic">
+                    @if (Model.IdObrazek != null)
+                    {
+                        <img src="/Account/RetrieveImage/@Model.IdObrazek" alt="avatar" class="rounded-circle img-fluid" style="width: 150px; height: 150px; object-fit: cover;">
+                    }
+                    else
+                    {
+                        <img src="https://cdn2.iconfinder.com/data/icons/instagram-ui/48/jee-74-512.png" alt="avatar" class="rounded-circle img-fluid" style="width: 150px; height: 150px; object-fit: cover;">
+                    }
+                </a>
+            </dd>
+            <dt class = "col-sm-2">
+                @Html.DisplayNameFor(model => model.Popis)
+            </dt>
+            <dd class = "col-sm-10">
+                @Html.DisplayFor(model => model.Popis)
+            </dd>
+            <dt class = "col-sm-2">
+                @Html.DisplayNameFor(model => model.Nazev)
+            </dt>
+            <dd class = "col-sm-10">
+                @Html.DisplayFor(model => model.Nazev)
+            </dd>
+            <dt class = "col-sm-2">
+                @Html.DisplayNameFor(model => model.Pripona)
+            </dt>
+            <dd class = "col-sm-10">
+                @Html.DisplayFor(model => model.Pripona)
+            </dd>
+        </dl>
+    </div>
+    <div>
+        @Html.ActionLink("Edit", "Edit", new { /* id = Model.PrimaryKey */ }) |
+        <a asp-action="Index">Back to List</a>
+    </div>
+</div>
