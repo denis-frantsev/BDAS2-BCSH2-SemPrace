@@ -1,0 +1,41 @@
+﻿@model IEnumerable<BDAS2_SemPrace.Models.ZboziNaDoplneniViewModel>
+
+@{
+    ViewData["Title"] = "Index";
+}
+<div class="container-mt3" style="margin:2rem;">
+    <h1>Seznam zboží, které je třeba doplnit na skladech</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Sklad)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.NazevZbozi)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Pocet)
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Sklad)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.NazevZbozi)
+
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.Pocet)
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+    <div />

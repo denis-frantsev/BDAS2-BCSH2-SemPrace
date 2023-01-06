@@ -7,11 +7,13 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using BDAS2_SemPrace.Models;
 using Oracle.ManagedDataAccess.Client;
+using System.Data;
 
 namespace BDAS2_SemPrace.Controllers
 {
     public class ZboziController : Controller
     {
+        private readonly string connStr = "Data Source=(description=(address_list=(address = (protocol = TCP)(host = fei-sql3.upceucebny.cz)(port = 1521)))(connect_data=(service_name=BDAS.UPCEUCEBNY.CZ))\n);User ID=ST64102;Password=j8ex765gh;Persist Security Info=True";
         private readonly ModelContext _context;
 
         public ZboziController(ModelContext context)
@@ -174,6 +176,37 @@ namespace BDAS2_SemPrace.Controllers
             await _context.Database.ExecuteSqlRawAsync("BEGIN zbozi_pkg.zbozi_delete(:p_id); END;", p_id);
 
             return RedirectToAction(nameof(Index));
+        }
+
+        public IActionResult ZboziNaDoplneni() {
+            DataSet dataset = new DataSet();
+            using (OracleConnection objConn = new OracleConnection(connStr))
+            {
+                OracleCommand cmd = new OracleCommand();
+                cmd.Connection = objConn;
+                cmd.CommandText = "SELECT * FROM zbozi_na_doplneni";
+                cmd.CommandType = CommandType.Text;
+                try
+                {
+                    objConn.Open();
+                    cmd.ExecuteNonQuery();
+                    OracleDataAdapter da = new OracleDataAdapter(cmd);
+                    da.Fill(dataset);
+                }
+                catch (Exception ex)
+                {
+                    throw;
+                }
+                objConn.Close();
+            }
+            var myData = dataset.Tables[0].AsEnumerable().Select(r => new ZboziNaDoplneniViewModel
+            {
+                NazevZbozi = r.Field<string>("zbozi"),
+                Sklad = r.Field<string>("sklad"),
+                Pocet = (int)r.Field<decimal>("pocet"),
+            });
+
+            return View(myData.ToList());
         }
 
         private bool ZboziExists(int id)
