@@ -78,10 +78,6 @@ namespace BDAS2_SemPrace.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Edit(string id, [Bind("Role,Password,Email,ProfilePic")] User user, IFormFile file)
         {
-            if (id != user.Email)
-            {
-                return NotFound();
-            }
 
             if (ModelState.IsValid)
             {
@@ -94,11 +90,16 @@ namespace BDAS2_SemPrace.Controllers
                         await image.CopyToAsync(stream);
                         user.IdObrazekNavigation.Data = stream.ToArray();
                         user.IdObrazekNavigation.Popis = "Profilový obrázek";
+                        user.IdObrazekNavigation.Nazev = image.FileName;
+                        user.IdObrazekNavigation.Pripona = image.ContentType;
                         await _context.Obrazky.AddAsync(user.IdObrazekNavigation);
                     }
-                    _context.Update(user);
+                    OracleParameter email = new() { ParameterName = "p_email", Direction = System.Data.ParameterDirection.Input, OracleDbType = OracleDbType.Varchar2, Value = user.Email };
+                    OracleParameter password = new() { ParameterName = "p_heslo", Direction = System.Data.ParameterDirection.Input, OracleDbType = OracleDbType.Varchar2, Value = user.Password };
+                    OracleParameter role = new() { ParameterName = "p_opravneni", Direction = System.Data.ParameterDirection.Input, OracleDbType = OracleDbType.Int32, Value = user.Role };
+                    OracleParameter obrazek = new() { ParameterName = "p_id_obrazek", Direction = System.Data.ParameterDirection.Input, OracleDbType = OracleDbType.Int32, Value = user.IdObrazek };
 
-                    await _context.SaveChangesAsync();
+                    await _context.Database.ExecuteSqlRawAsync("BEGIN users_pkg.user_update(:p_email,:p_heslo, :p_opravneni, :p_id_obrazek); END;",email,password,role,obrazek);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -146,8 +147,8 @@ namespace BDAS2_SemPrace.Controllers
             var user = await _context.Users.FindAsync(id);
             if (user != null)
             {
-                OracleParameter p_id = new OracleParameter() { ParameterName = "p_id", Direction = System.Data.ParameterDirection.Input, OracleDbType = OracleDbType.Varchar2, Value = id, };
-                await _context.Database.ExecuteSqlRawAsync("BEGIN DELETE_USER(:p_id); END;", p_id);
+                OracleParameter p_email = new OracleParameter() { ParameterName = "p_email", Direction = System.Data.ParameterDirection.Input, OracleDbType = OracleDbType.Varchar2, Value = id, };
+                await _context.Database.ExecuteSqlRawAsync("BEGIN users_pkg.user_delete(:p_email); END;", p_email);
             }
 
             await _context.SaveChangesAsync();

@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using BDAS2_SemPrace.Models;
+using Oracle.ManagedDataAccess.Client;
 
 namespace BDAS2_SemPrace.Controllers
 {
@@ -57,8 +58,14 @@ namespace BDAS2_SemPrace.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(znacky);
-                await _context.SaveChangesAsync();
+                OracleParameter nazev = new()
+                {
+                    ParameterName = "p_nazev",
+                    Direction = System.Data.ParameterDirection.Input, 
+                    OracleDbType = OracleDbType.Varchar2,
+                    Value = znacky.Nazev
+                };
+                await _context.Database.ExecuteSqlRawAsync("BEGIN znacky_pkg.znacka_insert(:p_nazev); END;", nazev);
                 return RedirectToAction(nameof(Index));
             }
             return View(znacky);
@@ -94,8 +101,22 @@ namespace BDAS2_SemPrace.Controllers
             {
                 try
                 {
-                    _context.Update(znacky);
-                    await _context.SaveChangesAsync();
+                    OracleParameter ID = new()
+                    {
+                        ParameterName = "p_id",
+                        Direction = System.Data.ParameterDirection.Input,
+                        OracleDbType = OracleDbType.Int32,
+                        Value = id
+                    };
+                    OracleParameter nazev = new()
+                    {
+                        ParameterName = "p_nazev",
+                        Direction = System.Data.ParameterDirection.Input,
+                        OracleDbType = OracleDbType.Varchar2, 
+                        Value = znacky.Nazev
+                    };
+
+                    await _context.Database.ExecuteSqlRawAsync("BEGIN znacky_pkg.znacka_update(:p_id,:p_nazev); END;",ID,nazev);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -140,13 +161,17 @@ namespace BDAS2_SemPrace.Controllers
             {
                 return Problem("Entity set 'ModelContext.Znacky'  is null.");
             }
-            var znacky = await _context.Znacky.FindAsync(id);
-            if (znacky != null)
+
+            OracleParameter ID = new()
             {
-                _context.Znacky.Remove(znacky);
-            }
-            
-            await _context.SaveChangesAsync();
+                ParameterName = "p_id",
+                Direction = System.Data.ParameterDirection.Input,
+                OracleDbType = OracleDbType.Int32,
+                Value = id
+            };
+
+            await _context.Database.ExecuteSqlRawAsync("BEGIN znacky_pkg.znacka_delete(:p_id); END;", ID);
+
             return RedirectToAction(nameof(Index));
         }
 

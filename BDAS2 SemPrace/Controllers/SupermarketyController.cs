@@ -24,8 +24,8 @@ namespace BDAS2_SemPrace.Controllers
         {
             if (ModelContext.User.Role == Role.GHOST || ModelContext.User.Role == Role.REGISTERED)
             return NotFound();
-            var test = await _context.Supermarkety.FromSqlRaw("select * from supermarkety_view").Include(s=>s.IdAdresaNavigation).ToListAsync();
-            return View(test);
+            var pobocky = await _context.Supermarkety.FromSqlRaw("select * from supermarkety_view").Include(s => s.IdAdresaNavigation).ToListAsync();
+            return View(pobocky);
         }
 
         // GET: Supermarkety/Details/5
@@ -63,9 +63,15 @@ namespace BDAS2_SemPrace.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(supermarkety);
                 _context.Adresy.Add(supermarkety.IdAdresaNavigation);
                 await _context.SaveChangesAsync();
+
+                OracleParameter nazev = new() { ParameterName = "p_nazev", Direction = System.Data.ParameterDirection.Input, OracleDbType = OracleDbType.Varchar2, Value = supermarkety.Nazev };
+                OracleParameter idAdresa = new() { ParameterName = "p_id_adresa", Direction = System.Data.ParameterDirection.Input, OracleDbType = OracleDbType.Int32, Value = supermarkety.IdAdresaNavigation.IdAdresa };
+
+                await _context.Database.ExecuteSqlRawAsync("BEGIN supermarkety_pkg.supermarket_insert(:p_nazev, :p_id_adresa); END;", nazev, idAdresa);
+
+
                 return RedirectToAction(nameof(Index));
             }
             ViewData["IdAdresa"] = new SelectList(_context.Adresy, "IdAdresa", "Mesto", supermarkety.IdAdresa);
@@ -85,7 +91,7 @@ namespace BDAS2_SemPrace.Controllers
             {
                 return NotFound();
             }
-            ViewData["IdAdresa"] = new SelectList(_context.Adresy, "IdAdresa", "Mesto", supermarkety.IdAdresa);
+            ViewData["IdAdresa"] = new SelectList(_context.Adresy, "IdAdresa", "Adresa", supermarkety.IdAdresa);
             return View(supermarkety);
         }
 
@@ -103,8 +109,11 @@ namespace BDAS2_SemPrace.Controllers
             {
                 try
                 {
-                    _context.Update(supermarkety);
-                    await _context.SaveChangesAsync();
+                    OracleParameter p_id = new() { ParameterName = "p_id", Direction = System.Data.ParameterDirection.Input, OracleDbType = OracleDbType.Int32, Value = id };
+                    OracleParameter nazev = new() { ParameterName = "p_nazev", Direction = System.Data.ParameterDirection.Input, OracleDbType = OracleDbType.Varchar2, Value = supermarkety.Nazev };
+                    OracleParameter idAdresa = new() { ParameterName = "p_id_adresa", Direction = System.Data.ParameterDirection.Input, OracleDbType = OracleDbType.Int32, Value = supermarkety.IdAdresa };
+
+                    await _context.Database.ExecuteSqlRawAsync("BEGIN supermarkety_pkg.supermarket_update(:p_id, :p_nazev, :p_id_adresa); END;",p_id, nazev, idAdresa);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -151,13 +160,10 @@ namespace BDAS2_SemPrace.Controllers
             {
                 return Problem("Entity set 'ModelContext.Supermarkety'  is null.");
             }
-            var supermarkety = await _context.Supermarkety.FindAsync(id);
-            if (supermarkety != null)
-            {
-                _context.Supermarkety.Remove(supermarkety);
-            }
-            
-            await _context.SaveChangesAsync();
+
+            OracleParameter p_id = new() { ParameterName = "p_id", Direction = System.Data.ParameterDirection.Input, OracleDbType = OracleDbType.Int32, Value = id };
+            await _context.Database.ExecuteSqlRawAsync("BEGIN supermarkety_pkg.supermarket_delete(:p_id); END;", p_id);
+
             return RedirectToAction(nameof(Index));
         }
 

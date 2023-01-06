@@ -23,6 +23,8 @@ namespace BDAS2_SemPrace.Models
         public virtual ICollection<Sklady> Sklady { get; set; }
         public virtual ICollection<Supermarkety> Supermarkety { get; set; }
 
+        public string Adresa => this.ToString();
+
         public override string ToString()
         {
             return $"{Ulice}, {Mesto} {Psc}";
