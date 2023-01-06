@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using BDAS2_SemPrace.Models;
+using Oracle.ManagedDataAccess.Client;
 
 namespace BDAS2_SemPrace.Controllers
 {
@@ -63,9 +64,13 @@ namespace BDAS2_SemPrace.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(sklady);
                 _context.Add(sklady.IdAdresaNavigation);
                 await _context.SaveChangesAsync();
+
+                OracleParameter nazev = new() { ParameterName = "p_nazev", Direction = System.Data.ParameterDirection.Input, OracleDbType = OracleDbType.Varchar2, Value = sklady.Nazev };
+                OracleParameter idAdresa = new() { ParameterName = "p_id_adresa", Direction = System.Data.ParameterDirection.Input, OracleDbType = OracleDbType.Int32, Value = sklady.IdAdresaNavigation.IdAdresa };
+
+                await _context.Database.ExecuteSqlRawAsync("BEGIN sklady_pkg.sklad_insert(:p_nazev, :p_id_adresa); END;", nazev, idAdresa);
                 return RedirectToAction(nameof(Index));
             }
             ViewData["IdAdresa"] = new SelectList(_context.Adresy, "IdAdresa", "Mesto", sklady.IdAdresa);
@@ -85,7 +90,7 @@ namespace BDAS2_SemPrace.Controllers
             {
                 return NotFound();
             }
-            ViewData["IdAdresa"] = new SelectList(_context.Adresy, "IdAdresa", "Mesto", sklady.IdAdresa);
+            ViewData["IdAdresa"] = new SelectList(_context.Adresy, "IdAdresa", "Adresa", sklady.IdAdresa);
             return View(sklady);
         }
 
@@ -103,8 +108,11 @@ namespace BDAS2_SemPrace.Controllers
             {
                 try
                 {
-                    _context.Update(sklady);
-                    await _context.SaveChangesAsync();
+                    OracleParameter p_id = new() { ParameterName = "p_id", Direction = System.Data.ParameterDirection.Input, OracleDbType = OracleDbType.Int32, Value = id };
+                    OracleParameter nazev = new() { ParameterName = "p_nazev", Direction = System.Data.ParameterDirection.Input, OracleDbType = OracleDbType.Varchar2, Value = sklady.Nazev };
+                    OracleParameter idAdresa = new() { ParameterName = "p_id_adresa", Direction = System.Data.ParameterDirection.Input, OracleDbType = OracleDbType.Int32, Value = sklady.IdAdresa };
+
+                    await _context.Database.ExecuteSqlRawAsync("BEGIN sklady_pkg.sklad_update(:p_id, :p_nazev, :p_id_adresa); END;", p_id, nazev, idAdresa);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -151,19 +159,16 @@ namespace BDAS2_SemPrace.Controllers
             {
                 return Problem("Entity set 'ModelContext.Sklady'  is null.");
             }
-            var sklady = await _context.Sklady.FindAsync(id);
-            if (sklady != null)
-            {
-                _context.Sklady.Remove(sklady);
-            }
-            
-            await _context.SaveChangesAsync();
+
+            OracleParameter p_id = new() { ParameterName = "p_id", Direction = System.Data.ParameterDirection.Input, OracleDbType = OracleDbType.Int32, Value = id };
+            await _context.Database.ExecuteSqlRawAsync("BEGIN sklady_pkg.sklad_delete(:p_id); END;", p_id);
+
             return RedirectToAction(nameof(Index));
         }
 
         private bool SkladyExists(decimal id)
         {
-          return _context.Sklady.Any(e => e.IdSklad == id);
+            return _context.Sklady.Any(e => e.IdSklad == id);
         }
     }
 }

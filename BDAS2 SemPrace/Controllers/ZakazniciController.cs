@@ -115,6 +115,14 @@ namespace BDAS2_SemPrace.Controllers
                     OracleParameter email = new() { ParameterName = "p_email", Direction = System.Data.ParameterDirection.Input, OracleDbType = OracleDbType.Varchar2, Value = zakaznici.Email };
 
                     await _context.Database.ExecuteSqlRawAsync("BEGIN zakaznici_pkg.zakaznik_update(:p_id, :p_jmeno, :p_prijmeni, :p_telefonni_cislo, :p_email); END;", p_id, jmeno, prijmeni, telefonniCislo, email);
+
+                    if (_context.IsUser(id))
+                    {
+                        var updatedUser = await _context.Users.FindAsync(zakaznici.Email);
+                        ModelContext.User.Email = updatedUser.Email;
+                        ModelContext.User.Password = updatedUser.Password;
+                        ModelContext.User.Role = updatedUser.Role;
+                    }
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -163,7 +171,7 @@ namespace BDAS2_SemPrace.Controllers
                 return Problem("Entity set 'ModelContext.Zakaznici'  is null.");
             }
 
-            OracleParameter p_id = new() { ParameterName = "p_id", Direction = System.Data.ParameterDirection.Input, OracleDbType = OracleDbType.Int32, Value = id, };
+            OracleParameter p_id = new() { ParameterName = "p_id", Direction = System.Data.ParameterDirection.Input, OracleDbType = OracleDbType.Int32, Value = id };
             await _context.Database.ExecuteSqlRawAsync("BEGIN zakaznici_pkg.zakaznik_delete(:p_id); END;", p_id);
             return RedirectToAction(nameof(Index));
         }

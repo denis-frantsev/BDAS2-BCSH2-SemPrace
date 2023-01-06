@@ -24,7 +24,7 @@ namespace BDAS2_SemPrace.Controllers
         {
             if (ModelContext.User.Role == Role.GHOST || ModelContext.User.Role == Role.REGISTERED)
                 return NotFound();
-            var zamestnanci = _context.Zamestnanci.Include(z => z.IdManazerNavigation).Include(z => z.IdMistoNavigation).Include(z => z.IdSkladNavigation).Include(z => z.IdSupermarketNavigation).Select(s => s).ToList().Where(s => s == s);
+            var zamestnanci = _context.Zamestnanci.FromSqlRaw("SELECT * FROM zamestnanci_view").Include(z => z.IdManazerNavigation).Include(z => z.IdMistoNavigation).Include(z => z.IdSkladNavigation).Include(z => z.IdSupermarketNavigation).Select(s => s).ToList().OrderByDescending(s=>s.Mzda).Where(s => s == s);
             ViewBag.manazer = new SelectList(_context.Zamestnanci.Where(m => m.IdManazer == null), "IdZamestnanec", "Email");
             ViewBag.misto = new SelectList(_context.PracovniMista, "IdMisto", "Nazev");
             ViewBag.supermarket = new SelectList(_context.Supermarkety, "IdSupermarket", "Nazev");
@@ -41,7 +41,6 @@ namespace BDAS2_SemPrace.Controllers
             if (sklad != null)
                 zamestnanci = zamestnanci.Where(x => x.IdSklad != null && x.IdSklad == sklad);
             
-            //var modelContext = _context.Zamestnanci.Include(z => z.IdManazerNavigation).Include(z => z.IdMistoNavigation).Include(z => z.IdSkladNavigation).Include(z => z.IdSupermarketNavigation);
             return View(zamestnanci);
         }
 
@@ -104,6 +103,22 @@ namespace BDAS2_SemPrace.Controllers
             return View(zamestnanci);
         }
 
+        public async Task<IActionResult> EmployeeEdit(int? id)
+        {
+            if (id == null || _context.Zamestnanci == null || !ModelContext.HasAdminRights())
+            {
+                return NotFound();
+            }
+
+            var zamestnanci = await _context.Zamestnanci.FindAsync(id);
+            if (zamestnanci == null)
+            {
+                return NotFound();
+            }
+
+            return View(zamestnanci);
+        }
+
         // GET: Zamestnanci/Edit/5
         public async Task<IActionResult> Edit(int? id)
         {
@@ -121,6 +136,38 @@ namespace BDAS2_SemPrace.Controllers
             ViewData["IdMisto"] = new SelectList(_context.PracovniMista, "IdMisto", "Nazev", zamestnanci.IdMisto);
             ViewData["IdSklad"] = new SelectList(_context.Sklady, "IdSklad", "Nazev", zamestnanci.IdSklad);
             ViewData["IdSupermarket"] = new SelectList(_context.Supermarkety, "IdSupermarket", "Nazev", zamestnanci.IdSupermarket);
+            return View(zamestnanci);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> EmployeeEdit(int id, [Bind("IdZamestnanec,Jmeno,Prijmeni,TelefonniCislo,Email,Mzda,IdSupermarket,IdManazer,IdMisto,IdSklad")] Zamestnanci zamestnanci)
+        {
+            if (id != zamestnanci.IdZamestnanec)
+            {
+                return NotFound();
+            }
+
+            if (ModelState.IsValid)
+            {
+                try
+                {
+                    _context.Update(zamestnanci);
+                    await _context.SaveChangesAsync();
+                }
+                catch (DbUpdateConcurrencyException)
+                {
+                    if (!ZamestnanciExists(zamestnanci.IdZamestnanec))
+                    {
+                        return NotFound();
+                    }
+                    else
+                    {
+                        throw;
+                    }
+                }
+                return RedirectToAction("MyAccount", "Account");
+            }
             return View(zamestnanci);
         }
 
