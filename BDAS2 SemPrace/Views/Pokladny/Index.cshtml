@@ -14,25 +14,31 @@
         <thead>
             <tr>
                 <th>
-                @Html.DisplayNameFor(model => model.IdSupermarketNavigation)
+                    @Html.DisplayNameFor(model => model.IdSupermarketNavigation)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.CisloPokladny)
                 </th>
                 <th></th>
             </tr>
         </thead>
         <tbody>
-        @foreach (var item in Model)
-        {
+            @foreach (var item in Model)
+            {
                 <tr>
                     <td>
-                    @Html.DisplayFor(modelItem => item.IdSupermarketNavigation.Nazev)
+                        @Html.DisplayFor(modelItem => item.IdSupermarketNavigation.Nazev)
                     </td>
                     <td>
-                    @Html.ActionLink("Edit", "Edit", new { /* id=item.PrimaryKey */ }) |
-                    @Html.ActionLink("Details", "Details", new { /* id=item.PrimaryKey */ }) |
-                    @Html.ActionLink("Delete", "Delete", new { /* id=item.PrimaryKey */ })
+                        @Html.DisplayFor(modelItem => item.CisloPokladny)
+                    </td>
+                    <td>
+                        <a class="btn btn-outline-secondary" asp-action="Edit" asp-route-supermarketId="@item.IdSupermarket" asp-route-cisloPokladny="@item.CisloPokladny">Upravit</a> |
+                        <a class="btn btn-outline-secondary" asp-action="Details" asp-route-supermarketId="@item.IdSupermarket" asp-route-cisloPokladny="@item.CisloPokladny">Podrobnosti</a> |
+                        <a class="btn btn-outline-danger" asp-action="Delete" asp-route-supermarketId="@item.IdSupermarket" asp-route-cisloPokladny="@item.CisloPokladny">Smazat</a>
                     </td>
                 </tr>
-        }
+            }
         </tbody>
     </table>
 </div>

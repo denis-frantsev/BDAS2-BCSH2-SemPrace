@@ -1,0 +1,44 @@
+﻿@model IEnumerable<BDAS2_SemPrace.Models.LogTable>
+
+@{
+    ViewData["Title"] = "Index";
+}
+<div class="container-mt3" style="margin:2rem;">
+    <h1>Seznam změn</h1>
+
+    <table class="table">
+        <thead>
+            <tr>
+                <th>
+                    @Html.DisplayNameFor(model => model.Tabulka)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Operace)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.Cas)
+                </th>
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+    @foreach (var item in Model) {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Tabulka)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Operace)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Cas)
+                </td>
+                <td>
+                   <a class="btn btn-outline-secondary" asp-action="Details" asp-route-id="@item.IdZaznam">Podrobnosti</a> |
+                   <a class="btn btn-outline-danger" asp-action="Delete" asp-route-id="@item.IdZaznam">Smazat</a>
+                </td>
+            </tr>
+    }
+        </tbody>
+    </table>
+<div/>

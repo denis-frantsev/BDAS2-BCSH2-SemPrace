@@ -10,7 +10,7 @@ namespace BDAS2_SemPrace.Models
         public int IdSupermarket { get; set; }
 
         [Display(Name = "Číslo pokladny")]
-        public byte CisloPokladny { get; set; }
+        public int CisloPokladny { get; set; }
 
         [Display(Name = "Pobočka")]
         public virtual Supermarkety IdSupermarketNavigation { get; set; }

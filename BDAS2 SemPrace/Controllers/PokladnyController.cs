@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using BDAS2_SemPrace.Models;
+using Oracle.ManagedDataAccess.Client;
 
 namespace BDAS2_SemPrace.Controllers
 {
@@ -29,16 +30,16 @@ namespace BDAS2_SemPrace.Controllers
         }
 
         // GET: Pokladny/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(int? supermarketId, int? cisloPokladny)
         {
-            if (id == null || _context.Pokladny == null || !ModelContext.HasAdminRights())
+            if (supermarketId == null || cisloPokladny == null ||_context.Pokladny == null || !ModelContext.HasAdminRights())
             {
                 return NotFound();
             }
 
             var pokladny = await _context.Pokladny
                 .Include(p => p.IdSupermarketNavigation)
-                .FirstOrDefaultAsync(m => m.IdSupermarket == id);
+                .FirstOrDefaultAsync(m => m.IdSupermarket == supermarketId && m.CisloPokladny == cisloPokladny);
             if (pokladny == null)
             {
                 return NotFound();
@@ -63,8 +64,11 @@ namespace BDAS2_SemPrace.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(pokladny);
-                await _context.SaveChangesAsync();
+                OracleParameter id_supermarket = new() { ParameterName = "p_id_supermarket", Direction = System.Data.ParameterDirection.Input, OracleDbType = OracleDbType.Int32, Value = pokladny.IdSupermarket };
+                OracleParameter cislo_pokladny = new() { ParameterName = "p_cislo_pokladny", Direction = System.Data.ParameterDirection.Input, OracleDbType = OracleDbType.Int32, Value = pokladny.CisloPokladny };
+                
+                await _context.Database.ExecuteSqlRawAsync("BEGIN pokladny_pkg.pokladny_insert(:p_id_supermarket, :p_cislo_pokladny); END;", id_supermarket, cislo_pokladny);
+
                 return RedirectToAction(nameof(Index));
             }
             ViewData["IdSupermarket"] = new SelectList(_context.Supermarkety, "IdSupermarket", "Nazev", pokladny.IdSupermarket);
@@ -72,14 +76,15 @@ namespace BDAS2_SemPrace.Controllers
         }
 
         // GET: Pokladny/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(int? supermarketId, int? cisloPokladny)
         {
-            if (id == null || _context.Pokladny == null || !ModelContext.HasAdminRights())
+            if (supermarketId == null || cisloPokladny == null || _context.Pokladny == null || !ModelContext.HasAdminRights())
             {
                 return NotFound();
             }
 
-            var pokladny = await _context.Pokladny.FindAsync(id);
+            var pokladny = await _context.Pokladny.FindAsync(supermarketId, cisloPokladny);
+            pokladny.IdSupermarketNavigation = await _context.Supermarkety.FindAsync(supermarketId);
             if (pokladny == null)
             {
                 return NotFound();
@@ -91,9 +96,9 @@ namespace BDAS2_SemPrace.Controllers
         // POST: Pokladny/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("IdSupermarket,CisloPokladny")] Pokladny pokladny)
+        public async Task<IActionResult> Edit(int supermarketId, int cisloPokladny, [Bind("IdSupermarket,CisloPokladny")] Pokladny pokladny)
         {
-            if (id != pokladny.IdSupermarket)
+            if (cisloPokladny != pokladny.CisloPokladny && supermarketId != pokladny.IdSupermarket)
             {
                 return NotFound();
             }
@@ -102,12 +107,15 @@ namespace BDAS2_SemPrace.Controllers
             {
                 try
                 {
-                    _context.Update(pokladny);
-                    await _context.SaveChangesAsync();
+                    OracleParameter id_supermarket = new() { ParameterName = "p_id_supermarket", Direction = System.Data.ParameterDirection.Input, OracleDbType = OracleDbType.Int32, Value = pokladny.IdSupermarket };
+                    OracleParameter cislo_pokladny = new() { ParameterName = "p_cislo_pokladny", Direction = System.Data.ParameterDirection.Input, OracleDbType = OracleDbType.Int32, Value = pokladny.CisloPokladny };
+
+                    await _context.Database.ExecuteSqlRawAsync("BEGIN pokladny_pkg.pokladny_update(:p_id_supermarket, :p_cislo_pokladny); END;", id_supermarket, cislo_pokladny);
+
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!PokladnyExists(pokladny.IdSupermarket))
+                    if (!PokladnyExists(pokladny.IdSupermarket, pokladny.CisloPokladny))
                     {
                         return NotFound();
                     }
@@ -123,16 +131,16 @@ namespace BDAS2_SemPrace.Controllers
         }
 
         // GET: Pokladny/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(int? supermarketId, int? cisloPokladny)
         {
-            if (id == null || _context.Pokladny == null || !ModelContext.HasAdminRights())
+            if (cisloPokladny == null || _context.Pokladny == null || !ModelContext.HasAdminRights())
             {
                 return NotFound();
             }
 
             var pokladny = await _context.Pokladny
                 .Include(p => p.IdSupermarketNavigation)
-                .FirstOrDefaultAsync(m => m.IdSupermarket == id);
+                .FirstOrDefaultAsync(m => m.IdSupermarket == supermarketId && m.CisloPokladny == cisloPokladny);
             if (pokladny == null)
             {
                 return NotFound();
@@ -144,25 +152,23 @@ namespace BDAS2_SemPrace.Controllers
         // POST: Pokladny/Delete/5
         [HttpPost, ActionName("Delete")]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public async Task<IActionResult> DeleteConfirmed([Bind("IdSupermarket,CisloPokladny")] Pokladny pokladny)
         {
             if (_context.Pokladny == null)
             {
                 return Problem("Entity set 'ModelContext.Pokladny'  is null.");
             }
-            var pokladny = await _context.Pokladny.FindAsync(id);
-            if (pokladny != null)
-            {
-                _context.Pokladny.Remove(pokladny);
-            }
-            
-            await _context.SaveChangesAsync();
+            OracleParameter id_supermarket = new() { ParameterName = "p_id_supermarket", Direction = System.Data.ParameterDirection.Input, OracleDbType = OracleDbType.Int32, Value = pokladny.IdSupermarket };
+            OracleParameter cislo_pokladny = new() { ParameterName = "p_cislo_pokladny", Direction = System.Data.ParameterDirection.Input, OracleDbType = OracleDbType.Int32, Value = pokladny.CisloPokladny };
+
+            await _context.Database.ExecuteSqlRawAsync("BEGIN pokladny_pkg.pokladny_delete(:p_id_supermarket, :p_cislo_pokladny); END;", id_supermarket, cislo_pokladny);
+
             return RedirectToAction(nameof(Index));
         }
 
-        private bool PokladnyExists(int id)
+        private bool PokladnyExists(int supermarketId, int cisloPokladny)
         {
-          return _context.Pokladny.Any(e => e.IdSupermarket == id);
+          return _context.Pokladny.Any(e => e.IdSupermarket == supermarketId && e.CisloPokladny == cisloPokladny);
         }
     }
 }

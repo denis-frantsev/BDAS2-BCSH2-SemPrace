@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using BDAS2_SemPrace.Models;
+using Oracle.ManagedDataAccess.Client;
 
 namespace BDAS2_SemPrace.Controllers
 {
@@ -92,14 +93,19 @@ namespace BDAS2_SemPrace.Controllers
 
             if (ModelState.IsValid)
             {
-                _context.Add(zamestnanci);
-                await _context.SaveChangesAsync();
+                OracleParameter jmeno = new() { ParameterName = "p_jmeno", Direction = System.Data.ParameterDirection.Input, OracleDbType = OracleDbType.Varchar2, Value = zamestnanci.Jmeno };
+                OracleParameter prijmeni = new() { ParameterName = "p_prijmeni", Direction = System.Data.ParameterDirection.Input, OracleDbType = OracleDbType.Varchar2, Value = zamestnanci.Prijmeni };
+                OracleParameter telefonniCislo = new() { ParameterName = "p_telefonni_cislo", Direction = System.Data.ParameterDirection.Input, OracleDbType = OracleDbType.Int32, Value = zamestnanci.TelefonniCislo };
+                OracleParameter email = new() { ParameterName = "p_email", Direction = System.Data.ParameterDirection.Input, OracleDbType = OracleDbType.Varchar2, Value = zamestnanci.Email };
+                OracleParameter mzda = new() { ParameterName = "p_mzda", Direction = System.Data.ParameterDirection.Input, OracleDbType = OracleDbType.Int32, Value = zamestnanci.Mzda };
+                OracleParameter id_supermarket = new() { ParameterName = "p_id_supermarket", Direction = System.Data.ParameterDirection.Input, OracleDbType = OracleDbType.Int32, Value = zamestnanci.IdSupermarket };
+                OracleParameter id_manazer = new() { ParameterName = "p_id_manazer", Direction = System.Data.ParameterDirection.Input, OracleDbType = OracleDbType.Int32, Value = zamestnanci.IdManazer };
+                OracleParameter id_misto = new() { ParameterName = "p_id_misto", Direction = System.Data.ParameterDirection.Input, OracleDbType = OracleDbType.Int32, Value = zamestnanci.IdMisto };
+                OracleParameter id_sklad = new() { ParameterName = "p_id_sklad", Direction = System.Data.ParameterDirection.Input, OracleDbType = OracleDbType.Int32, Value = zamestnanci.IdSklad };
+                await _context.Database.ExecuteSqlRawAsync("BEGIN zamestnanci_pkg.zamestnanec_insert(:p_jmeno, :p_prijmeni, :p_telefonni_cislo, :p_email, :p_mzda, :p_id_supermarket," +
+                    ":p_id_manazer, :p_id_misto, :p_id_sklad); END;", jmeno, prijmeni, telefonniCislo, email, mzda, id_supermarket, id_manazer, id_misto, id_sklad);
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["IdManazer"] = new SelectList(_context.Zamestnanci, "IdZamestnanec", "Email", zamestnanci.IdManazer);
-            ViewData["IdMisto"] = new SelectList(_context.PracovniMista, "IdMisto", "Nazev", zamestnanci.IdMisto);
-            ViewData["IdSklad"] = new SelectList(_context.Sklady, "IdSklad", "Nazev", zamestnanci.IdSklad);
-            ViewData["IdSupermarket"] = new SelectList(_context.Supermarkety, "IdSupermarket", "Nazev", zamestnanci.IdSupermarket);
             return View(zamestnanci);
         }
 
@@ -192,8 +198,19 @@ namespace BDAS2_SemPrace.Controllers
             {
                 try
                 {
-                    _context.Update(zamestnanci);
-                    await _context.SaveChangesAsync();
+                    OracleParameter p_id = new() { ParameterName = "p_id", Direction = System.Data.ParameterDirection.Input, OracleDbType = OracleDbType.Int32, Value = zamestnanci.IdZamestnanec };
+                    OracleParameter jmeno = new() { ParameterName = "p_jmeno", Direction = System.Data.ParameterDirection.Input, OracleDbType = OracleDbType.Varchar2, Value = zamestnanci.Jmeno };
+                    OracleParameter prijmeni = new() { ParameterName = "p_prijmeni", Direction = System.Data.ParameterDirection.Input, OracleDbType = OracleDbType.Varchar2, Value = zamestnanci.Prijmeni };
+                    OracleParameter telefonniCislo = new() { ParameterName = "p_telefonni_cislo", Direction = System.Data.ParameterDirection.Input, OracleDbType = OracleDbType.Int32, Value = zamestnanci.TelefonniCislo };
+                    OracleParameter email = new() { ParameterName = "p_email", Direction = System.Data.ParameterDirection.Input, OracleDbType = OracleDbType.Varchar2, Value = zamestnanci.Email };
+                    OracleParameter mzda = new() { ParameterName = "p_mzda", Direction = System.Data.ParameterDirection.Input, OracleDbType = OracleDbType.Int32, Value = zamestnanci.Mzda };
+                    OracleParameter id_supermarket = new() { ParameterName = "p_id_supermarket", Direction = System.Data.ParameterDirection.Input, OracleDbType = OracleDbType.Int32, Value = zamestnanci.IdSupermarket };
+                    OracleParameter id_manazer = new() { ParameterName = "p_id_manazer", Direction = System.Data.ParameterDirection.Input, OracleDbType = OracleDbType.Int32, Value = zamestnanci.IdManazer };
+                    OracleParameter id_misto = new() { ParameterName = "p_id_misto", Direction = System.Data.ParameterDirection.Input, OracleDbType = OracleDbType.Int32, Value = zamestnanci.IdMisto };
+                    OracleParameter id_sklad = new() { ParameterName = "p_id_sklad", Direction = System.Data.ParameterDirection.Input, OracleDbType = OracleDbType.Int32, Value = zamestnanci.IdSklad };
+
+                    await _context.Database.ExecuteSqlRawAsync("BEGIN zamestnanci_pkg.zamestnanec_update(:p_id, :p_jmeno, :p_prijmeni, :p_telefonni_cislo, :p_email, :p_mzda, :p_id_supermarket," +
+                                        ":p_id_manazer, :p_id_misto, :p_id_sklad); END;", p_id, jmeno, prijmeni, telefonniCislo, email, mzda, id_supermarket, id_manazer, id_misto, id_sklad);
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -208,10 +225,10 @@ namespace BDAS2_SemPrace.Controllers
                 }
                 return RedirectToAction(nameof(Index));
             }
-            ViewData["IdManazer"] = new SelectList(_context.Zamestnanci, "IdZamestnanec", "Email", zamestnanci.IdManazer);
-            ViewData["IdMisto"] = new SelectList(_context.PracovniMista, "IdMisto", "Nazev", zamestnanci.IdMisto);
-            ViewData["IdSklad"] = new SelectList(_context.Sklady, "IdSklad", "Nazev", zamestnanci.IdSklad);
-            ViewData["IdSupermarket"] = new SelectList(_context.Supermarkety, "IdSupermarket", "Nazev", zamestnanci.IdSupermarket);
+            //ViewData["IdManazer"] = new SelectList(_context.Zamestnanci, "IdZamestnanec", "Email", zamestnanci.IdManazer);
+            //ViewData["IdMisto"] = new SelectList(_context.PracovniMista, "IdMisto", "Nazev", zamestnanci.IdMisto);
+            //ViewData["IdSklad"] = new SelectList(_context.Sklady, "IdSklad", "Nazev", zamestnanci.IdSklad);
+            //ViewData["IdSupermarket"] = new SelectList(_context.Supermarkety, "IdSupermarket", "Nazev", zamestnanci.IdSupermarket);
             return View(zamestnanci);
         }
 
@@ -246,13 +263,15 @@ namespace BDAS2_SemPrace.Controllers
             {
                 return Problem("Entity set 'ModelContext.Zamestnanci'  is null.");
             }
-            var zamestnanci = await _context.Zamestnanci.FindAsync(id);
-            if (zamestnanci != null)
-            {
-                _context.Zamestnanci.Remove(zamestnanci);
-            }
+            //var zamestnanci = await _context.Zamestnanci.FindAsync(id);
+            //if (zamestnanci != null)
+            //{
+            //    _context.Zamestnanci.Remove(zamestnanci);
+            //}
+            OracleParameter p_id = new() { ParameterName = "p_id", Direction = System.Data.ParameterDirection.Input, OracleDbType = OracleDbType.Int32, Value = id, };
+            await _context.Database.ExecuteSqlRawAsync("BEGIN zamestnanci_pkg.zamestnanec_delete(:p_id);END;", p_id);
 
-            await _context.SaveChangesAsync();
+            //await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
 

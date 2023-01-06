@@ -8,6 +8,6 @@ namespace BDAS2_SemPrace.Models
         public int IdZaznam { get; set; }
         public string Tabulka { get; set; }
         public string Operace { get; set; }
-        public DateTime Cas { get; set; }
+        public DateTime? Cas { get; set; }
     }
 }

@@ -6,6 +6,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using BDAS2_SemPrace.Models;
+using Oracle.ManagedDataAccess.Client;
+using System.Web.Helpers;
 
 namespace BDAS2_SemPrace.Controllers
 {
@@ -60,8 +62,11 @@ namespace BDAS2_SemPrace.Controllers
         {
             if (ModelState.IsValid)
             {
-                _context.Add(kategorie);
-                await _context.SaveChangesAsync();
+                OracleParameter nazev = new() { ParameterName = "p_nazev", Direction = System.Data.ParameterDirection.Input, OracleDbType = OracleDbType.Varchar2, Value = kategorie.Nazev };
+                OracleParameter popis = new() { ParameterName = "p_popis", Direction = System.Data.ParameterDirection.Input, OracleDbType = OracleDbType.Varchar2, Value = kategorie.Popis };
+
+                await _context.Database.ExecuteSqlRawAsync("BEGIN kategorie_pkg.kategorie_insert(:p_nazev, :p_popis); END;", nazev, popis);
+
                 return RedirectToAction(nameof(Index));
             }
             return View(kategorie);
@@ -97,8 +102,12 @@ namespace BDAS2_SemPrace.Controllers
             {
                 try
                 {
-                    _context.Update(kategorie);
-                    await _context.SaveChangesAsync();
+                    OracleParameter p_id = new() { ParameterName = "p_id", Direction = System.Data.ParameterDirection.Input, OracleDbType = OracleDbType.Int32, Value = id, };
+                    OracleParameter nazev = new() { ParameterName = "p_nazev", Direction = System.Data.ParameterDirection.Input, OracleDbType = OracleDbType.Varchar2, Value = kategorie.Nazev };
+                    OracleParameter popis = new() { ParameterName = "p_popis", Direction = System.Data.ParameterDirection.Input, OracleDbType = OracleDbType.Varchar2, Value = kategorie.Popis };
+
+                    await _context.Database.ExecuteSqlRawAsync("BEGIN kategorie_pkg.kategorie_update(:p_id, :p_nazev, :p_popis); END;", p_id, nazev, popis);
+
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -144,13 +153,9 @@ namespace BDAS2_SemPrace.Controllers
                 return Problem("Entity set 'ModelContext.Kategorie'  is null.");
             }
 
-            var kategorie = await _context.Kategorie.FindAsync(id);
-            if (kategorie != null)
-            {
-                _context.Kategorie.Remove(kategorie);
-            }
-            
-            await _context.SaveChangesAsync();
+            OracleParameter p_id = new() { ParameterName = "p_id", Direction = System.Data.ParameterDirection.Input, OracleDbType = OracleDbType.Int32, Value = id, };
+            await _context.Database.ExecuteSqlRawAsync("BEGIN kategorie_pkg.kategorie_delete(:p_id); END;", p_id);
+
             return RedirectToAction(nameof(Index));
         }
 
