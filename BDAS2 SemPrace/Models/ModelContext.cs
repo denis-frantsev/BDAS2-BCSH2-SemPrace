@@ -33,6 +33,7 @@ namespace BDAS2_SemPrace.Models
         public virtual DbSet<Znacky> Znacky { get; set; }
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<Obrazky> Obrazky { get; set; }
+        public virtual DbSet<LogTable> LogTable { get; set; }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
@@ -184,7 +185,7 @@ namespace BDAS2_SemPrace.Models
                     .HasColumnName("ID_SUPERMARKET");
 
                 entity.Property(e => e.CisloPokladny)
-                    .HasPrecision(4)
+                    .HasPrecision(6)
                     .HasColumnName("CISLO_POKLADNY");
 
                 entity.HasOne(d => d.IdSupermarketNavigation)
@@ -688,6 +689,37 @@ namespace BDAS2_SemPrace.Models
                     .HasColumnName("POPIS");
             });
 
+            modelBuilder.Entity<LogTable>(entity =>
+            {
+                entity.HasKey(e => e.IdZaznam)
+                    .HasName("LOG_TABLE_PK");
+
+                entity.ToTable("LOG_TABLE");
+
+                entity.Property(e => e.IdZaznam)
+                    .HasPrecision(8)
+                    .HasColumnName("ID_ZAZNAM");
+
+                entity.Property(e => e.Cas)
+                    .HasPrecision(6)
+                    .ValueGeneratedOnAdd()
+                    .HasColumnName("CAS");
+
+                entity.Property(e => e.Operace)
+                    .IsRequired()
+                    .HasMaxLength(25)
+                    .IsUnicode(false)
+                    .HasColumnName("OPERACE");
+
+                entity.Property(e => e.Tabulka)
+                    .IsRequired()
+                    .HasMaxLength(40)
+                    .IsUnicode(false)
+                    .HasColumnName("TABULKA");
+            });
+
+            modelBuilder.HasSequence("S_LOG");
+
             modelBuilder.HasSequence("S_ADRESY");
 
             modelBuilder.HasSequence("S_KATEGORIE").IncrementsBy(10);
@@ -713,6 +745,8 @@ namespace BDAS2_SemPrace.Models
             OnModelCreatingPartial(modelBuilder);
 
         }
+
+
 
         partial void OnModelCreatingPartial(ModelBuilder modelBuilder);
 

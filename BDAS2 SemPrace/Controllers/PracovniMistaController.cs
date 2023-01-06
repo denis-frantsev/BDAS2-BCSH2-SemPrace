@@ -61,12 +61,12 @@ namespace BDAS2_SemPrace.Controllers
         {
             if (ModelState.IsValid)
             {
-                OracleParameter id_misto = new() { ParameterName = "p_id_misto", Direction = System.Data.ParameterDirection.Input, OracleDbType = OracleDbType.Varchar2, Value = pracovniMista.IdMisto };
+                OracleParameter id_misto = new() { ParameterName = "p_id_misto", Direction = System.Data.ParameterDirection.Input, OracleDbType = OracleDbType.Int32, Value = pracovniMista.IdMisto };
                 OracleParameter nazev = new() { ParameterName = "p_nazev", Direction = System.Data.ParameterDirection.Input, OracleDbType = OracleDbType.Varchar2, Value = pracovniMista.Nazev };
                 OracleParameter popis = new() { ParameterName = "p_popis", Direction = System.Data.ParameterDirection.Input, OracleDbType = OracleDbType.Varchar2, Value = pracovniMista.Popis };
                 OracleParameter min_plat = new() { ParameterName = "p_min_plat", Direction = System.Data.ParameterDirection.Input, OracleDbType = OracleDbType.Int32, Value = pracovniMista.MinPlat };
 
-                await _context.Database.ExecuteSqlRawAsync("BEGIN pracovni_mista_pkg.pracovni_mista_insert(:p_nazev, :p_popis, :p_min_plat); END;", nazev, popis, min_plat);
+                await _context.Database.ExecuteSqlRawAsync("BEGIN pracovni_mista_pkg.pracovni_mista_insert(:p_id_misto, :p_nazev, :p_popis, :p_min_plat); END;", id_misto, nazev, popis, min_plat);
 
                 return RedirectToAction(nameof(Index));
             }

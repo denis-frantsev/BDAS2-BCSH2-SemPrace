@@ -30,16 +30,16 @@ namespace BDAS2_SemPrace.Controllers
         }
 
         // GET: Pokladny/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(int? supermarketId, int? cisloPokladny)
         {
-            if (id == null || _context.Pokladny == null || !ModelContext.HasAdminRights())
+            if (supermarketId == null || cisloPokladny == null ||_context.Pokladny == null || !ModelContext.HasAdminRights())
             {
                 return NotFound();
             }
 
             var pokladny = await _context.Pokladny
                 .Include(p => p.IdSupermarketNavigation)
-                .FirstOrDefaultAsync(m => m.IdSupermarket == id);
+                .FirstOrDefaultAsync(m => m.IdSupermarket == supermarketId && m.CisloPokladny == cisloPokladny);
             if (pokladny == null)
             {
                 return NotFound();
@@ -76,14 +76,15 @@ namespace BDAS2_SemPrace.Controllers
         }
 
         // GET: Pokladny/Edit/5
-        public async Task<IActionResult> Edit(int? id)
+        public async Task<IActionResult> Edit(int? supermarketId, int? cisloPokladny)
         {
-            if (id == null || _context.Pokladny == null || !ModelContext.HasAdminRights())
+            if (supermarketId == null || cisloPokladny == null || _context.Pokladny == null || !ModelContext.HasAdminRights())
             {
                 return NotFound();
             }
 
-            var pokladny = await _context.Pokladny.FindAsync(id);
+            var pokladny = await _context.Pokladny.FindAsync(supermarketId, cisloPokladny);
+            pokladny.IdSupermarketNavigation = await _context.Supermarkety.FindAsync(supermarketId);
             if (pokladny == null)
             {
                 return NotFound();
@@ -95,9 +96,9 @@ namespace BDAS2_SemPrace.Controllers
         // POST: Pokladny/Edit/5
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("IdSupermarket,CisloPokladny")] Pokladny pokladny)
+        public async Task<IActionResult> Edit(int supermarketId, int cisloPokladny, [Bind("IdSupermarket,CisloPokladny")] Pokladny pokladny)
         {
-            if (id != pokladny.IdSupermarket)
+            if (cisloPokladny != pokladny.CisloPokladny && supermarketId != pokladny.IdSupermarket)
             {
                 return NotFound();
             }
@@ -114,7 +115,7 @@ namespace BDAS2_SemPrace.Controllers
                 }
                 catch (DbUpdateConcurrencyException)
                 {
-                    if (!PokladnyExists(pokladny.IdSupermarket))
+                    if (!PokladnyExists(pokladny.IdSupermarket, pokladny.CisloPokladny))
                     {
                         return NotFound();
                     }
@@ -130,16 +131,16 @@ namespace BDAS2_SemPrace.Controllers
         }
 
         // GET: Pokladny/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public async Task<IActionResult> Delete(int? supermarketId, int? cisloPokladny)
         {
-            if (id == null || _context.Pokladny == null || !ModelContext.HasAdminRights())
+            if (cisloPokladny == null || _context.Pokladny == null || !ModelContext.HasAdminRights())
             {
                 return NotFound();
             }
 
             var pokladny = await _context.Pokladny
                 .Include(p => p.IdSupermarketNavigation)
-                .FirstOrDefaultAsync(m => m.IdSupermarket == id);
+                .FirstOrDefaultAsync(m => m.IdSupermarket == supermarketId && m.CisloPokladny == cisloPokladny);
             if (pokladny == null)
             {
                 return NotFound();
@@ -165,9 +166,9 @@ namespace BDAS2_SemPrace.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private bool PokladnyExists(int id)
+        private bool PokladnyExists(int supermarketId, int cisloPokladny)
         {
-          return _context.Pokladny.Any(e => e.IdSupermarket == id);
+          return _context.Pokladny.Any(e => e.IdSupermarket == supermarketId && e.CisloPokladny == cisloPokladny);
         }
     }
 }
