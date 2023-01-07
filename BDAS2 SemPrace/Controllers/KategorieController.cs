@@ -8,14 +8,16 @@ using Microsoft.EntityFrameworkCore;
 using BDAS2_SemPrace.Models;
 using Oracle.ManagedDataAccess.Client;
 using System.Web.Helpers;
+using System.Data;
 
 namespace BDAS2_SemPrace.Controllers
 {
     public class KategorieController : Controller
     {
         private readonly ModelContext _context;
+		private readonly string connStr = "Data Source=(description=(address_list=(address = (protocol = TCP)(host = fei-sql3.upceucebny.cz)(port = 1521)))(connect_data=(service_name=BDAS.UPCEUCEBNY.CZ))\n);User ID=ST64102;Password=j8ex765gh;Persist Security Info=True";
 
-        public KategorieController(ModelContext context)
+		public KategorieController(ModelContext context)
         {
             _context = context;
         }
@@ -159,7 +161,39 @@ namespace BDAS2_SemPrace.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        private bool KategorieExists(short id)
+		public IActionResult KategorieBezZbozi()
+		{
+			DataSet dataset = new DataSet();
+			using (OracleConnection objConn = new OracleConnection(connStr))
+			{
+				OracleCommand cmd = new OracleCommand();
+				cmd.Connection = objConn;
+				cmd.CommandText = "SELECT * FROM kategorie_bez_zbozi";
+				cmd.CommandType = CommandType.Text;
+				try
+				{
+					objConn.Open();
+					cmd.ExecuteNonQuery();
+					OracleDataAdapter da = new OracleDataAdapter(cmd);
+					da.Fill(dataset);
+				}
+				catch (Exception ex)
+				{
+					throw;
+				}
+				objConn.Close();
+			}
+			var myData = dataset.Tables[0].AsEnumerable().Select(r => new KategorieBezZboziViewModel
+			{
+				IdKategorie = r.Field<short>("id_kategorie"),
+				Nazev = r.Field<string>("nazev"),
+				Popis = r.Field<string>("popis"),
+			});
+
+			return View(myData.ToList());
+		}
+
+		private bool KategorieExists(short id)
         {
           return _context.Kategorie.Any(e => e.IdKategorie == id);
         }
