@@ -7,52 +7,52 @@
 
 
 <!DOCTYPE html>
-<link rel="stylesheet" href="~/css/site.css asp-append-version="true" /> 
+<link rel="stylesheet" href="~/css/site.css asp-append-version="true" />
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
     <title>Zbozi</title>
 </head>
 <body>
-    <div class="container mt-2"> 
-    <h1>Náš sortiment</h1>
+    <div class="container mt-2">
+        <h1>Náš sortiment</h1>
 
-    @if (ModelContext.User.Role == BDAS2_SemPrace.Role.ADMIN)
-    {
-        <p>
-            <a class="btn btn-primary" asp-action="Create">Přidat zboží</a>
-            <a class="btn btn-primary" asp-action="ZboziNaDoplneni">Na doplnění</a>
-        </p>
-    }
+        @if (ModelContext.User.Role == BDAS2_SemPrace.Role.ADMIN)
+        {
+            <p>
+                <a class="btn btn-primary" asp-action="Create">Přidat zboží</a>
+                <a class="btn btn-primary" asp-action="ZboziNaDoplneni">Na doplnění</a>
+            </p>
+        }
 
-    <div class="card-deck" style=" display: grid;
+        <div class="card-deck" style=" display: grid;
     grid-template-columns: 1fr 1fr 1fr;
     gap: 10px 2em;">
 
-        @foreach (var item in Model)
-        {
-            <div class="card">
-                <img class="card-img-top" style="height: contain; width: contain; display: block;" src="@Html.DisplayFor(modelItem => item.Obrazek)" data-holder-rendered="true">
-                <div class="card-body" @*style="height: 200px; width: 100%; display: block;"*@>
-                    <h5 class="card-title">@Html.DisplayFor(modelItem => item.NazevZbozi)</h5>
-                    <p @*class="card-text">*@>
-                        @{
-                            if (item.Popis != "")
-                            {
+            @foreach (var item in Model)
+            {
+                <div class="card">
+                    <img class="card-img-top" style="object-fit: contain; max-height: 15rem;" src="@Html.DisplayFor(modelItem => item.Obrazek)" data-holder-rendered="true">
+                    <div class="card-body" @*style="height: 200px; width: 100%; display: block;"*@>
+                        <h5 class="card-title">@Html.DisplayFor(modelItem => item.NazevZbozi)</h5>
+                        <p>
+                            @{
+                                if (item.Popis != "")
+                                {
                                 <p>@Html.DisplayFor(modelItem => item.Popis)</p>
+                                }
                             }
-                        }
-                    </p>
-                </div>
-                <div class="card-footer">
-                    <div class="price-box">
-                    <h5 id="footer-price" class="card-text"> @Html.DisplayFor(modelItem => item.Cena) Kč</h5>
+                        </p>
                     </div>
-                    <a class="btn btn-light btn-sm" style="color: gray" asp-action="Details" asp-route-id="@item.IdZbozi">View details</a>
+                    <div class="card-footer">
+                        <div class="price-box">
+                            <h5 id="footer-price" class="card-text"> @Html.DisplayFor(modelItem => item.Cena) Kč</h5>
+                        </div>
+                        <a class="btn btn-light btn-sm" style="color: gray" asp-action="Details" asp-route-id="@item.IdZbozi">View details</a>
+                    </div>
                 </div>
-            </div>
-        }
-    </div>
+            }
+        </div>
     </div>
 </body>
 </html>

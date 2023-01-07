@@ -117,10 +117,9 @@ namespace BDAS2_SemPrace.Controllers
             return RedirectToAction(nameof(Index));
         }
 
-        [HttpPost]
-        public IActionResult TopSupermarket()
+        public static string TopSupermarket()
         {
-            DataSet dataset = new DataSet();
+            string connStr = "Data Source=(description=(address_list=(address = (protocol = TCP)(host = fei-sql3.upceucebny.cz)(port = 1521)))(connect_data=(service_name=BDAS.UPCEUCEBNY.CZ))\n);User ID=ST64102;Password=j8ex765gh;Persist Security Info=True";
             using (OracleConnection objConn = new OracleConnection(connStr))
             {
                 OracleCommand cmd = new OracleCommand();
@@ -134,12 +133,12 @@ namespace BDAS2_SemPrace.Controllers
                     cmd.ExecuteNonQuery();
                     var obj = cmd.Parameters[0].Value;
                     objConn.Close();
-                    return PartialView(obj);
+                    return obj.ToString();
                 }
                 catch (Exception)
                 {
                     objConn.Close();
-                    return PartialView();
+                    return null;
                 }
             }
         }
