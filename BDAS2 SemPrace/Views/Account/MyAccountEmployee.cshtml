@@ -1,164 +1,170 @@
 ﻿@model BDAS2_SemPrace.Models.UserEmployeeViewModel
 @{
-	ViewData["Title"] = "Profil";
+    ViewData["Title"] = "Profil";
 }
 
 
 
 <div class="container mine">
-	<section class="w-100 p-4" style="background-color: #eee; border-radius: .5rem .5rem 0 0;">
+    <section class="w-100 p-4" style="background-color: #eee; border-radius: .5rem .5rem 0 0;">
 
-		<div class="row">
-			<div class="col-lg-4">
-				<div class="card mb-4">
-					<div class="card-body text-center">
-						<a href="~/Account/AddProfilePic">
-							@if (Model.ProfilePic != null)
-							{
-								<img src="/Account/RetrieveImage/@Model.ProfilePic.IdObrazek" alt="avatar" class="rounded-circle img-fluid" style="width: 150px; height: 150px; object-fit: cover;">
-							}
-							else
-							{
-								<img src="https://cdn2.iconfinder.com/data/icons/instagram-ui/48/jee-74-512.png" alt="avatar" class="rounded-circle img-fluid" style="width: 150px; height: 150px; object-fit: cover;">
-							}
-						</a>
-						<h5 class="my-3">@Model.FullName</h5>
-						<p class="text-muted mb-1">@Model.Pozice</p>
-						<div class="d-flex justify-content-center mb-2" style="margin-top:1rem;">
-							<a asp-controller="Zamestnanci" asp-action="EmployeeEdit" asp-route-id="@Model.ID" class="btn btn-primary" style="margin-right:0.5rem;">Upravit údaje</a>
-							<button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#exampleModal">
-								Odhlásit se
-							</button>
-						</div>
-					</div>
-				</div>
-			</div>
-			<div class="col-lg-8">
-				<div class="card mb-4">
-					<div class="card-body">
-						<div class="row">
-							<div class="col-sm-3">
-								<p class="mb-0">Jméno a příjmení</p>
-							</div>
-							<div class="col-sm-9">
-								<p class="text-muted mb-0">@Model.FullName</p>
-							</div>
-						</div>
-						<hr>
-						<div class="row">
-							<div class="col-sm-3">
-								<p class="mb-0">Email</p>
-							</div>
-							<div class="col-sm-9">
-								<p class="text-muted mb-0">@Model.Email</p>
-							</div>
-						</div>
-						<hr>
-						<div class="row">
-							<div class="col-sm-3">
-								<p class="mb-0">Telefonní číslo</p>
-							</div>
-							<div class="col-sm-9">
-								<p class="text-muted mb-0">+420<span>@Model.TelefonniCislo</span></p>
-							</div>
-						</div>
-						<hr>
-						<div class="row">
-							<div class="col-sm-3">
-								<p class="mb-0">Zaměstnanecký slevový kód</p>
-							</div>
-							<div class="col-sm-9">
-								<button type="button" class="btn btn-outline-warning" data-bs-toggle="modal" data-bs-target="#exampleModalCode">
-									Zobrazit
-								</button>
-							</div>
-						</div>
-					</div>
-				</div>
-				<div class="row">
-					<div class="col-md-0">
-						<div class="card mb-4 mb-md-0">
-							<div class="card-body">
-								<p class="mb-4"><span class="text-primary font-italic me-1">Podřizení</span></p>
-								<table class="table">
-									<tbody>
-										@if (Model.Podrizeni.Any())
-										{
-											foreach (var item in Model.Podrizeni)
-											{
-												<tr>
-													<td>
-														@Html.DisplayFor(modelItem => item.Jmeno)
-													</td>
-													<td>
-														@Html.DisplayFor(modelItem => item.Prijmeni)
-													</td>
-													<td>
-														+420
-														@Html.DisplayFor(modelItem => item.TelefonniCislo)
-													</td>
-													<td>
-														@Html.DisplayFor(modelItem => item.Email)
-													</td>
-												</tr>
-											}
-										}
-									</tbody>
-								</table>
-							</div>
-						</div>
-					</div>
-				</div>
-			</div>
-		</div>
-	</section>
+        <div class="row">
+            <div class="col-lg-4">
+                <div class="card mb-4">
+                    <div class="card-body text-center">
+                        <a href="~/Account/AddProfilePic">
+                            @if (Model.ProfilePic != null)
+                            {
+                                <img src="/Account/RetrieveImage/@Model.ProfilePic.IdObrazek" alt="avatar" class="rounded-circle img-fluid" style="width: 150px; height: 150px; object-fit: cover;">
+                            }
+                            else
+                            {
+                                <img src="https://cdn2.iconfinder.com/data/icons/instagram-ui/48/jee-74-512.png" alt="avatar" class="rounded-circle img-fluid" style="width: 150px; height: 150px; object-fit: cover;">
+                            }
+                        </a>
+                        <h5 class="my-3">@Model.FullName</h5>
+                        <p class="text-muted mb-1">@Model.Pozice</p>
+                        <div class="d-flex justify-content-center mb-2" style="margin-top:1rem;">
+                            <a asp-controller="Zamestnanci" asp-action="EmployeeEdit" asp-route-id="@Model.ID" class="btn btn-primary" style="margin-right:0.5rem;">Upravit údaje</a>
+                            <button type="button" class="btn btn-outline-danger" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                                Odhlásit se
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-8">
+                <div class="card mb-4">
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <p class="mb-0">Jméno a příjmení</p>
+                            </div>
+                            <div class="col-sm-9">
+                                <p class="text-muted mb-0">@Model.FullName</p>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <p class="mb-0">Email</p>
+                            </div>
+                            <div class="col-sm-9">
+                                <p class="text-muted mb-0">@Model.Email</p>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <p class="mb-0">Telefonní číslo</p>
+                            </div>
+                            <div class="col-sm-9">
+                                <p class="text-muted mb-0">+420<span>@Model.TelefonniCislo</span></p>
+                            </div>
+                        </div>
+                        <hr>
+                        <div class="row">
+                            <div class="col-sm-3">
+                                <p class="mb-0">Zaměstnanecký slevový kód</p>
+                            </div>
+                            <div class="col-sm-9">
+                                <button type="button" class="btn btn-outline-warning" data-bs-toggle="modal" data-bs-target="#exampleModalCode">
+                                    Zobrazit
+                                </button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-0">
+                        <div class="card mb-4 mb-md-0">
+                            <div class="card-body">
+                                <p class="mb-4"><span class="text-primary font-italic me-1">Podřizení</span></p>
+                                <table class="table">
+                                    <tbody>
+                                        @if (Model.Podrizeni.Any())
+                                        {
+                                            foreach (var item in Model.Podrizeni)
+                                            {
+                                                <tr>
+                                                    <td>
+                                                        @Html.DisplayFor(modelItem => item.Jmeno)
+                                                    </td>
+                                                    <td>
+                                                        @Html.DisplayFor(modelItem => item.Prijmeni)
+                                                    </td>
+                                                    <td>
+                                                        +420
+                                                        @Html.DisplayFor(modelItem => item.TelefonniCislo)
+                                                    </td>
+                                                    <td>
+                                                        @Html.DisplayFor(modelItem => item.Email)
+                                                    </td>
+                                                </tr>
+                                            }
+                                        }
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
 </div>
-	
+
 
 
 
 <div class="p-4 text-center border-top mobile-hidden">
-	<a asp-action="LogOut" class="btn btn-link px-3" data-mdb-toggle="collapse" role="button" aria-expanded="false" aria-controls="example3" data-ripple-color="hsl(0, 0%, 67%)">
-		<i class="fas fa-code me-md-2"></i>
-		<span class="d-none d-md-inline-block">
-			Odhlásit se
-		</span>
-	</a>
+    <a asp-action="LogOut" class="btn btn-link px-3" data-mdb-toggle="collapse" role="button" aria-expanded="false" aria-controls="example3" data-ripple-color="hsl(0, 0%, 67%)">
+        <i class="fas fa-code me-md-2"></i>
+        <span class="d-none d-md-inline-block">
+            Odhlásit se
+        </span>
+    </a>
 </div>
 
 <!-- Modal -->
 <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-	<div class="modal-dialog">
-		<div class="modal-content">
-			<div class="modal-header">
-				<h5 class="modal-title" id="exampleModalLabel">Odhlášení</h5>
-				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-			</div>
-			<div class="modal-body">
-				Chcete se odhlásit?
-			</div>
-			<div class="modal-footer">
-				<button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Ne</button>
-				<a asp-action="LogOut" class="btn btn-outline-danger">Ano</a>
-			</div>
-		</div>
-	</div>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Odhlášení</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Chcete se odhlásit?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Ne</button>
+                <a asp-action="LogOut" class="btn btn-outline-danger">Ano</a>
+            </div>
+        </div>
+    </div>
 </div>
 
 <div class="modal fade" id="exampleModalCode" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
-	<div class="modal-dialog">
-		<div class="modal-content">
-			<div class="modal-header">
-				<h5 class="modal-title" id="exampleModalLabel">Váš slevový kód</h5>
-				<button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-			</div>
-			<div class="modal-body">
-				místo pro kód
-			</div>
-			<div class="modal-footer">
-				<a asp-action="" class="btn btn-success">Generovat</a>
-				<button type="button" class="btn btn-success" data-bs-dismiss="modal">Ok</button>
-			</div>
-		</div>
-	</div>
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="exampleModalLabel">Váš slevový kód</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                @if(Model.SlevovyKod != null)
+                {
+                    <p class="mb-0">@Model.SlevovyKod</p>
+                } else 
+                {
+                    <p>Zatím nemáte vygenerovaný slevový kod</p>
+                }
+            </div>
+            <div class="modal-footer">
+                <a asp-action="GenerujSlevovyKod" asp-controller="Zamestnanci" asp-route-id="@Model.ID" class="btn btn-success">Generovat</a>
+                <button type="button" class="btn btn-success" data-bs-dismiss="modal">Ok</button>
+            </div>
+        </div>
+    </div>
 </div>

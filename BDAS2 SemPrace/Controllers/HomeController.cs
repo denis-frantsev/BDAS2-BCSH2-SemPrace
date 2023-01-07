@@ -17,6 +17,7 @@ namespace BDAS2_SemPrace.Controllers
     {
         private readonly ModelContext _context;
         private readonly ILogger<HomeController> _logger;
+        private readonly string connStr = "Data Source=(description=(address_list=(address = (protocol = TCP)(host = fei-sql3.upceucebny.cz)(port = 1521)))(connect_data=(service_name=BDAS.UPCEUCEBNY.CZ))\n);User ID=ST64102;Password=j8ex765gh;Persist Security Info=True";
 
         public HomeController(ILogger<HomeController> logger, ModelContext context)
         {
@@ -38,13 +39,13 @@ namespace BDAS2_SemPrace.Controllers
         {
             ViewData["IdSupermarket"] = new SelectList(_context.Supermarkety, "IdSupermarket", "Nazev");
             return View();
-        }   
+        }
 
+        //vraci seznam plateb ktere byli provedeny za urcite doby
         [HttpPost]
         public IActionResult Platby(DateTime start, DateTime end, int id)
         {
             DataSet dataset = new DataSet();
-            var connStr = "Data Source=(description=(address_list=(address = (protocol = TCP)(host = fei-sql3.upceucebny.cz)(port = 1521)))(connect_data=(service_name=BDAS.UPCEUCEBNY.CZ))\n);User ID=ST64102;Password=j8ex765gh;Persist Security Info=True";
             using (OracleConnection objConn = new OracleConnection(connStr))
             {
                 OracleCommand cmd = new OracleCommand();
@@ -65,7 +66,7 @@ namespace BDAS2_SemPrace.Controllers
                 }
                 catch (Exception ex)
                 {
-                    System.Console.WriteLine("Exception: {0}", ex.ToString());
+                    throw;
                 }
                 objConn.Close();
             }
@@ -84,6 +85,62 @@ namespace BDAS2_SemPrace.Controllers
             ViewData["IdSupermarket"] = new SelectList(_context.Supermarkety, "IdSupermarket", "Nazev");
 
             return View(myData.ToList());
+        }
+
+        //zvysuje ceny na urcity pocet nejpopularnejsich produktu a vraci jejich seznam 
+        [HttpPost]
+        public IActionResult FavProductsPriceRise(int rise, int amountOfProducts)
+        {
+
+            DataSet dataset = new DataSet();
+            using (OracleConnection objConn = new OracleConnection(connStr))
+            {
+                OracleCommand cmd = new OracleCommand();
+                cmd.Connection = objConn;
+                cmd.CommandText = "zvys_cenu_poptavka";
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.Add("p_navyseni", OracleDbType.Int32).Value = rise;
+                cmd.Parameters.Add("p_pocet", OracleDbType.Int32).Value = amountOfProducts;
+                try
+                {
+                    objConn.Open();
+                    cmd.ExecuteNonQuery();
+                    OracleDataAdapter da = new OracleDataAdapter(cmd);
+                    da.Fill(dataset);
+                }
+                catch (Exception)
+                {
+                    throw;
+                }
+                objConn.Close();
+            }
+            return RedirectToAction(nameof(Index));
+        }
+
+        public static string TopSupermarket()
+        {
+            string connStr = "Data Source=(description=(address_list=(address = (protocol = TCP)(host = fei-sql3.upceucebny.cz)(port = 1521)))(connect_data=(service_name=BDAS.UPCEUCEBNY.CZ))\n);User ID=ST64102;Password=j8ex765gh;Persist Security Info=True";
+            using (OracleConnection objConn = new OracleConnection(connStr))
+            {
+                OracleCommand cmd = new OracleCommand();
+                cmd.Connection = objConn;
+                cmd.CommandText = "prodejna_mesice";
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.Add("result", OracleDbType.Varchar2, 40, null, ParameterDirection.ReturnValue);
+                try
+                {
+                    objConn.Open();
+                    cmd.ExecuteNonQuery();
+                    var obj = cmd.Parameters[0].Value;
+                    objConn.Close();
+                    return obj.ToString();
+                }
+                catch (Exception)
+                {
+                    objConn.Close();
+                    return null;
+                }
+            }
         }
     }
 }

@@ -36,6 +36,9 @@ namespace BDAS2_SemPrace.Models
         [Display(Name = "Sklad")]
         public int? IdSklad { get; set; }
 
+        [Display(Name = "Slevový kód")]
+        public string SlevovyKod { get; set; }
+
         [Display(Name = "Manažer")]
         public virtual Zamestnanci IdManazerNavigation { get; set; }
 
@@ -47,6 +50,7 @@ namespace BDAS2_SemPrace.Models
 
         [Display(Name = "Pobočka")]
         public virtual Supermarkety IdSupermarketNavigation { get; set; }
+        
         public virtual ICollection<Zamestnanci> InverseIdManazerNavigation { get; set; }
         public string FullName => $"{Jmeno} {Prijmeni}";
     }

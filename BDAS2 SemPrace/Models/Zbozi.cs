@@ -27,7 +27,6 @@ namespace BDAS2_SemPrace.Models
         public int Cena { get; set; }
 
         [Display(Name = "Obrázek")]
-        //[RegularExpression(@"^(http|https|ftp|)\://|[a-zA-Z0-9\-\.]+\.[a-zA-Z](:[a-zA-Z0-9]*)?/?([a-zA-Z0-9\-\._\?\,\'/\\\+&amp;%\$#\=~])*[^\.\,\)\(\s]", ErrorMessage ="Špatný format URL")]
         public string Obrazek { get; set; }
 
         [Display(Name = "Kategorie")]

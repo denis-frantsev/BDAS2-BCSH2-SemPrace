@@ -503,6 +503,11 @@ namespace BDAS2_SemPrace.Models
                     .IsUnicode(false)
                     .HasColumnName("PRIJMENI");
 
+                entity.Property(e => e.SlevovyKod)
+                    .HasMaxLength(60)
+                    .IsUnicode(false)
+                    .HasColumnName("SLEVOVY_KOD");
+
                 entity.Property(e => e.TelefonniCislo)
                     .HasColumnType("NUMBER(8)")
                     .HasColumnName("TELEFONNI_CISLO");
@@ -758,7 +763,9 @@ namespace BDAS2_SemPrace.Models
 
         public static bool HasAdminRights() => User.Role == Role.ADMIN;
 
-        public bool IsUser(int? id) => User.Email == Zakaznici.Find(id).Email; 
+        public static bool IsEmployee() => User.Role == Role.EMPLOYEE || User.Role == Role.ADMIN;
+        public bool IsUser(int? id) => User.Email == Zakaznici.Find(id).Email;
+
 
     }
 }

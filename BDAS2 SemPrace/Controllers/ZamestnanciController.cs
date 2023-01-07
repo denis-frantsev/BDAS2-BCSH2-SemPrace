@@ -7,12 +7,14 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using BDAS2_SemPrace.Models;
 using Oracle.ManagedDataAccess.Client;
+using System.Data;
 
 namespace BDAS2_SemPrace.Controllers
 {
     public class ZamestnanciController : Controller
     {
         private readonly ModelContext _context;
+        private readonly string connStr = "Data Source=(description=(address_list=(address = (protocol = TCP)(host = fei-sql3.upceucebny.cz)(port = 1521)))(connect_data=(service_name=BDAS.UPCEUCEBNY.CZ))\n);User ID=ST64102;Password=j8ex765gh;Persist Security Info=True";
 
         public ZamestnanciController(ModelContext context)
         {
@@ -263,16 +265,37 @@ namespace BDAS2_SemPrace.Controllers
             {
                 return Problem("Entity set 'ModelContext.Zamestnanci'  is null.");
             }
-            //var zamestnanci = await _context.Zamestnanci.FindAsync(id);
-            //if (zamestnanci != null)
-            //{
-            //    _context.Zamestnanci.Remove(zamestnanci);
-            //}
+
             OracleParameter p_id = new() { ParameterName = "p_id", Direction = System.Data.ParameterDirection.Input, OracleDbType = OracleDbType.Int32, Value = id, };
             await _context.Database.ExecuteSqlRawAsync("BEGIN zamestnanci_pkg.zamestnanec_delete(:p_id);END;", p_id);
 
             //await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
+        }
+
+        public IActionResult GenerujSlevovyKod(int id)
+        {
+            using (OracleConnection objConn = new OracleConnection(connStr))
+            {
+                OracleCommand cmd = new OracleCommand();
+                cmd.Connection = objConn;
+                cmd.CommandText = "generuj_slevovy_kod";
+                cmd.CommandType = CommandType.StoredProcedure;
+                cmd.Parameters.Add("result", OracleDbType.Varchar2, 60, null, ParameterDirection.ReturnValue);
+                cmd.Parameters.Add("p_id_zamestnanec", OracleDbType.Decimal, ParameterDirection.Input).Value = id;
+                try
+                {
+                    objConn.Open();
+                    cmd.ExecuteNonQuery();
+                    var obj = cmd.Parameters[0].Value;
+                    objConn.Close();
+                }
+                catch (Exception)
+                {
+                    objConn.Close();
+                }
+            }
+            return RedirectToAction("MyAccount","Account");
         }
 
         private bool ZamestnanciExists(int id)

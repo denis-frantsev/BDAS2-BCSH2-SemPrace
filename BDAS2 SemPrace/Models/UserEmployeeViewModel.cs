@@ -79,6 +79,8 @@ namespace BDAS2_SemPrace.Models
             }
         }
 
+        public string SlevovyKod => _zamestnanec.SlevovyKod;
+
         public List<Zamestnanci> Podrizeni => PodrizeniSeznam();
 
         private List<Zamestnanci> PodrizeniSeznam() {

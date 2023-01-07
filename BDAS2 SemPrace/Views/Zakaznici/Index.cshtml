@@ -11,11 +11,12 @@
     <div class="container-fluid d-inline-flex p-2" style="justify-content:space-between">
         <p>
             <a class="btn btn-primary" asp-action="Create">Přidat Zákazníka</a>
+            <a class="btn btn-primary" asp-action="TopZakaznici">Top zákazníků</a>
         </p>
 
         <form asp-controller="Zakaznici" asp-action="Index" method="get" class="d-inline-flex p-2">
-                <input class="form-control mr-sm-2" type="text" name="SearchString" placeholder="Zadej jméno" aria-label="Search" style="margin-right:0.5rem;">
-                <button class="btn btn-outline-success my-2 my-sm-0" value="Filter" type="submit">Hledat</button>
+            <input class="form-control mr-sm-2" type="text" name="SearchString" placeholder="Zadej jméno" aria-label="Search" style="margin-right:0.5rem;">
+            <button class="btn btn-outline-success my-2 my-sm-0" value="Filter" type="submit">Hledat</button>
         </form>
     </div>
     <table class="table">
@@ -39,26 +40,26 @@
         <tbody>
             @foreach (var item in Model)
             {
-                    <tr>
-                        <td>
+                <tr>
+                    <td>
                         @Html.DisplayFor(modelItem => item.Jmeno)
-                        </td>
-                        <td>
+                    </td>
+                    <td>
                         @Html.DisplayFor(modelItem => item.Prijmeni)
-                        </td>
-                        <td>
+                    </td>
+                    <td>
                         +420<span>@Html.DisplayFor(modelItem => item.TelefonniCislo)</span>
-                        </td>
-                        <td>
+                    </td>
+                    <td>
                         @Html.DisplayFor(modelItem => item.Email)
-                        </td>
-                        <td>
+                    </td>
+                    <td>
 
                         <a class="btn btn-outline-secondary" asp-action="Edit" asp-route-id="@item.IdZakaznik">Upravit</a> |
                         <a class="btn btn-outline-secondary" asp-action="Details" asp-route-id="@item.IdZakaznik">Podrobnosti</a> |
-                        <a class="btn btn-outline-danger" asp-action="Delete" asp-route-id="@item.IdZakaznik">Smazat</a> 
-                        </td>
-                    </tr>
+                        <a class="btn btn-outline-danger" asp-action="Delete" asp-route-id="@item.IdZakaznik">Smazat</a>
+                    </td>
+                </tr>
             }
         </tbody>
     </table>

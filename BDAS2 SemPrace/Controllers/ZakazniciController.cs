@@ -7,12 +7,14 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using BDAS2_SemPrace.Models;
 using Oracle.ManagedDataAccess.Client;
+using System.Data;
 
 namespace BDAS2_SemPrace.Controllers
 {
     public class ZakazniciController : Controller
     {
         private readonly ModelContext _context;
+        private readonly string connStr = "Data Source=(description=(address_list=(address = (protocol = TCP)(host = fei-sql3.upceucebny.cz)(port = 1521)))(connect_data=(service_name=BDAS.UPCEUCEBNY.CZ))\n);User ID=ST64102;Password=j8ex765gh;Persist Security Info=True";
 
         public ZakazniciController(ModelContext context)
         {
@@ -174,6 +176,38 @@ namespace BDAS2_SemPrace.Controllers
             OracleParameter p_id = new() { ParameterName = "p_id", Direction = System.Data.ParameterDirection.Input, OracleDbType = OracleDbType.Int32, Value = id };
             await _context.Database.ExecuteSqlRawAsync("BEGIN zakaznici_pkg.zakaznik_delete(:p_id); END;", p_id);
             return RedirectToAction(nameof(Index));
+        }
+
+        //zobrazuje seznam zakazniku kteri utratili nejvice v obchodech lidl
+        public IActionResult TopZakaznici() {
+
+            DataSet dataset = new DataSet();
+            using (OracleConnection objConn = new OracleConnection(connStr))
+            {
+                OracleCommand cmd = new OracleCommand();
+                cmd.Connection = objConn;
+                cmd.CommandText = "SELECT * FROM top_zakaznici";
+                cmd.CommandType = CommandType.Text;
+                try
+                {
+                    objConn.Open();
+                    cmd.ExecuteNonQuery();
+                    OracleDataAdapter da = new OracleDataAdapter(cmd);
+                    da.Fill(dataset);
+                }
+                catch (Exception ex)
+                {
+                    throw;
+                }
+                objConn.Close();
+            }
+            var myData = dataset.Tables[0].AsEnumerable().Select(r => new TopZakazniciViewModel
+            {
+                Utratili = (int) r.Field<decimal>("celkem_utraceno"),
+                FullName = r.Field<string>("zakaznik")
+            });
+
+            return View(myData.ToList());
         }
 
         private bool ZakazniciExists(int id)
